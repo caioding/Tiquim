@@ -1,0 +1,56 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Produto {
+  id        String          @id @default(uuid()) @db.Char(36)
+  nome      String          @unique @db.VarChar(100)
+  preco     Decimal         @db.Decimal(10, 2)
+  estoque   Int             @db.Int
+  compra    CompraProduto[]
+  createdAt DateTime        @default(now()) @map("created_at")
+  updatedAt DateTime        @updatedAt @map("updated_at")
+
+  @@map("produtos")
+}
+
+model Usuario {
+  id            String          @id @default(uuid()) @db.Char(36)
+  nome          String          @db.VarChar(100)
+  email         String          @unique @db.VarChar(100)
+  senha         String          @db.VarChar(60)
+  tipoUsuario   TipoUsuario     @relation(fields: [tipoUsuarioID], references: [id])
+  tipoUsuarioID String          @db.Char(36)
+  compra        CompraProduto[]
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+
+  @@map("usuarios")
+}
+
+model TipoUsuario {
+  id      String    @id @default(uuid()) @db.Char(36)
+  rotulo  String    @db.Char(8)
+  usuario Usuario[]
+
+  @@map("tipos_usuarios")
+}
+
+model CompraProduto {
+  id         String   @id @default(uuid()) @db.Char(36)
+  usuario    Usuario  @relation(fields: [usuarioID], references: [id])
+  usuarioID  String   @db.Char(36)
+  produto    Produto  @relation(fields: [produtoID], references: [id])
+  produtoID  String   @db.Char(36)
+  quantidade Int      @db.Int
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("compras_produtos")
+}
