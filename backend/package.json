@@ -8,8 +8,8 @@
     "start:prod": "node build/index.js",
     "build": "npx tsc",
     "format": "npx prettier --write src/",
-    "migrate": "docker exec -it backend_crowdspark npx prisma migrate dev",
-    "seed": "docker exec -it backend_crowdspark npx prisma db seed",
+    "migrate": "npx prisma migrate dev",
+    "seed": "npx prisma db seed",
     "swagger": "ts-node src/swagger.ts"
   },
   "keywords": [],
