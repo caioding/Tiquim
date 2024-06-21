@@ -7,50 +7,152 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-
-model Produto {
-  id        String          @id @default(uuid()) @db.Char(36)
-  nome      String          @unique @db.VarChar(100)
-  preco     Decimal         @db.Decimal(10, 2)
-  estoque   Int             @db.Int
-  compra    CompraProduto[]
-  createdAt DateTime        @default(now()) @map("created_at")
-  updatedAt DateTime        @updatedAt @map("updated_at")
-
-  @@map("produtos")
-}
-
 model Usuario {
-  id            String          @id @default(uuid()) @db.Char(36)
-  nome          String          @db.VarChar(100)
-  email         String          @unique @db.VarChar(100)
-  senha         String          @db.VarChar(60)
-  tipoUsuario   TipoUsuario     @relation(fields: [tipoUsuarioID], references: [id])
-  tipoUsuarioID String          @db.Char(36)
-  compra        CompraProduto[]
-  createdAt     DateTime        @default(now()) @map("created_at")
-  updatedAt     DateTime        @updatedAt @map("updated_at")
+  id              String          @id @default(uuid()) @db.Char(36)
+  nome            String          @db.VarChar(100)
+  email           String          @unique @db.VarChar(100)
+  senha           String          @db.VarChar(60)
+  avatarURL       String?         @db.VarChar(255)
+  tipoUsuario     TipoUsuario     @relation(fields: [tipoUsuarioID], references: [id])
+  tipoUsuarioID   String          @db.Char(36)
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+  campanha        Campanha[]
+  endereco        Endereco[]
+  formaPagamento  FormaPagamento[]
+  contribuicao    Contribuicao[]
+  postagem        Postagem[]
+  mensagem        Mensagem[]
 
   @@map("usuarios")
 }
 
 model TipoUsuario {
-  id      String    @id @default(uuid()) @db.Char(36)
-  rotulo  String    @db.Char(8)
-  usuario Usuario[]
+  id       String     @id @default(uuid()) @db.Char(36)
+  tipo     String     @db.Char(8)
+  usuario  Usuario[]
 
   @@map("tipos_usuarios")
 }
 
-model CompraProduto {
-  id         String   @id @default(uuid()) @db.Char(36)
-  usuario    Usuario  @relation(fields: [usuarioID], references: [id])
-  usuarioID  String   @db.Char(36)
-  produto    Produto  @relation(fields: [produtoID], references: [id])
-  produtoID  String   @db.Char(36)
-  quantidade Int      @db.Int
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
+model Endereco {
+  id            String     @id @default(uuid()) @db.Char(36)
+  rua           String     @db.VarChar(100)
+  numero        String     @db.VarChar(10)
+  bairro        String     @db.VarChar(100)
+  cidade        String     @db.VarChar(100)
+  uf            String     @db.Char(2)
+  usuarioID     String     @db.Char(36)
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+  Usuario       Usuario    @relation(fields: [usuarioID], references: [id])
 
-  @@map("compras_produtos")
+  @@map("enderecos")
+}
+
+model Campanha {
+  id                String       @id @default(uuid()) @db.Char(36)
+  metaArrecadacao   Decimal      @db.Decimal(9, 2)
+  qtdeContribuinte  Int
+  prazo             Int
+  titulo            String       @db.Char(50)
+  descricao         String       @db.Char(100)
+  categoria         String       @db.Char(50)
+  urlLog            String?      @db.VarChar(255)
+  createdAt         DateTime     @default(now()) @map("created_at")
+  updatedAt         DateTime     @updatedAt @map("updated_at")
+  valorArrecadado   Decimal      @db.Decimal(9, 2)
+  usuarioID         String       @db.Char(36)
+  usuario           Usuario      @relation(fields: [usuarioID], references: [id])
+  contribuicao      Contribuicao[]
+  recompensa        Recompensa[]
+  postagem          Postagem[]
+  mensagem          Mensagem[]
+
+  @@map("campanhas")
+}
+
+model Contribuicao {
+  id                 String          @id @default(uuid()) @db.Char(36)
+  valorContribuicao  Decimal         @db.Decimal(9, 2)
+  usuarioID          String          @db.Char(36)
+  campanhaID         String          @db.Char(36)
+  createdAt          DateTime        @default(now()) @map("created_at")
+  updatedAt          DateTime        @updatedAt @map("updated_at")
+  usuario            Usuario         @relation(fields: [usuarioID], references: [id])
+  campanha           Campanha        @relation(fields: [campanhaID], references: [id])
+  formaPagamento     FormaPagamento[]
+  itemRecompensa     ItemRecompensa[]
+
+  @@map("contribuicoes")
+}
+
+model FormaPagamento {
+  id                 String         @id @default(uuid()) @db.Char(36)
+  descFormaPagamento String         @db.VarChar(100)
+  bandeira           String?        @db.VarChar(50)
+  dataPagamento      DateTime
+  valorPago          Decimal        @db.Decimal(9, 2)
+  usuarioID          String         @db.Char(36)
+  contribuicaoID     String         @db.Char(36)
+  usuario            Usuario        @relation(fields: [usuarioID], references: [id])
+  contribuicao       Contribuicao   @relation(fields: [contribuicaoID], references: [id])
+
+  @@map("formas_pagamento")
+}
+
+model Postagem {
+  id                 String         @id @default(uuid()) @db.Char(36)
+  tituloPostagem     String?        @db.VarChar(50)
+  descPostagem       String?        @db.VarChar(100)
+  usuarioID          String         @db.Char(36)
+  campanhaID         String         @db.Char(36)
+  createdAt          DateTime       @default(now()) @map("created_at")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
+  usuario            Usuario        @relation(fields: [usuarioID], references: [id])
+  campanha           Campanha       @relation(fields: [campanhaID], references: [id])
+
+  @@map("postagens")
+}
+
+model Mensagem {
+  id                 String         @id @default(uuid()) @db.Char(36)
+  textoMensagem      String         @db.VarChar(200)
+  createdAt          DateTime       @default(now()) @map("created_at")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
+  usuarioID          String         @db.Char(36)
+  campanhaID         String         @db.Char(36)
+  usuario            Usuario        @relation(fields: [usuarioID], references: [id])
+  campanha           Campanha       @relation(fields: [campanhaID], references: [id])
+
+  @@map("mensagens")
+}
+
+model Recompensa {
+  id                 String         @id @default(uuid()) @db.Char(36)
+  tituloRecompensa   String         @db.VarChar(50)
+  descRecompensa     String         @db.VarChar(100)
+  valorMinimo        Decimal        @db.Decimal(9, 2)
+  urlImagem          String?        @db.VarChar(200)
+  createdAt          DateTime       @default(now()) @map("created_at")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
+  campanhaID         String         @db.Char(36)
+  campanha           Campanha       @relation(fields: [campanhaID], references: [id])
+  itemRecompensa     ItemRecompensa[]
+
+  @@map("recompensas")
+}
+
+model ItemRecompensa {
+  id                  String         @id @default(uuid()) @db.Char(36)
+  descItemRecompensa  String         @db.VarChar(50)
+  urlImagem           String?        @db.VarChar(200)
+  createdAt           DateTime       @default(now()) @map("created_at")
+  updatedAt           DateTime       @updatedAt @map("updated_at")
+  recompensaID        String         @db.Char(36)
+  contribuicaoID      String         @db.Char(36)
+  recompensa          Recompensa     @relation(fields: [recompensaID], references: [id])
+  contribuicao        Contribuicao   @relation(fields: [contribuicaoID], references: [id])
+
+  @@map("itens_recompensa")
 }
