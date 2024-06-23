@@ -7,14 +7,15 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
 model Usuario {
   id              String          @id @default(uuid()) @db.Char(36)
   nome            String          @db.VarChar(100)
   email           String          @unique @db.VarChar(100)
   senha           String          @db.VarChar(60)
   avatarURL       String?         @db.VarChar(255)
-  tipoUsuario     TipoUsuario     @relation(fields: [tipoUsuarioID], references: [id])
   tipoUsuarioID   String          @db.Char(36)
+  tipoUsuario     TipoUsuario     @relation(fields: [tipoUsuarioID], references: [id])
   createdAt       DateTime        @default(now()) @map("created_at")
   updatedAt       DateTime        @updatedAt @map("updated_at")
   campanha        Campanha[]
@@ -23,13 +24,14 @@ model Usuario {
   contribuicao    Contribuicao[]
   postagem        Postagem[]
   mensagem        Mensagem[]
+  itemRecompensa  ItemRecompensa[]
 
   @@map("usuarios")
 }
 
 model TipoUsuario {
   id       String     @id @default(uuid()) @db.Char(36)
-  tipo     String     @db.Char(8)
+  rotulo   String     @db.Char(8)
   usuario  Usuario[]
 
   @@map("tipos_usuarios")
@@ -37,9 +39,8 @@ model TipoUsuario {
 
 model Endereco {
   id            String     @id @default(uuid()) @db.Char(36)
-  rua           String     @db.VarChar(100)
-  numero        String     @db.VarChar(10)
-  bairro        String     @db.VarChar(100)
+  numero        String     @db.VarChar(5)
+  cep           String     @db.Char(8)
   cidade        String     @db.VarChar(100)
   uf            String     @db.Char(2)
   usuarioID     String     @db.Char(36)
@@ -52,17 +53,15 @@ model Endereco {
 
 model Campanha {
   id                String       @id @default(uuid()) @db.Char(36)
-  metaArrecadacao   Decimal      @db.Decimal(9, 2)
-  qtdeContribuinte  Int
-  prazo             Int
-  titulo            String       @db.Char(50)
-  descricao         String       @db.Char(100)
-  categoria         String       @db.Char(50)
-  urlLog            String?      @db.VarChar(255)
+  meta              Decimal      @db.Decimal(10, 2)
+  prazo             DateTime     @db.DateTime()
+  titulo            String       @db.VarChar(50)
+  descricao         String       @db.VarChar(200)
+  categoria         String       @db.VarChar(50)
+  logoURL           String?      @db.VarChar(255)
+  usuarioID         String       @db.Char(36)
   createdAt         DateTime     @default(now()) @map("created_at")
   updatedAt         DateTime     @updatedAt @map("updated_at")
-  valorArrecadado   Decimal      @db.Decimal(9, 2)
-  usuarioID         String       @db.Char(36)
   usuario           Usuario      @relation(fields: [usuarioID], references: [id])
   contribuicao      Contribuicao[]
   recompensa        Recompensa[]
@@ -74,37 +73,61 @@ model Campanha {
 
 model Contribuicao {
   id                 String          @id @default(uuid()) @db.Char(36)
-  valorContribuicao  Decimal         @db.Decimal(9, 2)
+  valor              Decimal         @db.Decimal(10, 2)
   usuarioID          String          @db.Char(36)
   campanhaID         String          @db.Char(36)
+  formaID            String          @db.Char(36)
   createdAt          DateTime        @default(now()) @map("created_at")
   updatedAt          DateTime        @updatedAt @map("updated_at")
   usuario            Usuario         @relation(fields: [usuarioID], references: [id])
   campanha           Campanha        @relation(fields: [campanhaID], references: [id])
-  formaPagamento     FormaPagamento[]
-  itemRecompensa     ItemRecompensa[]
-
+  formaPagamento     FormaPagamento  @relation(fields: [formaID], references: [id])
   @@map("contribuicoes")
 }
 
 model FormaPagamento {
   id                 String         @id @default(uuid()) @db.Char(36)
-  descFormaPagamento String         @db.VarChar(100)
-  bandeira           String?        @db.VarChar(50)
-  dataPagamento      DateTime
-  valorPago          Decimal        @db.Decimal(9, 2)
+  tipo               String         @db.VarChar(10)
   usuarioID          String         @db.Char(36)
-  contribuicaoID     String         @db.Char(36)
+  createdAt          DateTime       @default(now()) @map("created_at")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
   usuario            Usuario        @relation(fields: [usuarioID], references: [id])
-  contribuicao       Contribuicao   @relation(fields: [contribuicaoID], references: [id])
+  contribuicao       Contribuicao[]
 
   @@map("formas_pagamento")
 }
 
+model Recompensa {
+  id                 String         @id @default(uuid()) @db.Char(36)
+  titulo             String         @db.VarChar(50)
+  descricao          String         @db.VarChar(100)
+  valorMinimo        Decimal        @db.Decimal(9, 2)
+  imagemURL          String?        @db.VarChar(200)
+  campanhaID         String         @db.Char(36)
+  createdAt          DateTime       @default(now()) @map("created_at")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
+  campanha           Campanha       @relation(fields: [campanhaID], references: [id])
+  itemRecompensa     ItemRecompensa[]
+
+  @@map("recompensas")
+}
+
+model ItemRecompensa {
+  id                  String         @id @default(uuid()) @db.Char(36)
+  recompensaID        String         @db.Char(36)
+  usuarioID           String         @db.Char(36)
+  createdAt           DateTime       @default(now()) @map("created_at")
+  updatedAt           DateTime       @updatedAt @map("updated_at")
+  recompensa          Recompensa     @relation(fields: [recompensaID], references: [id])
+  usuario             Usuario        @relation(fields: [usuarioID], references: [id])
+
+  @@map("itens_recompensa")
+}
+
 model Postagem {
   id                 String         @id @default(uuid()) @db.Char(36)
-  tituloPostagem     String?        @db.VarChar(50)
-  descPostagem       String?        @db.VarChar(100)
+  titulo             String?        @db.VarChar(50)
+  descricao          String?        @db.VarChar(200)
   usuarioID          String         @db.Char(36)
   campanhaID         String         @db.Char(36)
   createdAt          DateTime       @default(now()) @map("created_at")
@@ -117,42 +140,13 @@ model Postagem {
 
 model Mensagem {
   id                 String         @id @default(uuid()) @db.Char(36)
-  textoMensagem      String         @db.VarChar(200)
-  createdAt          DateTime       @default(now()) @map("created_at")
-  updatedAt          DateTime       @updatedAt @map("updated_at")
+  texto              String         @db.VarChar(200)
   usuarioID          String         @db.Char(36)
   campanhaID         String         @db.Char(36)
+  createdAt          DateTime       @default(now()) @map("created_at")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
   usuario            Usuario        @relation(fields: [usuarioID], references: [id])
   campanha           Campanha       @relation(fields: [campanhaID], references: [id])
 
   @@map("mensagens")
-}
-
-model Recompensa {
-  id                 String         @id @default(uuid()) @db.Char(36)
-  tituloRecompensa   String         @db.VarChar(50)
-  descRecompensa     String         @db.VarChar(100)
-  valorMinimo        Decimal        @db.Decimal(9, 2)
-  urlImagem          String?        @db.VarChar(200)
-  createdAt          DateTime       @default(now()) @map("created_at")
-  updatedAt          DateTime       @updatedAt @map("updated_at")
-  campanhaID         String         @db.Char(36)
-  campanha           Campanha       @relation(fields: [campanhaID], references: [id])
-  itemRecompensa     ItemRecompensa[]
-
-  @@map("recompensas")
-}
-
-model ItemRecompensa {
-  id                  String         @id @default(uuid()) @db.Char(36)
-  descItemRecompensa  String         @db.VarChar(50)
-  urlImagem           String?        @db.VarChar(200)
-  createdAt           DateTime       @default(now()) @map("created_at")
-  updatedAt           DateTime       @updatedAt @map("updated_at")
-  recompensaID        String         @db.Char(36)
-  contribuicaoID      String         @db.Char(36)
-  recompensa          Recompensa     @relation(fields: [recompensaID], references: [id])
-  contribuicao        Contribuicao   @relation(fields: [contribuicaoID], references: [id])
-
-  @@map("itens_recompensa")
 }
