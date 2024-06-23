@@ -8,13 +8,11 @@ import swaggerFile from "./swagger-output.json";
 import router from "./router";
 import validateEnv from "./utils/validateEnv";
 import setCookieLang from "./middlewares/setLangCookie";
-import { CompraDto } from "./resources/compra/compra.types";
 
 declare module "express-session" {
   interface SessionData {
     uid: string;
     tipoUsuarioID: string;
-    carrinho: CompraDto[];
   }
 }
 
