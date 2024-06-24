@@ -1,56 +1,129 @@
 "use client";
 
-import Link from "next/link";
+import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-export default function Login() {
+function Copyright(props: any) {
   return (
-    <main>
-      <div className="container-fluid d-flex min-vh-100">
-        <div className="row min-vw-100">
-          <div className="col-12 col-md-4 bg-light d-flex justify-content-center align-items-center">
-            <h2>Bem vindo à WA Loja!</h2>
-          </div>{" "}
-          <div className="col-12 col-md-8 d-flex justify-content-center align-items-center">
-            <form>
-              <div className="mb-3">
-                <label htmlFor="email" className="form-label">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  className="form-control form-control-lg"
-                  id="email"
-                  aria-describedby="email"
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="senha" className="form-label">
-                  Senha
-                </label>
-                <input
-                  type="password"
-                  className="form-control form-control-lg"
-                  id="senha"
-                  required
-                />
-              </div>
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+      {'Copyright © '}
+      <Link color="inherit" href="#">
+        CrowdSpark
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
 
-              <div className="d-grid col-12">
-                <button type="submit" className="btn btn-success">
-                  Entrar
-                </button>
-              </div>
+const defaultTheme = createTheme();
 
-              <div className="text-center mt-3">
-                <Link href="/cadastro" className="btn btn-link">
-                  não tenho cadastro
-                </Link>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </main>
+export default function SignInSide() {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      email: data.get('email'),
+      password: data.get('password'),
+    });
+  };
+
+  return (
+    <ThemeProvider theme={defaultTheme}>
+      <Grid container component="main" sx={{ height: '100vh' }}>
+        <CssBaseline />
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={7}
+          sx={{
+            backgroundImage: 'url()',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: (t) =>
+              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <Box
+            sx={{
+              my: 8,
+              mx: 4,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: '#198754' }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Login
+            </Typography>
+            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email"
+                name="email"
+                autoComplete="email"
+                autoFocus
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Senha"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Lembrar"
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2, backgroundColor: '#198754', '&:hover': { backgroundColor: '#008000' } }}
+              >
+                Entrar
+              </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Esqueceu a senha?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href="/cadastro" variant="body2">
+                    {"Não tem uma conta? Criar conta"}
+                  </Link>
+                </Grid>
+              </Grid>
+              <Copyright sx={{ mt: 5 }} />
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
+    </ThemeProvider>
   );
 }

@@ -1,80 +1,133 @@
-import Link from "next/link";
+"use client";
 
-export default function Cadastro() {
+import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+function Copyright(props: any) {
   return (
-    <main>
-      <div className="container-fluid d-flex min-vh-100">
-        <div className="row min-vw-100">
-          <div className="col-12 col-md-4 bg-light d-flex justify-content-center align-items-center">
-            <h2>Bem vindo à WA Loja!</h2>
-          </div>
-          <div className="col-12 col-md-8 d-flex justify-content-center align-items-center">
-            <form>
-              <div className="mb-3">
-                <label htmlFor="nome" className="form-label">
-                  Nome
-                </label>
-                <input
-                  type="text"
-                  className="form-control form-control-lg"
-                  id="nome"
-                  aria-describedby="nome"
-                  required
-                />
-              </div>
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+      {'Copyright © '}
+      <Link color="inherit" href="#">
+        CrowdSpark
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
 
-              <div className="mb-3">
-                <label htmlFor="email" className="form-label">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  className="form-control form-control-lg"
+const defaultTheme = createTheme();
+
+export default function SignUp() {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      email: data.get('email'),
+      password: data.get('password'),
+    });
+  };
+
+  return (
+    <ThemeProvider theme={defaultTheme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: '#198754' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Criar Conta
+          </Typography>
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  autoComplete="given-name"
+                  name="firstName"
+                  required
+                  fullWidth
+                  id="firstName"
+                  label="Primeiro Nome"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  id="lastName"
+                  label="Último Nome"
+                  name="lastName"
+                  autoComplete="family-name"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
                   id="email"
-                  aria-describedby="email"
-                  required
+                  label="Email"
+                  name="email"
+                  autoComplete="email"
                 />
-              </div>
-
-              <div className="mb-3">
-                <label htmlFor="confirmarEmail" className="form-label">
-                  Confirmar email
-                </label>
-                <input
-                  type="email"
-                  className="form-control form-control-lg"
-                  id="confirmarEmail"
-                  aria-describedby="confirmarEmail"
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
                   required
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="senha" className="form-label">
-                  Senha
-                </label>
-                <input
+                  fullWidth
+                  name="password"
+                  label="Senha"
                   type="password"
-                  className="form-control form-control-lg"
-                  id="senha"
-                  required
+                  id="password"
+                  autoComplete="new-password"
                 />
-              </div>
-
-              <div className="d-grid col-12">
-                <button type="submit" className="btn btn-success">
-                  Confirmar cadastro
-                </button>
-              </div>
-
-              <div className="text-center mt-3">
-                <Link href="/login" className="btn btn-link">
-                  já possuo cadastro
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={<Checkbox value="allowExtraEmails" color="primary" />}
+                  label="Eu quero receber inspiração, promoções de marketing e atualizações por e-mail.."
+                />
+              </Grid>
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2, backgroundColor: '#198754', '&:hover': { backgroundColor: '#008000' } }}
+            >
+              Criar
+            </Button>
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Link href="/login" variant="body2">
+                  Já tem uma conta? Faça login!
                 </Link>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </main>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
+        <Copyright sx={{ mt: 5 }} />
+      </Container>
+    </ThemeProvider>
   );
 }
