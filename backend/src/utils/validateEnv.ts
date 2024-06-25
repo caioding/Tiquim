@@ -1,6 +1,6 @@
 import { cleanEnv, host, port, str } from "envalid";
 
-function validateEnv() {
+function validate_env() {
   cleanEnv(process.env, {
     PORT: port(),
     HOST: host(),
@@ -10,4 +10,4 @@ function validateEnv() {
   });
 }
 
-export default validateEnv;
+export default validate_env;

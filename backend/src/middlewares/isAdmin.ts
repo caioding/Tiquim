@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import { TiposUsuarios } from "../resources/tipoUsuario/tipoUsuario.constants";
+import { UserType } from "../resources/userType/userType.constants";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 
-export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
-  if (req.session.tipoUsuarioID === TiposUsuarios.ADMIN) next();
+export const is_admin = (req: Request, res: Response, next: NextFunction) => {
+  if (req.session.tipo_usuario_id === UserType.ADMIN) next();
   else return res.status(StatusCodes.FORBIDDEN).json(ReasonPhrases.FORBIDDEN);
 };
 
-export const isAuth = (req: Request, res: Response, next: NextFunction) => {
-  if (req.session.tipoUsuarioID === TiposUsuarios.CLIENT) next();
+export const is_auth = (req: Request, res: Response, next: NextFunction) => {
+  if (req.session.tipo_usuario_id === UserType.CLIENT) next();
   else return res.status(StatusCodes.FORBIDDEN).json(ReasonPhrases.FORBIDDEN);
 };

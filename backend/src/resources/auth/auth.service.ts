@@ -1,24 +1,24 @@
 import { PrismaClient } from "@prisma/client";
-import { UsuarioDto } from "../usuario/usuario.types";
+import { UserDto } from "../user/user.types";
 import { LoginDto } from "./auth.types";
 import { compare } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
-export const checkCredentials = async (credentials: LoginDto): Promise<UsuarioDto | null> => {
-  const usuario = await prisma.usuario.findUnique({
+export const check_credentials = async (credentials: LoginDto): Promise<UserDto | null> => {
+  const user = await prisma.usuario.findUnique({
     where: { email: credentials.email },
   });
-  if (!usuario) return null;
-  const ok = await compare(credentials.senha, usuario.senha);
+  if (!user) return null;
+  const ok = await compare(credentials.senha, user.senha);
   if (!ok) return null;
   return {
-    id: usuario.id,
-    nome: usuario.nome,
-    email: usuario.email,
-    tipoUsuarioID: usuario.tipoUsuarioID,
-    avatarURL: usuario.avatarURL,
-    createdAt: usuario.createdAt,
-    updatedAt: usuario.updatedAt,
+    id: user.id,
+    nome: user.nome,
+    email: user.email,
+    tipo_usuario_id: user.tipo_usuario_id,
+    avatar_url: user.avatar_url,
+    created_at: user.created_at,
+    updated_at: user.updated_at,
   };
 };

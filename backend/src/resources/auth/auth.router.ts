@@ -1,11 +1,11 @@
 import { Router } from "express";
-import authController from "./auth.controller";
-import { isAuth } from "../../middlewares/isAdmin";
+import auth_controller from "./auth.controller";
+import { is_auth } from "../../middlewares/isAdmin";
 
 const router = Router();
 
-router.post("/signup", authController.signup);
-router.post("/login", authController.login);
-router.post("/logout", isAuth, authController.logout);
+router.post("/signup", auth_controller.signup);
+router.post("/login", auth_controller.login);
+router.post("/logout", is_auth, auth_controller.logout);
 
 export default router;

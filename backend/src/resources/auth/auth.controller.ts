@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { createUsuario } from "../usuario/usuario.service";
+import { create_user } from "../user/user.service";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import { checkCredentials } from "./auth.service";
+import { check_credentials } from "./auth.service";
 import { LoginDto } from "./auth.types";
-import { CreateUsuarioDto, TipoUsuario } from "../usuario/usuario.types";
+import { CreateUserDto, TypeUser } from "../user/user.types";
 
 const signup = async (req: Request, res: Response) => {
   /*
@@ -17,11 +17,11 @@ const signup = async (req: Request, res: Response) => {
   schema: { $ref: '#/definitions/Usuario' }
   }
   */
-  const usuario = req.body as CreateUsuarioDto;
-  const tipoUsuario = req.query.tipoUsuario as TipoUsuario;
+  const user = req.body as CreateUserDto;
+  const user_type = req.query.tipoUsuario as TypeUser;
   try {
-    const novoUsuario = await createUsuario(usuario, tipoUsuario);
-    res.status(StatusCodes.CREATED).json(novoUsuario);
+    const new_user = await create_user(user, user_type);
+    res.status(StatusCodes.CREATED).json(new_user);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }
@@ -40,11 +40,11 @@ const login = async (req: Request, res: Response) => {
   */
   const credentials = req.body as LoginDto;
   try {
-    const usuario = await checkCredentials(credentials);
-    if (!usuario) return res.status(StatusCodes.UNAUTHORIZED).json(ReasonPhrases.UNAUTHORIZED);
-    req.session.uid = usuario.id;
-    req.session.tipoUsuarioID = usuario.tipoUsuarioID;
-    res.status(StatusCodes.OK).json(usuario);
+    const user = await check_credentials(credentials);
+    if (!user) return res.status(StatusCodes.UNAUTHORIZED).json(ReasonPhrases.UNAUTHORIZED);
+    req.session.uid = user.id;
+    req.session.tipo_usuario_id = user.tipo_usuario_id;
+    res.status(StatusCodes.OK).json(user);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }

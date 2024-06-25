@@ -6,18 +6,18 @@ import session from "express-session";
 import swaggerUi from "swagger-ui-express";
 import swaggerFile from "./swagger-output.json";
 import router from "./router";
-import validateEnv from "./utils/validateEnv";
+import validate_env from "./utils/validateEnv";
 import setCookieLang from "./middlewares/setLangCookie";
 
 declare module "express-session" {
   interface SessionData {
     uid: string;
-    tipoUsuarioID: string;
+    tipo_usuario_id: string;
   }
 }
 
 dotenv.config();
-validateEnv();
+validate_env();
 
 const app = express();
 const PORT = process.env.PORT || 3333;

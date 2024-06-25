@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Navbar from "./compononents/Navbar";
-import BootstrapClient from "./compononents/BootstrapClient";
-import { ReactQueryClientProvider } from "./compononents/ReactQueryClient";
+import Navbar from "./components/Navbar";
+import BootstrapClient from "./components/BootstrapClient";
+import { ReactQueryClientProvider } from "./components/ReactQueryClient";
 
 export const metadata: Metadata = {
   title: "Create Next App",

@@ -1,12 +1,12 @@
 import { PrismaClient } from "@prisma/client"
-import { TiposUsuarios} from "../src/resources/tipoUsuario/tipoUsuario.constants"
+import { UserType} from "../src/resources/userType/userType.constants"
 
 const prisma = new PrismaClient();
 
 const seed = async () => {
     await prisma.tipoUsuario.createMany({ data: [
-        { id: TiposUsuarios.ADMIN, rotulo: "admin"},
-        { id: TiposUsuarios.CLIENT, rotulo: "client"}
+        { id: UserType.ADMIN, rotulo: "admin"},
+        { id: UserType.CLIENT, rotulo: "client"}
     ]})
 }
 

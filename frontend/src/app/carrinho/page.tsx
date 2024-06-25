@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import ResumoCarrinho from "../compononents/ResumoCarrinho";
-import ListagemCarrinho from "../compononents/ListagemCarrinho";
+import ResumoCarrinho from "../components/ResumoCarrinho";
+import ListagemCarrinho from "../components/ListagemCarrinho";
 import { mockItensCarrinho } from "../mocks/itensCarrinho";
 
 export default function Carrinho() {

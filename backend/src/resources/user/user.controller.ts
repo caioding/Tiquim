@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
-import { CreateUsuarioDto, TipoUsuario, UsuarioDto } from "./usuario.types";
+import { CreateUserDto, TypeUser, UserDto } from "./user.types";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import {
-  createUsuario,
-  deleteUsuario,
-  listUsuarios,
-  readUsuario,
-  updateUsuario,
-} from "./usuario.service";
+  create_user,
+  delete_user,
+  list_users,
+  read_user,
+  update_user,
+} from "./user.service";
 
 const index = async (req: Request, res: Response) => {
   /*
@@ -19,16 +19,16 @@ const index = async (req: Request, res: Response) => {
   const skip = req.query.skip ? parseInt(req.query.skip.toString()) : undefined;
   const take = req.query.take ? parseInt(req.query.take.toString()) : undefined;
   try {
-    const produtos = await listUsuarios(skip, take);
-    res.status(StatusCodes.OK).json(produtos);
+    const product = await list_users(skip, take);
+    res.status(StatusCodes.OK).json(product);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }
 };
 
 const create = async (req: Request, res: Response) => {
-  const usuario = req.body as CreateUsuarioDto;
-  const tipoUsuario = req.query.tipoUsuario as TipoUsuario;
+  const user = req.body as CreateUserDto;
+  const user_type = req.query.tipoUsuario as TypeUser;
   try {
     /*
     #swagger.summary = 'Cria um usuário novo.'
@@ -41,8 +41,8 @@ const create = async (req: Request, res: Response) => {
     schema: { $ref: '#/definitions/Usuario' }
     }
     */
-    const novoUsuario = await createUsuario(usuario, tipoUsuario);
-    res.status(StatusCodes.OK).json(novoUsuario);
+    const new_user = await create_user(user, user_type);
+    res.status(StatusCodes.OK).json(new_user);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }
@@ -58,9 +58,9 @@ const read = async (req: Request, res: Response) => {
   */
   const { id } = req.params;
   try {
-    const usuario = await readUsuario(id);
-    if (!usuario) return res.status(StatusCodes.NOT_FOUND).json(ReasonPhrases.NOT_FOUND);
-    res.status(StatusCodes.OK).json(usuario);
+    const user = await read_user(id);
+    if (!user) return res.status(StatusCodes.NOT_FOUND).json(ReasonPhrases.NOT_FOUND);
+    res.status(StatusCodes.OK).json(user);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }
@@ -79,9 +79,9 @@ const update = async (req: Request, res: Response) => {
   }
   */
   const { id } = req.params;
-  const produto = req.body as UsuarioDto;
+  const product = req.body as UserDto;
   try {
-    const updatedProduto = await updateUsuario(id, produto);
+    const updatedProduto = await update_user(id, product);
     res.status(StatusCodes.NO_CONTENT).json();
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
@@ -95,7 +95,7 @@ const remove = async (req: Request, res: Response) => {
   */
   const { id } = req.params;
   try {
-    const deletedProduto = await deleteUsuario(id);
+    const deleted_product = await delete_user(id);
     res.status(StatusCodes.NO_CONTENT).json();
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
