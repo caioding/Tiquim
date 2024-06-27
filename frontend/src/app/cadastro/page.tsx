@@ -131,6 +131,12 @@ export default function Cadastro() {
               backgroundColor: "#32a852",
               "&:hover": { backgroundColor: "#008000" },
             }}
+            sx={{
+              mt: 3,
+              mb: 2,
+              backgroundColor: "#32a852",
+              "&:hover": { backgroundColor: "#008000" },
+            }}
           >
             Criar
           </Button>
@@ -147,3 +153,4 @@ export default function Cadastro() {
     </Container>
   );
 }
+
