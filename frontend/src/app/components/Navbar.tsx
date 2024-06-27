@@ -1,7 +1,5 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -16,6 +14,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import { usePathname } from "next/navigation";
 
 interface Props {
   /**
@@ -29,6 +28,7 @@ const drawerWidth = 240;
 const navItems = ["Todas as Campanhas", "Suas Campanhas", "Mensagem", "Perfil"];
 
 export default function Navbar(props: Props) {
+  // Path for pages
   const path = usePathname();
   if (path === "/login" || path === "/cadastro") {
     return null;
@@ -56,6 +56,11 @@ export default function Navbar(props: Props) {
             </ListItemButton>
           </ListItem>
         ))}
+        <ListItem key={"Sair"} disablePadding>
+          <ListItemButton sx={{ textAlign: "center" }}>
+            <ListItemText primary={"Sair"} />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
@@ -83,14 +88,20 @@ export default function Navbar(props: Props) {
             {/* Nome do projeto */}
             Tiquim
           </Typography>
-          <Box sx={{ display: { xs: "none", sm: "block" }, color: "text.primary" }}>
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (
               <Button key={item} sx={{ color: "text.primary", textTransform: "none" }}>
                 {item}
               </Button>
             ))}
+            <Button
+              variant="contained"
+              size="small"
+              sx={{ color: "withe", textTransform: "none", backgroundColor: "black" }}
+            >
+              Sair
+            </Button>
           </Box>
-          <Button sx={{ color: "text.primary", textTransform: "none" }}>Sair</Button>
         </Toolbar>
       </AppBar>
       <nav>
