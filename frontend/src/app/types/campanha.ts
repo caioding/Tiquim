@@ -1,12 +1,9 @@
-export interface campanha {
-  id: string;
-  titulo: string;
-  descricao: string;
-  categoria: string;
-  meta: number;
-  prazo: Date;
-  logo_url: string;
-  usuario_id: string;
-  created_at: Date;
-  updated_at: Date;
+export interface Campanha {
+  id: number;
+  title: string;
+  author: string;
+  createdAt: string;
+  logoUrl: string;
+  completedPercentage: number;
+  description: string;
 }

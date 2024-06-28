@@ -7,20 +7,23 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { CardHearder } from "./CardHeader";
+import { Campanha } from "../types/campanha";
 
-export function CampanhaCard() {
-  const campanha = {
-    title: "Heading",
-    author: "John Doe",
-    createdAt: "4 Feb 2022",
-    logoUrl: "./lagarto.png",
-    completedPercentage: 40,
-    description:
-      "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-  };
+interface CampanhaCardProps {
+  campanha: Campanha;
+}
 
+export function CampanhaCard({ campanha }: CampanhaCardProps) {
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card
+      sx={{
+        maxWidth: 345,
+        height: 400,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
+    >
       <CardMedia component="img" alt={campanha.title} height="140" image={campanha.logoUrl} />
       <CardContent sx={{ m: 1.5 }}>
         <CardHearder

@@ -12,15 +12,15 @@ interface CardHearderProps {
 export function CardHearder({ title, author, createdAt, completedPercentage }: CardHearderProps) {
   return (
     <Stack direction="row" justifyContent="space-between" alignItems="center">
-      <span>
-        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+      <Box sx={{ width: "calc(100% - 60px)" }}>
+        <Typography variant="h6" noWrap sx={{ fontWeight: "bold", overflow: "hidden" }}>
           {title}
         </Typography>
 
         <Typography variant="caption" color="text.secondary" component="h2" sx={{ mb: 1.5 }}>
           {author} • {createdAt}
         </Typography>
-      </span>
+      </Box>
 
       <Box
         sx={{
@@ -28,7 +28,7 @@ export function CardHearder({ title, author, createdAt, completedPercentage }: C
           position: "relative",
           display: "flex",
           justifyContent: "center",
-          minWidth: 100,
+          minWidth: 60,
         }}
       >
         <PieChart
@@ -40,7 +40,7 @@ export function CardHearder({ title, author, createdAt, completedPercentage }: C
               ],
               innerRadius: 18,
               outerRadius: 25,
-              cx: 40,
+              cx: 20,
             },
           ]}
           width={50}
@@ -50,8 +50,8 @@ export function CardHearder({ title, author, createdAt, completedPercentage }: C
           variant="caption"
           sx={{
             position: "absolute",
-            top: "50%",
-            left: "70%",
+            top: "52%",
+            left: "50%",
             transform: "translate(-50%, -50%)",
             pointerEvents: "none",
           }}
