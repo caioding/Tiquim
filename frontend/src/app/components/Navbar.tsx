@@ -83,21 +83,36 @@ export default function Navbar(props: Props) {
           <Typography
             variant="h6"
             component="div"
-            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" }, color: "text.primary" }}
+            sx={{
+              ml: 4,
+              flexGrow: 1,
+              display: { xs: "none", sm: "block" },
+              color: "text.primary",
+              fontWeight: "bold",
+            }}
           >
             {/* Nome do projeto */}
             Tiquim
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (
-              <Button key={item} sx={{ color: "text.primary", textTransform: "none" }}>
+              <Button
+                key={item}
+                sx={{ mr: 2, color: "text.primary", textTransform: "none", fontWeight: "bold" }}
+              >
                 {item}
               </Button>
             ))}
             <Button
               variant="contained"
               size="small"
-              sx={{ color: "withe", textTransform: "none", backgroundColor: "black" }}
+              sx={{
+                mr: 4,
+                color: "withe",
+                textTransform: "none",
+                backgroundColor: "black",
+                fontWeight: "bold",
+              }}
             >
               Sair
             </Button>
