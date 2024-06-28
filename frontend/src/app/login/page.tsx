@@ -92,6 +92,7 @@ export default function Login() {
                 mb: 2,
                 backgroundColor: "#32a852",
                 "&:hover": { backgroundColor: "#008000" },
+                textTransform: "none"
               }}
             >
               Entrar
