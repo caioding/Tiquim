@@ -5,29 +5,31 @@ import { CreateUserDto, UserDto, TypeUser } from "./user.types";
 
 const prisma = new PrismaClient();
 
-export const create_user = async (
-  user: CreateUserDto,
-  user_type: TypeUser,
-): Promise<UserDto> => {
+export const create_user = async (user: CreateUserDto, user_type: TypeUser): Promise<UserDto> => {
   const rounds = parseInt(process.env.BCRYPT_ROUNDS!);
   const salt = await genSalt(rounds);
   const password = await hash(user.senha, salt);
-  return await prisma.usuario.create({
-    select: {
-      id: true,
-      nome: true,
-      email: true,
-      tipo_usuario_id: true,
-      avatar_url: true,
-      created_at: true,
-      updated_at: true,
-    },
-    data: {
-      ...user,
-      senha: password,
-      tipo_usuario_id: user_type === "ADMIN" ? UserType.ADMIN : UserType.CLIENT,
-    },
-  });
+  try {
+    const new_user = await prisma.usuario.create({
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        tipo_usuario_id: true,
+        avatar_url: true,
+        created_at: true,
+        updated_at: true,
+      },
+      data: {
+        ...user,
+        senha: password,
+        tipo_usuario_id: user_type === "ADMIN" ? UserType.ADMIN : UserType.CLIENT,
+      },
+    });
+    return new_user;
+  } catch (err) {
+    throw err;
+  }
 };
 
 export const list_users = async (skip?: number, take?: number): Promise<UserDto[]> => {

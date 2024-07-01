@@ -8,6 +8,7 @@ import swaggerFile from "./swagger-output.json";
 import router from "./router";
 import validate_env from "./utils/validateEnv";
 import setCookieLang from "./middlewares/setLangCookie";
+import cors from "cors";
 
 declare module "express-session" {
   interface SessionData {
@@ -21,6 +22,14 @@ validate_env();
 
 const app = express();
 const PORT = process.env.PORT || 3333;
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 
 app.use(cookieParser());
 app.use(

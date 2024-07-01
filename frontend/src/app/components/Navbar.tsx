@@ -7,7 +7,5 @@ export default function Navbar() {
   if (path === "/login" || path === "/cadastro") {
     return null;
   }
-  return (
-    <></>
-  );
+  return <></>;
 }

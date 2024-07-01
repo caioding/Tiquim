@@ -1,13 +1,7 @@
 import { Request, Response } from "express";
 import { CreateUserDto, TypeUser, UserDto } from "./user.types";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import {
-  create_user,
-  delete_user,
-  list_users,
-  read_user,
-  update_user,
-} from "./user.service";
+import { create_user, delete_user, list_users, read_user, update_user } from "./user.service";
 
 const index = async (req: Request, res: Response) => {
   /*
@@ -19,8 +13,8 @@ const index = async (req: Request, res: Response) => {
   const skip = req.query.skip ? parseInt(req.query.skip.toString()) : undefined;
   const take = req.query.take ? parseInt(req.query.take.toString()) : undefined;
   try {
-    const product = await list_users(skip, take);
-    res.status(StatusCodes.OK).json(product);
+    const user = await list_users(skip, take);
+    res.status(StatusCodes.OK).json(user);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }
