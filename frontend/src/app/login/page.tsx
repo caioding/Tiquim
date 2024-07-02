@@ -34,12 +34,13 @@ export default function Login() {
         md={7}
         sx={{
           backgroundImage:
-            "url(https://images.unsplash.com/photo-1719206835965-088ed79e95e2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+            "url(brenda.svg)",
           backgroundRepeat: "no-repeat",
           backgroundColor: (t) =>
             t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900],
           backgroundSize: "cover",
           backgroundPosition: "center",
+          // 551 x 366
         }}
       />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>

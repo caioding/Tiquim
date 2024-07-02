@@ -69,7 +69,7 @@ export default function Navbar(props: Props) {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <AppBar component="nav" sx={{ backgroundColor: "#32a852", boxShadow: "none" }}>
+      <AppBar component="nav" sx={{ backgroundColor: "white", boxShadow: "none" }}>
         <Toolbar>
           <IconButton
             color="primary"
@@ -112,6 +112,9 @@ export default function Navbar(props: Props) {
                 textTransform: "none",
                 backgroundColor: "black",
                 fontWeight: "bold",
+                '&:hover': {
+                  backgroundColor: "black"
+                },
               }}
             >
               Sair
