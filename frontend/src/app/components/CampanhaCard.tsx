@@ -25,7 +25,7 @@ export function CampanhaCard({ campanha }: CampanhaCardProps) {
       }}
     >
       <CardMedia component="img" alt={campanha.title} height="140" image={campanha.logoUrl} />
-      <CardContent sx={{ m: 1.5 }}>
+      <CardContent sx={{ mx: 1.5, overflow: "hidden" }}>
         <CardHearder
           title={campanha.title}
           author={campanha.author}
@@ -36,7 +36,7 @@ export function CampanhaCard({ campanha }: CampanhaCardProps) {
           {campanha.description}
         </Typography>
       </CardContent>
-      <CardActions sx={{ m: 1.5, mb: 3.5 }}>
+      <CardActions sx={{ m: 2, mb: 3.5 }}>
         <Button
           variant="contained"
           sx={{

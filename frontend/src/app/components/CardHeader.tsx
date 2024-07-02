@@ -35,8 +35,8 @@ export function CardHearder({ title, author, createdAt, completedPercentage }: C
           series={[
             {
               data: [
-                { value: completedPercentage, color: "orange" },
-                { value: 100 - completedPercentage, color: "green" },
+                { value: completedPercentage, color: "green" },
+                { value: 100 - completedPercentage, color: "white" },
               ],
               innerRadius: 18,
               outerRadius: 25,
