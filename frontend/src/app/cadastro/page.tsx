@@ -130,6 +130,7 @@ export default function Cadastro() {
               mb: 2,
               backgroundColor: "#32a852",
               "&:hover": { backgroundColor: "#008000" },
+              textTransform: "none"
             }}
           >
             Criar
@@ -147,3 +148,4 @@ export default function Cadastro() {
     </Container>
   );
 }
+
