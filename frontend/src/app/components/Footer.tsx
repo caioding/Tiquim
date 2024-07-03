@@ -99,21 +99,18 @@ export default function Footer() {
           }}
         >
           <Typography variant="body2" fontWeight={600}>
-            Product
+            Campanha
           </Typography>
-          <Link color="text.secondary" href="#">
-            Features
+          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+            Novas
           </Link>
-          <Link color="text.secondary" href="#">
-            Testimonials
+          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+            Destaques
           </Link>
-          <Link color="text.secondary" href="#">
-            Highlights
+          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+            Populares
           </Link>
-          <Link color="text.secondary" href="#">
-            Pricing
-          </Link>
-          <Link color="text.secondary" href="#">
+          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
             FAQs
           </Link>
         </Box>
@@ -125,16 +122,16 @@ export default function Footer() {
           }}
         >
           <Typography variant="body2" fontWeight={600}>
-            Company
+            Companhia
           </Typography>
-          <Link color="text.secondary" href="#">
-            About us
+          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+            Sobre nós
           </Link>
-          <Link color="text.secondary" href="#">
-            Careers
+          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+            Carreira
           </Link>
-          <Link color="text.secondary" href="#">
-            Press
+          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+            Imprensa
           </Link>
         </Box>
         <Box
@@ -145,16 +142,16 @@ export default function Footer() {
           }}
         >
           <Typography variant="body2" fontWeight={600}>
-            Legal
+            Termos Legais
           </Typography>
-          <Link color="text.secondary" href="#">
-            Terms
+          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+            Segurança
           </Link>
-          <Link color="text.secondary" href="#">
-            Privacy
+          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+            Privacidade
           </Link>
-          <Link color="text.secondary" href="#">
-            Contact
+          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+            Contato
           </Link>
         </Box>
       </Box>
