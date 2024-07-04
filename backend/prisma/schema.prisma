@@ -9,24 +9,24 @@ datasource db {
 }
 
 model Usuario {
-  id                 String              @id @default(uuid()) @db.Char(36)
-  nome               String              @db.VarChar(100)
-  email              String              @unique @db.VarChar(100)
-  senha              String              @db.VarChar(60)
-  avatar_url         String?             @db.VarChar(255)
-  tipo_usuario_id    String              @db.Char(36)
-  created_at         DateTime            @default(now()) @map("created_at")
-  updated_at         DateTime            @updatedAt @map("updated_at")
-  campanha           Campanha[]
-  contribuicao       Contribuicao[]
-  endereco           Endereco[]
-  forma_pagamento    FormaPagamento[]
-  mensagem           Mensagem[]
-  postagem           Postagem[]
-  tipo_usuario       TipoUsuario         @relation(fields: [tipo_usuario_id], references: [id])
-  usuario_recompensa UsuarioRecompensa[]
+  id                String              @id @default(uuid()) @db.Char(36)
+  nome              String              @db.VarChar(100)
+  email             String              @unique @db.VarChar(100)
+  senha             String              @db.VarChar(60)
+  avatarUrl         String?             @db.VarChar(255)
+  tipoUsuarioId     String              @db.Char(36)
+  createdAt         DateTime            @default(now()) @map("createdAt")
+  updatedAt         DateTime            @updatedAt @map("updatedAt")
+  campanha          Campanha[]
+  contribuicao      Contribuicao[]
+  endereco          Endereco[]
+  formaPagamento    FormaPagamento[]
+  mensagem          Mensagem[]
+  postagem          Postagem[]
+  tipoUsuario       TipoUsuario         @relation(fields: [tipoUsuarioId], references: [id])
+  usuarioRecompensa UsuarioRecompensa[]
 
-  @@index([tipo_usuario_id], map: "usuarios_tipo_usuario_id_fkey")
+  @@index([tipoUsuarioId], map: "usuariosTipoUsuarioId_fkey")
   @@map("usuarios")
 }
 
@@ -35,21 +35,21 @@ model TipoUsuario {
   rotulo  String    @db.Char(8)
   usuario Usuario[]
 
-  @@map("tipos_usuarios")
+  @@map("tiposUsuarios")
 }
 
 model Endereco {
-  id         String   @id @default(uuid()) @db.Char(36)
-  numero     String   @db.VarChar(5)
-  cep        String   @db.Char(8)
-  cidade     String   @db.VarChar(100)
-  uf         String   @db.Char(2)
-  usuario_id String   @db.Char(36)
-  created_at DateTime @default(now()) @map("created_at")
-  updated_at DateTime @updatedAt @map("updated_at")
-  usuario    Usuario  @relation(fields: [usuario_id], references: [id])
+  id        String   @id @default(uuid()) @db.Char(36)
+  numero    String   @db.VarChar(5)
+  cep       String   @db.Char(8)
+  cidade    String   @db.VarChar(100)
+  uf        String   @db.Char(2)
+  usuarioId String   @db.Char(36)
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
 
-  @@index([usuario_id], map: "enderecos_usuario_id_fkey")
+  @@index([usuarioId], map: "enderecosUsuarioId_fkey")
   @@map("enderecos")
 }
 
@@ -59,109 +59,110 @@ model Campanha {
   prazo        DateTime       @db.DateTime(0)
   titulo       String         @db.VarChar(50)
   descricao    String         @db.VarChar(200)
+  previa       String         @db.VarChar(50)
   categoria    String         @db.VarChar(50)
-  logo_url     String?        @db.VarChar(255)
-  usuario_id   String         @db.Char(36)
-  created_at   DateTime       @default(now()) @map("created_at")
-  updated_at   DateTime       @updatedAt @map("updated_at")
-  usuario      Usuario        @relation(fields: [usuario_id], references: [id])
+  logoUrl      String?        @db.VarChar(255)
+  usuarioId    String         @db.Char(36)
+  createdAt    DateTime       @default(now()) @map("createdAt")
+  updatedAt    DateTime       @updatedAt @map("updatedAt")
+  usuario      Usuario        @relation(fields: [usuarioId], references: [id])
   contribuicao Contribuicao[]
   mensagem     Mensagem[]
   postagem     Postagem[]
   recompensa   Recompensa[]
 
-  @@index([usuario_id], map: "campanhas_usuario_id_fkey")
+  @@index([usuarioId], map: "campanhasUsuarioId_fkey")
   @@map("campanhas")
 }
 
 model Contribuicao {
-  id              String         @id @default(uuid()) @db.Char(36)
-  valor           Decimal        @db.Decimal(10, 2)
-  usuario_id      String         @db.Char(36)
-  campanha_id     String         @db.Char(36)
-  forma_id        String         @db.Char(36)
-  created_at      DateTime       @default(now()) @map("created_at")
-  updated_at      DateTime       @updatedAt @map("updated_at")
-  campanha        Campanha       @relation(fields: [campanha_id], references: [id])
-  forma_pagamento FormaPagamento @relation(fields: [forma_id], references: [id])
-  usuario         Usuario        @relation(fields: [usuario_id], references: [id])
+  id               String         @id @default(uuid()) @db.Char(36)
+  valor            Decimal        @db.Decimal(10, 2)
+  usuarioId        String         @db.Char(36)
+  campanhaId       String         @db.Char(36)
+  formaPagamentoId String         @db.Char(36)
+  createdAt        DateTime       @default(now()) @map("createdAt")
+  updatedAt        DateTime       @updatedAt @map("updatedAt")
+  campanha         Campanha       @relation(fields: [campanhaId], references: [id])
+  formaPagamento   FormaPagamento @relation(fields: [formaPagamentoId], references: [id])
+  usuario          Usuario        @relation(fields: [usuarioId], references: [id])
 
-  @@index([campanha_id], map: "contribuicoes_campanha_id_fkey")
-  @@index([forma_id], map: "contribuicoes_forma_id_fkey")
-  @@index([usuario_id], map: "contribuicoes_usuario_id_fkey")
+  @@index([campanhaId], map: "contribuicoesCampanhaId_fkey")
+  @@index([formaPagamentoId], map: "contribuicoesFormaPagamentoId_fkey")
+  @@index([usuarioId], map: "contribuicoesUsuarioId_fkey")
   @@map("contribuicoes")
 }
 
 model FormaPagamento {
   id           String         @id @default(uuid()) @db.Char(36)
   tipo         String         @db.VarChar(10)
-  usuario_id   String         @db.Char(36)
-  created_at   DateTime       @default(now()) @map("created_at")
-  updated_at   DateTime       @updatedAt @map("updated_at")
+  usuarioId    String         @db.Char(36)
+  createdAt    DateTime       @default(now()) @map("createdAt")
+  updatedAt    DateTime       @updatedAt @map("updatedAt")
   contribuicao Contribuicao[]
-  usuario      Usuario        @relation(fields: [usuario_id], references: [id])
+  usuario      Usuario        @relation(fields: [usuarioId], references: [id])
 
-  @@index([usuario_id], map: "formas_pagamento_usuario_id_fkey")
-  @@map("formas_pagamento")
+  @@index([usuarioId], map: "formasPagamentoUsuarioId_fkey")
+  @@map("formasPagamento")
 }
 
 model Recompensa {
-  id                 String              @id @default(uuid()) @db.Char(36)
-  titulo             String              @db.VarChar(50)
-  descricao          String              @db.VarChar(100)
-  valor_minimo       Decimal             @db.Decimal(9, 2)
-  imagem_url         String?             @db.VarChar(200)
-  campanha_id        String              @db.Char(36)
-  created_at         DateTime            @default(now()) @map("created_at")
-  updated_at         DateTime            @updatedAt @map("updated_at")
-  campanha           Campanha            @relation(fields: [campanha_id], references: [id])
-  usuario_recompensa UsuarioRecompensa[]
+  id                String              @id @default(uuid()) @db.Char(36)
+  titulo            String              @db.VarChar(50)
+  descricao         String              @db.VarChar(100)
+  valorMinimo       Decimal             @db.Decimal(9, 2)
+  imagemUrl         String?             @db.VarChar(200)
+  campanhaId        String              @db.Char(36)
+  createdAt         DateTime            @default(now()) @map("createdAt")
+  updatedAt         DateTime            @updatedAt @map("updatedAt")
+  campanha          Campanha            @relation(fields: [campanhaId], references: [id])
+  usuarioRecompensa UsuarioRecompensa[]
 
-  @@index([campanha_id], map: "recompensas_campanha_id_fkey")
+  @@index([campanhaId], map: "recompensasCampanhaId_fkey")
   @@map("recompensas")
 }
 
 model UsuarioRecompensa {
-  id            String     @id @default(uuid()) @db.Char(36)
-  recompensa_id String     @db.Char(36)
-  usuario_id    String     @db.Char(36)
-  created_at    DateTime   @default(now()) @map("created_at")
-  updated_at    DateTime   @updatedAt @map("updated_at")
-  recompensa    Recompensa @relation(fields: [recompensa_id], references: [id])
-  usuario       Usuario    @relation(fields: [usuario_id], references: [id])
+  id           String     @id @default(uuid()) @db.Char(36)
+  recompensaId String     @db.Char(36)
+  usuarioId    String     @db.Char(36)
+  createdAt    DateTime   @default(now()) @map("createdAt")
+  updatedAt    DateTime   @updatedAt @map("updatedAt")
+  recompensa   Recompensa @relation(fields: [recompensaId], references: [id])
+  usuario      Usuario    @relation(fields: [usuarioId], references: [id])
 
-  @@index([recompensa_id], map: "usuarios_recompensas_recompensa_id_fkey")
-  @@index([usuario_id], map: "usuarios_recompensas_usuario_id_fkey")
-  @@map("usuarios_recompensas")
+  @@index([recompensaId], map: "usuariosRecompensasRecompensaId_fkey")
+  @@index([usuarioId], map: "usuariosRecompensasUsuarioId_fkey")
+  @@map("usuariosRecompensas")
 }
 
 model Postagem {
-  id          String   @id @default(uuid()) @db.Char(36)
-  titulo      String?  @db.VarChar(50)
-  descricao   String?  @db.VarChar(200)
-  usuario_id  String   @db.Char(36)
-  campanha_id String   @db.Char(36)
-  created_at  DateTime @default(now()) @map("created_at")
-  updated_at  DateTime @updatedAt @map("updated_at")
-  campanha    Campanha @relation(fields: [campanha_id], references: [id])
-  usuario     Usuario  @relation(fields: [usuario_id], references: [id])
+  id         String   @id @default(uuid()) @db.Char(36)
+  titulo     String?  @db.VarChar(50)
+  descricao  String?  @db.VarChar(200)
+  usuarioId  String   @db.Char(36)
+  campanhaId String   @db.Char(36)
+  createdAt  DateTime @default(now()) @map("createdAt")
+  updatedAt  DateTime @updatedAt @map("updatedAt")
+  campanha   Campanha @relation(fields: [campanhaId], references: [id])
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
 
-  @@index([campanha_id], map: "postagens_campanha_id_fkey")
-  @@index([usuario_id], map: "postagens_usuario_id_fkey")
+  @@index([campanhaId], map: "postagensCampanhaId_fkey")
+  @@index([usuarioId], map: "postagensUsuarioId_fkey")
   @@map("postagens")
 }
 
 model Mensagem {
-  id          String   @id @default(uuid()) @db.Char(36)
-  texto       String   @db.VarChar(200)
-  usuario_id  String   @db.Char(36)
-  campanha_id String   @db.Char(36)
-  created_at  DateTime @default(now()) @map("created_at")
-  updated_at  DateTime @updatedAt @map("updated_at")
-  campanha    Campanha @relation(fields: [campanha_id], references: [id])
-  usuario     Usuario  @relation(fields: [usuario_id], references: [id])
+  id         String   @id @default(uuid()) @db.Char(36)
+  texto      String   @db.VarChar(200)
+  usuarioId  String   @db.Char(36)
+  campanhaId String   @db.Char(36)
+  createdAt  DateTime @default(now()) @map("createdAt")
+  updatedAt  DateTime @updatedAt @map("updatedAt")
+  campanha   Campanha @relation(fields: [campanhaId], references: [id])
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
 
-  @@index([campanha_id], map: "mensagens_campanha_id_fkey")
-  @@index([usuario_id], map: "mensagens_usuario_id_fkey")
+  @@index([campanhaId], map: "mensagensCampanhaId_fkey")
+  @@index([usuarioId], map: "mensagensUsuarioId_fkey")
   @@map("mensagens")
 }
