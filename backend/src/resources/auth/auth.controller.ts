@@ -43,7 +43,7 @@ const login = async (req: Request, res: Response) => {
     const user = await check_credentials(credentials);
     if (!user) return res.status(StatusCodes.UNAUTHORIZED).json(ReasonPhrases.UNAUTHORIZED);
     req.session.uid = user.id;
-    req.session.tipo_usuario_id = user.tipo_usuario_id;
+    req.session.tipoUsuarioId = user.tipoUsuarioId;
     res.status(StatusCodes.OK).json(user);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);

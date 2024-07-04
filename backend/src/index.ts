@@ -13,7 +13,7 @@ import cors from "cors";
 declare module "express-session" {
   interface SessionData {
     uid: string;
-    tipo_usuario_id: string;
+    tipoUsuarioId: string;
   }
 }
 
