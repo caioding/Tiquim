@@ -20,7 +20,7 @@ services:
       - ${FRONTEND_PORT}:${FRONTEND_PORT}
   
   mysql:
-    container_name: db_crowdspark
+    container_name: db_tiquim
     image: mysql:latest
     ports:
       - ${MYSQL_PORT}:3306
