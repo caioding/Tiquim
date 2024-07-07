@@ -112,8 +112,8 @@ export default function Navbar(props: Props) {
                 textTransform: "none",
                 backgroundColor: "black",
                 fontWeight: "bold",
-                '&:hover': {
-                  backgroundColor: "black"
+                "&:hover": {
+                  backgroundColor: "black",
                 },
               }}
             >

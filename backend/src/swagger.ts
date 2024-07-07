@@ -72,6 +72,6 @@ const doc = {
     },
   },
 };
-const output_file = "./swagger-output.json";
+const outputFile = "./swagger-output.json";
 const routes = ["./src/router/index.ts"];
-swaggerAutogen()(output_file, routes, doc);
+swaggerAutogen()(outputFile, routes, doc);

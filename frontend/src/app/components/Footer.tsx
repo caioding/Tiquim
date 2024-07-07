@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import * as React from "react";
 import Box from "@mui/material/Box";
@@ -101,16 +101,16 @@ export default function Footer() {
           <Typography variant="body2" fontWeight={600}>
             Campanha
           </Typography>
-          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+          <Link color="text.secondary" href="#" sx={{ textDecoration: "none" }}>
             Novas
           </Link>
-          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+          <Link color="text.secondary" href="#" sx={{ textDecoration: "none" }}>
             Destaques
           </Link>
-          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+          <Link color="text.secondary" href="#" sx={{ textDecoration: "none" }}>
             Populares
           </Link>
-          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+          <Link color="text.secondary" href="#" sx={{ textDecoration: "none" }}>
             FAQs
           </Link>
         </Box>
@@ -124,13 +124,13 @@ export default function Footer() {
           <Typography variant="body2" fontWeight={600}>
             Companhia
           </Typography>
-          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+          <Link color="text.secondary" href="#" sx={{ textDecoration: "none" }}>
             Sobre nós
           </Link>
-          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+          <Link color="text.secondary" href="#" sx={{ textDecoration: "none" }}>
             Carreira
           </Link>
-          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+          <Link color="text.secondary" href="#" sx={{ textDecoration: "none" }}>
             Imprensa
           </Link>
         </Box>
@@ -144,13 +144,13 @@ export default function Footer() {
           <Typography variant="body2" fontWeight={600}>
             Termos Legais
           </Typography>
-          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+          <Link color="text.secondary" href="#" sx={{ textDecoration: "none" }}>
             Segurança
           </Link>
-          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+          <Link color="text.secondary" href="#" sx={{ textDecoration: "none" }}>
             Privacidade
           </Link>
-          <Link color="text.secondary" href="#" sx = {{textDecoration: "none"}}>
+          <Link color="text.secondary" href="#" sx={{ textDecoration: "none" }}>
             Contato
           </Link>
         </Box>

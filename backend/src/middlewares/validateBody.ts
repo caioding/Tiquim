@@ -2,7 +2,7 @@ import { NextFunction, Response, Request } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Schema } from "joi";
 
-const validate_body = (schema: Schema) => {
+const validateBody = (schema: Schema) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const { error } = schema.validate(req.body, {
       abortEarly: false,
@@ -12,4 +12,4 @@ const validate_body = (schema: Schema) => {
   };
 };
 
-export default validate_body;
+export default validateBody;

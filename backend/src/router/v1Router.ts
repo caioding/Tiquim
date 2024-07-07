@@ -1,15 +1,17 @@
 import { Router } from "express";
 import languageRouter from "../resources/language/language.router";
-import user_router from "../resources/user/user.router";
-import auth_router from "../resources/auth/auth.router";
+import userRouter from "../resources/user/user.router";
+import authRouter from "../resources/auth/auth.router";
 
 const router = Router();
 
 router.use("/language", // #swagger.tags = ['Language']
 languageRouter);
+
 router.use("/user", // #swagger.tags = ['Usuario']
-user_router);
+userRouter);
+
 router.use("/auth", // #swagger.tags = ['Auth']
-auth_router);
+authRouter);
 
 export default router;

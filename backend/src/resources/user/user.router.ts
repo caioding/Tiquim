@@ -1,13 +1,13 @@
 import { Router } from "express";
-import user_controller from "./user.controller";
-import { is_admin } from "../../middlewares/isAdmin";
+import userController from "./user.controller";
+import { isAdmin } from "../../middlewares/isAdmin";
 
 const router = Router();
 
-router.get("/", user_controller.index);
-router.post("/", user_controller.create);
-router.get("/:id", user_controller.read);
-router.put("/:id", is_admin, user_controller.update);
-router.delete("/:id", is_admin, user_controller.remove);
+router.get("/", userController.index);
+router.post("/", userController.create);
+router.get("/:id", userController.read);
+router.put("/:id", isAdmin, userController.update);
+router.delete("/:id", isAdmin, userController.remove);
 
 export default router;

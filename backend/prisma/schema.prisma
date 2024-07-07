@@ -13,10 +13,10 @@ model Usuario {
   nome              String              @db.VarChar(100)
   email             String              @unique @db.VarChar(100)
   senha             String              @db.VarChar(60)
-  avatarUrl         String?             @db.VarChar(255)
-  tipoUsuarioId     String              @db.Char(36)
-  createdAt         DateTime            @default(now()) @map("createdAt")
-  updatedAt         DateTime            @updatedAt @map("updatedAt")
+  avatarUrl         String?             @db.VarChar(255) @map("avatar_url")
+  tipoUsuarioId     String              @db.Char(36) @map("tipo_usuario_id")
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
   campanha          Campanha[]
   contribuicao      Contribuicao[]
   endereco          Endereco[]
@@ -35,18 +35,18 @@ model TipoUsuario {
   rotulo  String    @db.Char(8)
   usuario Usuario[]
 
-  @@map("tiposUsuarios")
+  @@map("tipos_usuarios")
 }
 
 model Endereco {
   id        String   @id @default(uuid()) @db.Char(36)
-  numero    String   @db.VarChar(5)
+  numero    String   @db.VarChar(5) 
   cep       String   @db.Char(8)
   cidade    String   @db.VarChar(100)
   uf        String   @db.Char(2)
-  usuarioId String   @db.Char(36)
-  createdAt DateTime @default(now()) @map("createdAt")
-  updatedAt DateTime @updatedAt @map("updatedAt")
+  usuarioId String   @db.Char(36) @map("usuario_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
   usuario   Usuario  @relation(fields: [usuarioId], references: [id])
 
   @@index([usuarioId], map: "enderecosUsuarioId_fkey")
@@ -61,10 +61,10 @@ model Campanha {
   descricao    String         @db.VarChar(200)
   previa       String         @db.VarChar(50)
   categoria    String         @db.VarChar(50)
-  logoUrl      String?        @db.VarChar(255)
-  usuarioId    String         @db.Char(36)
-  createdAt    DateTime       @default(now()) @map("createdAt")
-  updatedAt    DateTime       @updatedAt @map("updatedAt")
+  logoUrl      String?        @db.VarChar(255) @map("logo_url")
+  usuarioId    String         @db.Char(36) @map("usuario_id")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
   usuario      Usuario        @relation(fields: [usuarioId], references: [id])
   contribuicao Contribuicao[]
   mensagem     Mensagem[]
@@ -78,11 +78,11 @@ model Campanha {
 model Contribuicao {
   id               String         @id @default(uuid()) @db.Char(36)
   valor            Decimal        @db.Decimal(10, 2)
-  usuarioId        String         @db.Char(36)
-  campanhaId       String         @db.Char(36)
-  formaPagamentoId String         @db.Char(36)
-  createdAt        DateTime       @default(now()) @map("createdAt")
-  updatedAt        DateTime       @updatedAt @map("updatedAt")
+  usuarioId        String         @db.Char(36) @map("usuario_id")
+  campanhaId       String         @db.Char(36) @map("campanha_id")
+  formaPagamentoId String         @db.Char(36) @map("forma_pagamento_id")
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
   campanha         Campanha       @relation(fields: [campanhaId], references: [id])
   formaPagamento   FormaPagamento @relation(fields: [formaPagamentoId], references: [id])
   usuario          Usuario        @relation(fields: [usuarioId], references: [id])
@@ -96,25 +96,25 @@ model Contribuicao {
 model FormaPagamento {
   id           String         @id @default(uuid()) @db.Char(36)
   tipo         String         @db.VarChar(10)
-  usuarioId    String         @db.Char(36)
-  createdAt    DateTime       @default(now()) @map("createdAt")
-  updatedAt    DateTime       @updatedAt @map("updatedAt")
+  usuarioId    String         @db.Char(36) @map("usuario_id")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
   contribuicao Contribuicao[]
   usuario      Usuario        @relation(fields: [usuarioId], references: [id])
 
   @@index([usuarioId], map: "formasPagamentoUsuarioId_fkey")
-  @@map("formasPagamento")
+  @@map("formas_pagamento")
 }
 
 model Recompensa {
   id                String              @id @default(uuid()) @db.Char(36)
   titulo            String              @db.VarChar(50)
   descricao         String              @db.VarChar(100)
-  valorMinimo       Decimal             @db.Decimal(9, 2)
-  imagemUrl         String?             @db.VarChar(200)
-  campanhaId        String              @db.Char(36)
-  createdAt         DateTime            @default(now()) @map("createdAt")
-  updatedAt         DateTime            @updatedAt @map("updatedAt")
+  valorMinimo       Decimal             @db.Decimal(9, 2) @map("valor_minimo")
+  imagemUrl         String?             @db.VarChar(200) @map("imagem_url")
+  campanhaId        String              @db.Char(36) @map("campanha_id")
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
   campanha          Campanha            @relation(fields: [campanhaId], references: [id])
   usuarioRecompensa UsuarioRecompensa[]
 
@@ -124,26 +124,26 @@ model Recompensa {
 
 model UsuarioRecompensa {
   id           String     @id @default(uuid()) @db.Char(36)
-  recompensaId String     @db.Char(36)
-  usuarioId    String     @db.Char(36)
-  createdAt    DateTime   @default(now()) @map("createdAt")
-  updatedAt    DateTime   @updatedAt @map("updatedAt")
+  recompensaId String     @db.Char(36) @map("recompesa_id")
+  usuarioId    String     @db.Char(36) @map("usuario_id")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
   recompensa   Recompensa @relation(fields: [recompensaId], references: [id])
   usuario      Usuario    @relation(fields: [usuarioId], references: [id])
 
   @@index([recompensaId], map: "usuariosRecompensasRecompensaId_fkey")
   @@index([usuarioId], map: "usuariosRecompensasUsuarioId_fkey")
-  @@map("usuariosRecompensas")
+  @@map("usuarios_recompensas")
 }
 
 model Postagem {
   id         String   @id @default(uuid()) @db.Char(36)
   titulo     String?  @db.VarChar(50)
   descricao  String?  @db.VarChar(200)
-  usuarioId  String   @db.Char(36)
-  campanhaId String   @db.Char(36)
-  createdAt  DateTime @default(now()) @map("createdAt")
-  updatedAt  DateTime @updatedAt @map("updatedAt")
+  usuarioId  String   @db.Char(36) @map("usuario_id")
+  campanhaId String   @db.Char(36) @map("campanha_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
   campanha   Campanha @relation(fields: [campanhaId], references: [id])
   usuario    Usuario  @relation(fields: [usuarioId], references: [id])
 
@@ -155,10 +155,10 @@ model Postagem {
 model Mensagem {
   id         String   @id @default(uuid()) @db.Char(36)
   texto      String   @db.VarChar(200)
-  usuarioId  String   @db.Char(36)
-  campanhaId String   @db.Char(36)
-  createdAt  DateTime @default(now()) @map("createdAt")
-  updatedAt  DateTime @updatedAt @map("updatedAt")
+  usuarioId  String   @db.Char(36) @map("usuario_id")
+  campanhaId String   @db.Char(36) @map("campanha_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
   campanha   Campanha @relation(fields: [campanhaId], references: [id])
   usuario    Usuario  @relation(fields: [usuarioId], references: [id])
 
