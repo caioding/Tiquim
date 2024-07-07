@@ -1,7 +1,7 @@
 import { PrismaClient, Usuario } from "@prisma/client";
 import { genSalt, hash } from "bcryptjs";
 import { UserType } from "../userType/userType.constants";
-import { CreateUserDto, UserDto, TypeUser } from "./user.types";
+import { CreateUserDto, UserDto, TypeUser, UpdateUserDto } from "./user.types";
 
 const prisma = new PrismaClient();
 
@@ -63,7 +63,7 @@ export const readUser = async (id: string): Promise<UserDto | null> => {
   });
 };
 
-export const updateUser = async (id: string, user: UserDto): Promise<Usuario | null> => {
+export const updateUser = async (id: string, user: UpdateUserDto): Promise<Usuario | null> => {
   return await prisma.usuario.update({ where: { id }, data: user });
 };
 

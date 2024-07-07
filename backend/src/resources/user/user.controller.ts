@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import { CreateUserDto, TypeUser, UserDto } from "./user.types";
+import { CreateUserDto, TypeUser, UpdateUserDto, UserDto } from "./user.types";
 import { createUser, deleteUser, listUsers, readUser, updateUser } from "./user.service";
 
 const index = async (req: Request, res: Response) => {
@@ -73,9 +73,9 @@ const update = async (req: Request, res: Response) => {
   }
   */
   const { id } = req.params;
-  const product = req.body as UserDto;
+  const product = req.body as UpdateUserDto;
   try {
-    const updatedProduto = await updateUser(id, product);
+    const updatedProduct = await updateUser(id, product);
     res.status(StatusCodes.NO_CONTENT).json();
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
