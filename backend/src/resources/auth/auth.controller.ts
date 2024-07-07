@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { create_user } from "../user/user.service";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import { check_credentials } from "./auth.service";
+import { checkCredentials } from "./auth.service";
 import { LoginDto } from "./auth.types";
 import { CreateUserDto, TypeUser } from "../user/user.types";
+import { createUser } from "../user/user.service";
 
 const signup = async (req: Request, res: Response) => {
   /*
@@ -18,10 +18,10 @@ const signup = async (req: Request, res: Response) => {
   }
   */
   const user = req.body as CreateUserDto;
-  const user_type = req.query.tipoUsuario as TypeUser;
+  const userType = req.query.tipoUsuario as TypeUser;
   try {
-    const new_user = await create_user(user, user_type);
-    res.status(StatusCodes.CREATED).json(new_user);
+    const newUser = await createUser(user, userType);
+    res.status(StatusCodes.CREATED).json(newUser);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }
@@ -40,7 +40,7 @@ const login = async (req: Request, res: Response) => {
   */
   const credentials = req.body as LoginDto;
   try {
-    const user = await check_credentials(credentials);
+    const user = await checkCredentials(credentials);
     if (!user) return res.status(StatusCodes.UNAUTHORIZED).json(ReasonPhrases.UNAUTHORIZED);
     req.session.uid = user.id;
     req.session.tipoUsuarioId = user.tipoUsuarioId;

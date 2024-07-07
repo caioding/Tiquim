@@ -5,12 +5,12 @@ import { CreateUserDto, UserDto, TypeUser } from "./user.types";
 
 const prisma = new PrismaClient();
 
-export const create_user = async (user: CreateUserDto, user_type: TypeUser): Promise<UserDto> => {
+export const createUser = async (user: CreateUserDto, userType: TypeUser): Promise<UserDto> => {
   const rounds = parseInt(process.env.BCRYPT_ROUNDS!);
   const salt = await genSalt(rounds);
   const password = await hash(user.senha, salt);
   try {
-    const new_user = await prisma.usuario.create({
+    const newUser = await prisma.usuario.create({
       select: {
         id: true,
         nome: true,
@@ -23,16 +23,16 @@ export const create_user = async (user: CreateUserDto, user_type: TypeUser): Pro
       data: {
         ...user,
         senha: password,
-        tipoUsuarioId: user_type === "ADMIN" ? UserType.ADMIN : UserType.CLIENT,
+        tipoUsuarioId: userType === "ADMIN" ? UserType.ADMIN : UserType.CLIENT,
       },
     });
-    return new_user;
+    return newUser;
   } catch (err) {
     throw err;
   }
 };
 
-export const list_users = async (skip?: number, take?: number): Promise<UserDto[]> => {
+export const listUsers = async (skip?: number, take?: number): Promise<UserDto[]> => {
   return await prisma.usuario.findMany({
     select: {
       id: true,
@@ -48,7 +48,7 @@ export const list_users = async (skip?: number, take?: number): Promise<UserDto[
   });
 };
 
-export const read_user = async (id: string): Promise<UserDto | null> => {
+export const readUser = async (id: string): Promise<UserDto | null> => {
   return await prisma.usuario.findUnique({
     select: {
       id: true,
@@ -63,10 +63,10 @@ export const read_user = async (id: string): Promise<UserDto | null> => {
   });
 };
 
-export const update_user = async (id: string, user: UserDto): Promise<Usuario | null> => {
+export const updateUser = async (id: string, user: UserDto): Promise<Usuario | null> => {
   return await prisma.usuario.update({ where: { id }, data: user });
 };
 
-export const delete_user = async (id: string): Promise<Usuario> => {
+export const deleteUser = async (id: string): Promise<Usuario> => {
   return await prisma.usuario.delete({ where: { id } });
 };

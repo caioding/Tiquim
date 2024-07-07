@@ -4,11 +4,11 @@ import cookieParser from "cookie-parser";
 import { v4 as uuidv4 } from "uuid";
 import session from "express-session";
 import swaggerUi from "swagger-ui-express";
+import cors from "cors";
 import swaggerFile from "./swagger-output.json";
 import router from "./router";
-import validate_env from "./utils/validateEnv";
+import validateEnv from "./utils/validateEnv";
 import setCookieLang from "./middlewares/setLangCookie";
-import cors from "cors";
 
 declare module "express-session" {
   interface SessionData {
@@ -18,7 +18,7 @@ declare module "express-session" {
 }
 
 dotenv.config();
-validate_env();
+validateEnv();
 
 const app = express();
 const PORT = process.env.PORT || 3333;
