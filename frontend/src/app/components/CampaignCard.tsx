@@ -9,6 +9,8 @@ import Typography from "@mui/material/Typography";
 import { CardHearder } from "./CardHeader";
 import { Campaign } from "../types/campaign";
 import { useRouter } from "next/navigation";
+import users from "../mocks/user";
+import contributions from "../mocks/contribution";
 
 interface CampaignCardProps {
   campaign: Campaign;
@@ -26,6 +28,17 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
   const router = useRouter();
 
   const datetime: string = campaign.createdAt.toLocaleString("pt-BR", TIME_FORMAT);
+
+  const user = users.find((element) => element.id == campaign.userId)!;
+
+  const listOfContributions = contributions.filter((element) => element.campaignId == campaign.id)!;
+
+  const totalContributions = listOfContributions.reduce(
+    (sum, contribution) => sum + contribution.amount,
+    0,
+  );
+
+  const completedPercentage = (totalContributions / campaign.goal) * 100;
 
   const openCampaignDetails = (idCampaign: string) => {
     router.push(`/campaign/${idCampaign}`);
@@ -51,9 +64,9 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
       <CardContent sx={{ mx: 1.5, overflow: "hidden" }}>
         <CardHearder
           title={campaign.title}
-          author={campaign.author}
+          author={user.name}
           createdAt={datetime}
-          completedPercentage={campaign.completedPercentage}
+          completedPercentage={completedPercentage}
         />
         <Typography variant="body2" color="text.secondary">
           {campaign.preview}

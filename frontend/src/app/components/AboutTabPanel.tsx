@@ -3,6 +3,7 @@ import React from "react";
 import { Box, CssBaseline, Grid, Typography } from "@mui/material";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { Campaign } from "../types/campaign";
+import contributions from "../mocks/contribution";
 
 interface TabPanelProps {
   campaign: Campaign;
@@ -12,6 +13,15 @@ interface TabPanelProps {
 
 export function AboutTabPanel(props: TabPanelProps) {
   const { campaign, value, index, ...other } = props;
+
+  const listOfContributions = contributions.filter((element) => element.campaignId == campaign.id)!;
+
+  const totalContributions = listOfContributions.reduce(
+    (sum, contribution) => sum + contribution.amount,
+    0,
+  );
+
+  const completedPercentage = (totalContributions / campaign.goal) * 100;
 
   return (
     <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`} {...other}>
@@ -45,11 +55,11 @@ export function AboutTabPanel(props: TabPanelProps) {
               series={[
                 {
                   data: [
-                    { label: "Alcançado", value: campaign.completedPercentage, color: "green" },
+                    { label: "Alcançado", value: completedPercentage, color: "green" },
                     {
                       label: "Restante",
-                      value: 100 - campaign.completedPercentage,
-                      color: "white",
+                      value: 100 - completedPercentage,
+                      color: "#D1FFBD",
                     },
                   ],
                   innerRadius: 100,
@@ -70,7 +80,7 @@ export function AboutTabPanel(props: TabPanelProps) {
                 pointerEvents: "none",
               }}
             >
-              {campaign.completedPercentage}%
+              {Math.floor(completedPercentage)}%
             </Typography>
           </Grid>
         </Grid>

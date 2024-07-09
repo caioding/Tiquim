@@ -84,6 +84,7 @@ export default function Campanha() {
             sx={{
               my: 8,
               mx: 4,
+              mt: { xs: 0 },
               ml: { xs: 0, sm: 6, md: 10 },
             }}
           >
@@ -96,7 +97,7 @@ export default function Campanha() {
             </Typography>
 
             <Typography variant="body1" sx={{ color: "#828282", mt: 6 }}>
-              Por {campaign.preview}
+              {campaign.preview}
             </Typography>
           </Box>
           <Button
