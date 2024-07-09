@@ -18,7 +18,7 @@ export function CardHearder({ title, author, createdAt, completedPercentage }: C
         </Typography>
 
         <Typography variant="caption" color="text.secondary" component="h2" sx={{ mb: 1.5 }}>
-          {author} • {createdAt}
+          {author} • Criado em {createdAt.toString()}
         </Typography>
       </Box>
 

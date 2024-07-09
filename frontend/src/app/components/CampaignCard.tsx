@@ -7,13 +7,35 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { CardHearder } from "./CardHeader";
-import { Campanha } from "../types/campanha";
+import { Campaign } from "../types/campaign";
+import { useRouter } from "next/navigation";
 
-interface CampanhaCardProps {
-  campanha: Campanha;
+interface CampaignCardProps {
+  campaign: Campaign;
 }
 
-export function CampanhaCard({ campanha }: CampanhaCardProps) {
+const TIME_FORMAT: Intl.DateTimeFormatOptions = {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+  timeZone: "America/Manaus",
+  hour12: false,
+};
+
+export function CampaignCard({ campaign }: CampaignCardProps) {
+  const router = useRouter();
+
+  const datetime: string = campaign.createdAt.toLocaleString("pt-BR", TIME_FORMAT);
+
+  const openCampaignDetails = (idCampaign: string) => {
+    router.push(`/campaign/${idCampaign}`);
+  };
+
+  const handleDonateToCampaign = (e: React.SyntheticEvent) => {
+    // TODO: ir para a página de doação
+    e.stopPropagation();
+  };
+
   return (
     <Card
       sx={{
@@ -23,17 +45,18 @@ export function CampanhaCard({ campanha }: CampanhaCardProps) {
         flexDirection: "column",
         justifyContent: "space-between",
       }}
+      onClick={() => openCampaignDetails(campaign.id)}
     >
-      <CardMedia component="img" alt={campanha.title} height="140" image={campanha.logoUrl} />
+      <CardMedia component="img" alt={campaign.title} height="140" image={campaign.imageUrl} />
       <CardContent sx={{ mx: 1.5, overflow: "hidden" }}>
         <CardHearder
-          title={campanha.title}
-          author={campanha.author}
-          createdAt={campanha.createdAt}
-          completedPercentage={campanha.completedPercentage}
+          title={campaign.title}
+          author={campaign.author}
+          createdAt={datetime}
+          completedPercentage={campaign.completedPercentage}
         />
         <Typography variant="body2" color="text.secondary">
-          {campanha.description}
+          {campaign.preview}
         </Typography>
       </CardContent>
       <CardActions sx={{ m: 2, mb: 3.5 }}>
@@ -45,6 +68,7 @@ export function CampanhaCard({ campanha }: CampanhaCardProps) {
             textTransform: "none",
             "&:hover": { backgroundColor: "#008000" },
           }}
+          onClick={handleDonateToCampaign}
         >
           Doar
         </Button>

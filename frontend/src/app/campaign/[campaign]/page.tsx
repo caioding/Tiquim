@@ -1,5 +1,6 @@
 "use client";
 import { AboutTabPanel } from "@/app/components/AboutTabPanel";
+import campaigns from "@/app/mocks/campaigns";
 import {
   Box,
   Button,
@@ -39,24 +40,23 @@ function CustomTabPanel(props: TabPanelProps) {
 export default function Campanha() {
   const params = useParams();
 
-  // const idCampanha = params.campanha as string;
-
   const [tabValue, setTabValue] = useState(0);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
+  const idCampaign = params.campaign as string;
 
-  const mock = {
-    id: 2,
-    title: "Apoio à Educação Infantil",
-    author: "Maria Souza",
-    createdAt: "15 Fev 2024",
-    logoUrl: "./lagarto.png",
-    completedPercentage: 60,
-    description:
-      "Projeto para fornecer material escolar e apoio educacional para crianças de baixa renda.",
-    category: "Educação",
+  const campaign = campaigns.find((element) => element.id == idCampaign)!;
+
+  if (!campaign)
+    return (
+      <Container sx={{ width: "80%" }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+          Não há detalhes disponíveis para esta campanha no momento.
+        </Typography>
+      </Container>
+    );
+
+  const handleTabChange = (e: React.SyntheticEvent, newValue: number) => {
+    setTabValue(newValue);
   };
 
   return (
@@ -84,49 +84,48 @@ export default function Campanha() {
             sx={{
               my: 8,
               mx: 4,
-              ml: { xs: 0, sm: 2, md: 10 },
+              ml: { xs: 0, sm: 6, md: 10 },
             }}
           >
             <Chip
-              label={mock.category}
+              label={campaign.category}
               sx={{ backgroundColor: "#32A852", color: "white", mb: 3 }}
             />
             <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-              {mock.title}
+              {campaign.title}
             </Typography>
 
             <Typography variant="body1" sx={{ color: "#828282", mt: 6 }}>
-              Por {mock.description}
+              Por {campaign.preview}
             </Typography>
-
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{
-                mt: 3,
-                mb: 2,
-                backgroundColor: "#32a852",
-                "&:hover": { backgroundColor: "#008000" },
-                textTransform: "none",
-              }}
-            >
-              Doar
-            </Button>
           </Box>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              width: { xs: "70%", md: "80%" },
+              mt: { xs: 0, sm: 2, md: 3 },
+              ml: { xs: 0, sm: 6, md: 10 },
+              backgroundColor: "#32a852",
+              "&:hover": { backgroundColor: "#008000" },
+              textTransform: "none",
+            }}
+          >
+            Doar
+          </Button>
         </Grid>
       </Grid>
 
       <Box sx={{ width: "100%", mt: 5 }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs value={tabValue} onChange={handleChange}>
+          <Tabs value={tabValue} onChange={handleTabChange}>
             <Tab label="Sobre" />
             <Tab label="Atualizações" />
             <Tab label="Comentários" />
             <Tab label="Apoiadores" />
           </Tabs>
         </Box>
-        <AboutTabPanel campanha={mock} value={tabValue} index={0} />
+        <AboutTabPanel campaign={campaign} value={tabValue} index={0} />
         <CustomTabPanel value={tabValue} index={1}>
           Item Two
         </CustomTabPanel>

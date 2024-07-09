@@ -2,8 +2,8 @@
 import React from "react";
 import { ListagemHeader } from "./components/ListagemHeader";
 import { Box, Container } from "@mui/material";
-import { CampanhaCard } from "./components/CampanhaCard";
-import campanhas from "./mocks/campanhas";
+import { CampaignCard } from "./components/CampaignCard";
+import campaigns from "./mocks/campaigns";
 
 export default function Campanhas() {
   return (
@@ -20,8 +20,8 @@ export default function Campanhas() {
         gap={4}
         p={2}
       >
-        {campanhas.map((campanha) => (
-          <CampanhaCard key={campanha.id} campanha={campanha} />
+        {campaigns.map((campaign) => (
+          <CampaignCard key={campaign.id} campaign={campaign} />
         ))}
       </Box>
     </Container>
