@@ -18,7 +18,7 @@ const signup = async (req: Request, res: Response) => {
   }
   */
   const user = req.body as CreateUserDto;
-  const userType = req.query.tipoUsuario as TypeUser;
+  const userType = req.query.userType as TypeUser;
   try {
     const newUser = await createUser(user, userType);
     res.status(StatusCodes.CREATED).json(newUser);
@@ -43,7 +43,7 @@ const login = async (req: Request, res: Response) => {
     const user = await checkCredentials(credentials);
     if (!user) return res.status(StatusCodes.UNAUTHORIZED).json(ReasonPhrases.UNAUTHORIZED);
     req.session.uid = user.id;
-    req.session.tipoUsuarioId = user.tipoUsuarioId;
+    req.session.userTypeId = user.userTypeId;
     res.status(StatusCodes.OK).json(user);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);

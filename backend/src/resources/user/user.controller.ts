@@ -22,7 +22,7 @@ const index = async (req: Request, res: Response) => {
 
 const create = async (req: Request, res: Response) => {
   const user = req.body as CreateUserDto;
-  const userType = req.query.tipoUsuario as TypeUser;
+  const userType = req.query.userType as TypeUser;
   try {
     /*
     #swagger.summary = 'Cria um usuário novo.'

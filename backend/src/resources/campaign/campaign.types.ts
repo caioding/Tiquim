@@ -1,8 +1,8 @@
-import { Campanha } from "@prisma/client";
+import { Campaign } from "@prisma/client";
 
 export type CreateCampaignDto = Pick<
-  Campanha,
-  "meta" | "prazo" | "titulo" | "descricao" | "previa" | "categoria" | "logoUrl"
+  Campaign,
+  "goal" | "deadline" | "title" | "description" | "preview" | "category" | "imageUrl"
 >;
-export type UpdateCampaignDto = Pick<Campanha, "titulo" | "descricao" | "previa" | "logoUrl">;
-export type CampaignDto = Campanha;
+export type UpdateCampaignDto = Pick<Campaign, "title" | "description" | "preview" | "imageUrl">;
+export type CampaignDto = Campaign;

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Campanha, PrismaClient } from "@prisma/client";
+import { Campaign, PrismaClient } from "@prisma/client";
 import { CampaignDto, CreateCampaignDto, UpdateCampaignDto } from "./campaign.types";
 
 const prisma = new PrismaClient();
@@ -9,39 +9,39 @@ export const createCampaign = async (
   req: Request,
 ): Promise<CampaignDto> => {
   const userId = req.session.uid as string;
-  return await prisma.campanha.create({
+  return await prisma.campaign.create({
     select: {
       id: true,
-      meta: true,
-      prazo: true,
-      titulo: true,
-      descricao: true,
-      previa: true,
-      categoria: true,
-      logoUrl: true,
-      usuarioId: true,
+      goal: true,
+      deadline: true,
+      title: true,
+      description: true,
+      preview: true,
+      category: true,
+      imageUrl: true,
+      userId: true,
       createdAt: true,
       updatedAt: true,
     },
     data: {
       ...campaign,
-      usuarioId: userId,
+      userId: userId,
     },
   });
 };
 
 export const listCampaigns = async (skip?: number, take?: number): Promise<CampaignDto[]> => {
-  return await prisma.campanha.findMany({
+  return await prisma.campaign.findMany({
     select: {
       id: true,
-      meta: true,
-      prazo: true,
-      titulo: true,
-      descricao: true,
-      previa: true,
-      categoria: true,
-      logoUrl: true,
-      usuarioId: true,
+      goal: true,
+      deadline: true,
+      title: true,
+      description: true,
+      preview: true,
+      category: true,
+      imageUrl: true,
+      userId: true,
       createdAt: true,
       updatedAt: true,
     },
@@ -51,17 +51,17 @@ export const listCampaigns = async (skip?: number, take?: number): Promise<Campa
 };
 
 export const readCampaign = async (id: string): Promise<CampaignDto | null> => {
-  return await prisma.campanha.findUnique({
+  return await prisma.campaign.findUnique({
     select: {
       id: true,
-      meta: true,
-      prazo: true,
-      titulo: true,
-      descricao: true,
-      previa: true,
-      categoria: true,
-      logoUrl: true,
-      usuarioId: true,
+      goal: true,
+      deadline: true,
+      title: true,
+      description: true,
+      preview: true,
+      category: true,
+      imageUrl: true,
+      userId: true,
       createdAt: true,
       updatedAt: true,
     },
@@ -73,9 +73,9 @@ export const updateCampaign = async (
   id: string,
   updatedCampaign: UpdateCampaignDto,
   req: Request,
-): Promise<Campanha | null> => {
-  const campaign = await prisma.campanha.findUnique({
-    select: { usuarioId: true },
+): Promise<Campaign | null> => {
+  const campaign = await prisma.campaign.findUnique({
+    select: { userId: true },
     where: { id },
   });
 
@@ -83,19 +83,19 @@ export const updateCampaign = async (
     throw new Error("Campanha não encontrada");
   }
 
-  if (campaign.usuarioId !== req.session.uid) {
+  if (campaign.userId !== req.session.uid) {
     throw new Error("Usuário não autorizado a atualizar esta campanha");
   }
 
-  return await prisma.campanha.update({
+  return await prisma.campaign.update({
     where: { id },
     data: updatedCampaign,
   });
 };
 
-export const deleteCampaign = async (id: string, req: Request): Promise<Campanha> => {
-  const campaign = await prisma.campanha.findUnique({
-    select: { usuarioId: true },
+export const deleteCampaign = async (id: string, req: Request): Promise<Campaign> => {
+  const campaign = await prisma.campaign.findUnique({
+    select: { userId: true },
     where: { id },
   });
 
@@ -103,8 +103,8 @@ export const deleteCampaign = async (id: string, req: Request): Promise<Campanha
     throw new Error("Campanha não encontrada");
   }
 
-  if (campaign.usuarioId !== req.session.uid) {
+  if (campaign.userId !== req.session.uid) {
     throw new Error("Usuário não autorizado a remover esta campanha");
   }
-  return await prisma.campanha.delete({ where: { id } });
+  return await prisma.campaign.delete({ where: { id } });
 };
