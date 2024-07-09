@@ -18,7 +18,7 @@ export function CardHearder({ title, author, createdAt, completedPercentage }: C
         </Typography>
 
         <Typography variant="caption" color="text.secondary" component="h2" sx={{ mb: 1.5 }}>
-          {author} • {createdAt}
+          {author} • Criado em {createdAt.toString()}
         </Typography>
       </Box>
 
@@ -36,7 +36,7 @@ export function CardHearder({ title, author, createdAt, completedPercentage }: C
             {
               data: [
                 { value: completedPercentage, color: "green" },
-                { value: 100 - completedPercentage, color: "white" },
+                { value: 100 - completedPercentage, color: "#D1FFBD" },
               ],
               innerRadius: 18,
               outerRadius: 25,
@@ -56,7 +56,7 @@ export function CardHearder({ title, author, createdAt, completedPercentage }: C
             pointerEvents: "none",
           }}
         >
-          {completedPercentage}%
+          {Math.floor(completedPercentage)}%
         </Typography>
       </Box>
     </Stack>
