@@ -2,9 +2,11 @@ version: '3.8'
 
 services:
   backend:
-    container_name: backend_crowdspark
+    container_name: backend_tiquim
     build:
       context: ./backend
+    volumes:
+      - ./backend:/app
     ports:
       - ${BACKEND_PORT}:${BACKEND_PORT}
     env_file:
@@ -13,9 +15,11 @@ services:
       - mysql
 
   frontend:
-    container_name: frontend_crowdspark
+    container_name: frontend_tiquim
     build: 
       context: ./frontend
+    volumes:
+      - ./frontend:/app
     ports:
       - ${FRONTEND_PORT}:${FRONTEND_PORT}
   
@@ -32,7 +36,7 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
 
   bd_gui:
-    container_name: bd_gui_crowdspark
+    container_name: bd_gui_tiquim
     image: phpmyadmin:latest
     ports:
       - ${BD_GUI_PORT}:80

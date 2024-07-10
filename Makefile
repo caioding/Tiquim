@@ -15,10 +15,10 @@ down-volume:
 	docker compose down --rmi local -v
 
 migrate:
-	docker exec -it backend_crowdspark npx prisma migrate dev
+	docker exec -it backend_tiquim npx prisma migrate dev
 
 seed:
-	docker exec -it backend_crowdspark npx prisma db seed
+	docker exec -it backend_tiquim npx prisma db seed
 
 swagger:
-	docker exec -it backend_crowdspark npx ts-node src/swagger.ts
+	docker exec -it backend_tiquim npx ts-node src/swagger.ts

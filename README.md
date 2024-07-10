@@ -1,4 +1,4 @@
-# hands-on-t3-03-crowdspark
+# hands-on-t3-03-tiquim
 
 ## Pré-requisitos
 1. make 
