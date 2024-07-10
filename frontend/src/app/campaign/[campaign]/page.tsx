@@ -1,5 +1,6 @@
 "use client";
 import { AboutTabPanel } from "@/app/components/AboutTabPanel";
+import { useCampaignDetails } from "@/app/hooks/useCampaignDetails";
 import campaigns from "@/app/mocks/campaigns";
 import {
   Box,
@@ -44,9 +45,29 @@ export default function Campanha() {
 
   const idCampaign = params.campaign as string;
 
-  const campaign = campaigns.find((element) => element.id == idCampaign)!;
+  const { campaign, isPending, isError } = useCampaignDetails(idCampaign);
 
-  if (!campaign)
+  if (isPending) {
+    return (
+      <Container sx={{ width: "80%" }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+          Carregando...
+        </Typography>
+      </Container>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Container sx={{ width: "80%" }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+          Ocorreu um erro ao carregar os produtos.
+        </Typography>
+      </Container>
+    );
+  }
+
+  if (!campaign) {
     return (
       <Container sx={{ width: "80%" }}>
         <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
@@ -54,6 +75,7 @@ export default function Campanha() {
         </Typography>
       </Container>
     );
+  }
 
   const handleTabChange = (e: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);

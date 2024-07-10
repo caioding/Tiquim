@@ -1,11 +1,43 @@
 "use client";
 import React from "react";
 import { ListagemHeader } from "./components/ListagemHeader";
-import { Box, Container } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import { CampaignCard } from "./components/CampaignCard";
-import campaigns from "./mocks/campaigns";
+import { useCampaigns } from "./hooks/useCampaigns";
 
 export default function Campanhas() {
+  const { campaigns, isPending, isError } = useCampaigns();
+
+  if (isPending) {
+    return (
+      <Container sx={{ width: "80%" }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+          Carregando...
+        </Typography>
+      </Container>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Container sx={{ width: "80%" }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+          Ocorreu um erro ao carregar os produtos.
+        </Typography>
+      </Container>
+    );
+  }
+
+  if (!campaigns) {
+    return (
+      <Container sx={{ width: "80%" }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+          Não há campanhas disponíveis no momento.
+        </Typography>
+      </Container>
+    );
+  }
+
   return (
     <Container>
       <ListagemHeader />
