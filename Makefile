@@ -2,6 +2,10 @@ copy:
 	cp .env.example .env
 	cp backend/.env.example backend/.env
 
+install:
+	cd backend && npm install
+	cd frontend && npm install
+	
 up:
 	docker compose up 
 
