@@ -4,9 +4,9 @@ import { UserType} from "../src/resources/userType/userType.constants"
 const prisma = new PrismaClient();
 
 const seed = async () => {
-    await prisma.tipoUsuario.createMany({ data: [
-        { id: UserType.ADMIN, rotulo: "admin"},
-        { id: UserType.CLIENT, rotulo: "client"}
+    await prisma.userType.createMany({ data: [
+        { id: UserType.ADMIN, label: "admin"},
+        { id: UserType.CLIENT, label: "client"}
     ]})
 }
 

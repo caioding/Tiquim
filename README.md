@@ -1,4 +1,4 @@
-# hands-on-t3-03-crowdspark
+# hands-on-t3-03-tiquim
 
 ## Pré-requisitos
 1. make 
@@ -13,17 +13,12 @@
 make copy
 ```
 
-## Passo 2: Iniciar a aplicação em docker
+## Passo 2: Instalar as dependências do projeto
+```bash
+make install
+```
+
+## Passo 3: Iniciar a aplicação em docker
 ```bash
 make up
-```
-
-## Passo 3: Instanciar banco de dados
-```bash
-make migrate
-```
-
-## Passo 4: Criar tipos de ID
-```bash
-make seed
 ```

@@ -13,7 +13,7 @@ import setCookieLang from "./middlewares/setLangCookie";
 declare module "express-session" {
   interface SessionData {
     uid: string;
-    tipoUsuarioId: string;
+    userTypeId: string;
   }
 }
 
