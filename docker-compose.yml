@@ -11,6 +11,8 @@ services:
       - ${BACKEND_PORT}:${BACKEND_PORT}
     env_file:
       - ./backend/.env
+    restart:
+      on-failure
     depends_on:
       - mysql
 

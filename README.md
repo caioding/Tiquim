@@ -22,3 +22,8 @@ make install
 ```bash
 make up
 ```
+
+## Passo 4: Criar tipos de ID
+```bash
+make seed
+```

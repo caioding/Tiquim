@@ -12,4 +12,4 @@ RUN npx prisma generate
 
 EXPOSE ${BACKEND_PORT}
 
-CMD ["npm", "start"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npm start"]
