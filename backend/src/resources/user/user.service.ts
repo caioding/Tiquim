@@ -6,11 +6,9 @@ import { CreateUserDto, UserDto, TypeUser, UpdateUserDto } from "./user.types";
 const prisma = new PrismaClient();
 
 export const createUser = async (user: CreateUserDto, userType: TypeUser): Promise<UserDto> => {
-  console.log("a senha:",user.password);
   const rounds = parseInt(process.env.BCRYPT_ROUNDS!);
   const salt = await genSalt(rounds);
   const password = await hash(user.password, salt);
-  console.log("password coded:",password);
   try {
     const newUser = await prisma.user.create({
       select: {
@@ -30,7 +28,6 @@ export const createUser = async (user: CreateUserDto, userType: TypeUser): Promi
     });
     return newUser;
   } catch (err) {
-    console.log("erro na createUser em service:",err);
     throw err;
   }
 };
