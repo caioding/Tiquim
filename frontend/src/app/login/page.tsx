@@ -26,10 +26,6 @@ export default function Login() {
       email: data.get("email") as string,
       password: data.get("password") as string,
     };
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
 
     try {
       const response = await fetch("http://localhost:9000/v1/user/login", {
