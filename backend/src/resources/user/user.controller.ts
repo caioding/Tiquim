@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { CreateUserDto, TypeUser, UpdateUserDto, UserDto } from "./user.types";
-import { createUser, deleteUser, listUsers, readUser, updateUser } from "./user.service";
+import { createUser, deleteUser, listUsers, loginUser, readUser, updateUser } from "./user.service";
 
 const index = async (req: Request, res: Response) => {
   /*
@@ -41,7 +41,7 @@ const create = async (req: Request, res: Response) => {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }
 };
-
+ 
 const read = async (req: Request, res: Response) => {
   /*
   #swagger.summary = 'Mostra um usuário com base no ID.'
@@ -96,4 +96,25 @@ const remove = async (req: Request, res: Response) => {
   }
 };
 
-export default { index, create, read, update, remove };
+const login = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ message: "Email and password are required" });
+  }
+
+  try {
+    const user = await loginUser(email, password);
+    if (user) {
+      req.session.uid = user.id;
+      req.session.userTypeId = user.userTypeId;
+      res.status(StatusCodes.OK).json(user);
+    } else {
+      res.status(StatusCodes.UNAUTHORIZED).json({ message: "Invalid Credentials" });
+    }
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
+  }
+};
+
+export default { index, create, read, update, remove, login};

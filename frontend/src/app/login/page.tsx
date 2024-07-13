@@ -15,13 +15,37 @@ import { Copyright } from "../components/Copyright";
 import { Link, Typography } from "@mui/material";
 
 export default function Login() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get("email"),
       password: data.get("password"),
     });
+    const credentials = {
+      email: data.get("email") as string,
+      password: data.get("password") as string,
+    };
+    console.log({
+      email: data.get("email"),
+      password: data.get("password"),
+    });
+
+    try {
+      const response = await fetch("http://localhost:9000/v1/user/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      if (!response) {
+        throw new Error("Erro ao fazer login");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

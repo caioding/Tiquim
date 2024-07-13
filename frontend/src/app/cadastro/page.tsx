@@ -21,19 +21,19 @@ export default function Cadastro() {
     const data = new FormData(event.currentTarget);
 
     console.log({
-      nome: `${data.get("firstName")} ${data.get("lastName")}`,
+      name: `${data.get("firstName")} ${data.get("lastName")}`,
       email: data.get("email"),
-      senha: data.get("password"),
+      password: data.get("password"),
     });
 
     const user = {
-      nome: `${data.get("firstName")} ${data.get("lastName")}`,
+      name: `${data.get("firstName")} ${data.get("lastName")}`,
       email: data.get("email"),
-      senha: data.get("password"),
+      password: data.get("password"),
     };
 
     try {
-      const response = await fetch("http://localhost:9000/v1/user/?tipoUsuario=CLIENT", {
+      const response = await fetch("http://localhost:9000/v1/user/?userType=CLIENT", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +42,7 @@ export default function Cadastro() {
       });
 
       if (!response.ok) {
-        throw new Error("Erro ao criar usuario");
+        throw new Error("Error on Sign on a new user");
       }
 
       const result = await response.json();
