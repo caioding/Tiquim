@@ -9,7 +9,6 @@ import Typography from "@mui/material/Typography";
 import { CardHearder } from "./CardHeader";
 import { Campaign } from "../types/campaign";
 import { useRouter } from "next/navigation";
-import users from "../mocks/user";
 import contributions from "../mocks/contribution";
 import { useUser } from "../hooks/useUser";
 
@@ -28,7 +27,9 @@ const TIME_FORMAT: Intl.DateTimeFormatOptions = {
 export function CampaignCard({ campaign }: CampaignCardProps) {
   const router = useRouter();
 
-  const datetime: string = campaign.createdAt.toLocaleString("pt-BR", TIME_FORMAT);
+  const createdAt = new Date(campaign.createdAt);
+
+  const datetime: string = createdAt.toLocaleString("pt-BR", TIME_FORMAT);
 
   const { user, isPending, isError } = useUser(campaign.userId);
 
@@ -37,7 +38,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
   }
 
   if (isError) {
-    return <div>Error</div>;
+    return <div>Error loading user information</div>;
   }
 
   if (!user) {
@@ -53,6 +54,9 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
   );
 
   const completedPercentage = (totalContributions / campaign.goal) * 100;
+
+  const imageUrl =
+    campaign?.imageUrl && campaign.imageUrl.length > 0 ? campaign.imageUrl : "/placeholder.png";
 
   const openCampaignDetails = (idCampaign: string) => {
     router.push(`/campaign/${idCampaign}`);
@@ -74,7 +78,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
       }}
       onClick={() => openCampaignDetails(campaign.id)}
     >
-      <CardMedia component="img" alt={campaign.title} height="140" image={campaign.imageUrl} />
+      <CardMedia component="img" alt={campaign.title} height="140" image={imageUrl} />
       <CardContent sx={{ mx: 1.5, overflow: "hidden" }}>
         <CardHearder
           title={campaign.title}

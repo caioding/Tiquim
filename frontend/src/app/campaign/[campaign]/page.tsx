@@ -1,7 +1,6 @@
 "use client";
 import { AboutTabPanel } from "@/app/components/AboutTabPanel";
 import { useCampaignDetails } from "@/app/hooks/useCampaignDetails";
-import campaigns from "@/app/mocks/campaigns";
 import {
   Box,
   Button,
@@ -47,6 +46,9 @@ export default function Campanha() {
 
   const { campaign, isPending, isError } = useCampaignDetails(idCampaign);
 
+  const imageUrl =
+    campaign?.imageUrl && campaign.imageUrl.length > 0 ? campaign.imageUrl : "/placeholder.png";
+
   if (isPending) {
     return (
       <Container sx={{ width: "80%" }}>
@@ -61,7 +63,7 @@ export default function Campanha() {
     return (
       <Container sx={{ width: "80%" }}>
         <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
-          Ocorreu um erro ao carregar os produtos.
+          Ocorreu um erro ao carregar as informações da campanha.
         </Typography>
       </Container>
     );
@@ -92,10 +94,8 @@ export default function Campanha() {
           md={6}
           margin={0}
           sx={{
-            backgroundImage:
-              "url(https://images.unsplash.com/photo-1719206835965-088ed79e95e2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+            backgroundImage: `url(${imageUrl})`,
             backgroundRepeat: "no-repeat",
-
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

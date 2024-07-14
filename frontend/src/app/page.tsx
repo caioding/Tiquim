@@ -8,35 +8,29 @@ import { useCampaigns } from "./hooks/useCampaigns";
 export default function Campanhas() {
   const { campaigns, isPending, isError } = useCampaigns();
 
-  if (isPending) {
-    return (
-      <Container sx={{ width: "80%" }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+  const showCampaigns = () => {
+    if (isPending) {
+      return (
+        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
           Carregando...
         </Typography>
-      </Container>
-    );
-  }
-
-  if (isError) {
-    return (
-      <Container sx={{ width: "80%" }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
-          Ocorreu um erro ao carregar os produtos.
+      );
+    } else if (isError) {
+      return (
+        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
+          Ocorreu um erro ao carregar as campanhas.
         </Typography>
-      </Container>
-    );
-  }
-
-  if (!campaigns) {
-    return (
-      <Container sx={{ width: "80%" }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+      );
+    } else if (campaigns?.length == 0) {
+      return (
+        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
           Não há campanhas disponíveis no momento.
         </Typography>
-      </Container>
-    );
-  }
+      );
+    } else {
+      return campaigns?.map((campaign) => <CampaignCard key={campaign.id} campaign={campaign} />);
+    }
+  };
 
   return (
     <Container>
@@ -52,9 +46,7 @@ export default function Campanhas() {
         gap={4}
         p={2}
       >
-        {campaigns.map((campaign) => (
-          <CampaignCard key={campaign.id} campaign={campaign} />
-        ))}
+        {showCampaigns()}
       </Box>
     </Container>
   );
