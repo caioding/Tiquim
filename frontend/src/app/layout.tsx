@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import { ReactQueryClientProvider } from "./components/ReactQueryClient";
 
 export const metadata: Metadata = {
   title: "Campanhas",
@@ -15,10 +16,11 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body>
-        {" "}
-        <Navbar />
-        {children}
-        <Footer />
+        <ReactQueryClientProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </ReactQueryClientProvider>
       </body>
     </html>
   );

@@ -9,8 +9,8 @@ import Typography from "@mui/material/Typography";
 import { CardHearder } from "./CardHeader";
 import { Campaign } from "../types/campaign";
 import { useRouter } from "next/navigation";
-import users from "../mocks/user";
 import contributions from "../mocks/contribution";
+import { useUser } from "../hooks/useUser";
 
 interface CampaignCardProps {
   campaign: Campaign;
@@ -27,11 +27,26 @@ const TIME_FORMAT: Intl.DateTimeFormatOptions = {
 export function CampaignCard({ campaign }: CampaignCardProps) {
   const router = useRouter();
 
-  const datetime: string = campaign.createdAt.toLocaleString("pt-BR", TIME_FORMAT);
+  const createdAt = new Date(campaign.createdAt);
 
-  const user = users.find((element) => element.id == campaign.userId)!;
+  const datetime: string = createdAt.toLocaleString("pt-BR", TIME_FORMAT);
 
-  const listOfContributions = contributions.filter((element) => element.campaignId == campaign.id)!;
+  const { user, isPending, isError } = useUser(campaign.userId);
+
+  if (isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading user information</div>;
+  }
+
+  if (!user) {
+    return <div>User not found</div>;
+  }
+
+  const listOfContributions =
+    contributions.filter((element) => element.campaignId == campaign.id) ?? 0;
 
   const totalContributions = listOfContributions.reduce(
     (sum, contribution) => sum + contribution.amount,
@@ -39,6 +54,9 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
   );
 
   const completedPercentage = (totalContributions / campaign.goal) * 100;
+
+  const imageUrl =
+    campaign?.imageUrl && campaign.imageUrl.length > 0 ? campaign.imageUrl : "/placeholder.png";
 
   const openCampaignDetails = (idCampaign: string) => {
     router.push(`/campaign/${idCampaign}`);
@@ -60,7 +78,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
       }}
       onClick={() => openCampaignDetails(campaign.id)}
     >
-      <CardMedia component="img" alt={campaign.title} height="140" image={campaign.imageUrl} />
+      <CardMedia component="img" alt={campaign.title} height="140" image={imageUrl} />
       <CardContent sx={{ mx: 1.5, overflow: "hidden" }}>
         <CardHearder
           title={campaign.title}

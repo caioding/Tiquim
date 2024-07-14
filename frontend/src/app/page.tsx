@@ -1,11 +1,37 @@
 "use client";
 import React from "react";
 import { ListagemHeader } from "./components/ListagemHeader";
-import { Box, Container } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import { CampaignCard } from "./components/CampaignCard";
-import campaigns from "./mocks/campaigns";
+import { useCampaigns } from "./hooks/useCampaigns";
 
 export default function Campanhas() {
+  const { campaigns, isPending, isError } = useCampaigns();
+
+  const showCampaigns = () => {
+    if (isPending) {
+      return (
+        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
+          Carregando...
+        </Typography>
+      );
+    } else if (isError) {
+      return (
+        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
+          Ocorreu um erro ao carregar as campanhas.
+        </Typography>
+      );
+    } else if (campaigns?.length == 0) {
+      return (
+        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
+          Não há campanhas disponíveis no momento.
+        </Typography>
+      );
+    } else {
+      return campaigns?.map((campaign) => <CampaignCard key={campaign.id} campaign={campaign} />);
+    }
+  };
+
   return (
     <Container>
       <ListagemHeader />
@@ -20,9 +46,7 @@ export default function Campanhas() {
         gap={4}
         p={2}
       >
-        {campaigns.map((campaign) => (
-          <CampaignCard key={campaign.id} campaign={campaign} />
-        ))}
+        {showCampaigns()}
       </Box>
     </Container>
   );

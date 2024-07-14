@@ -1,6 +1,6 @@
 "use client";
 import { AboutTabPanel } from "@/app/components/AboutTabPanel";
-import campaigns from "@/app/mocks/campaigns";
+import { useCampaignDetails } from "@/app/hooks/useCampaignDetails";
 import {
   Box,
   Button,
@@ -44,9 +44,32 @@ export default function Campanha() {
 
   const idCampaign = params.campaign as string;
 
-  const campaign = campaigns.find((element) => element.id == idCampaign)!;
+  const { campaign, isPending, isError } = useCampaignDetails(idCampaign);
 
-  if (!campaign)
+  const imageUrl =
+    campaign?.imageUrl && campaign.imageUrl.length > 0 ? campaign.imageUrl : "/placeholder.png";
+
+  if (isPending) {
+    return (
+      <Container sx={{ width: "80%" }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+          Carregando...
+        </Typography>
+      </Container>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Container sx={{ width: "80%" }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+          Ocorreu um erro ao carregar as informações da campanha.
+        </Typography>
+      </Container>
+    );
+  }
+
+  if (!campaign) {
     return (
       <Container sx={{ width: "80%" }}>
         <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
@@ -54,6 +77,7 @@ export default function Campanha() {
         </Typography>
       </Container>
     );
+  }
 
   const handleTabChange = (e: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -70,10 +94,8 @@ export default function Campanha() {
           md={6}
           margin={0}
           sx={{
-            backgroundImage:
-              "url(https://images.unsplash.com/photo-1719206835965-088ed79e95e2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+            backgroundImage: `url(${imageUrl})`,
             backgroundRepeat: "no-repeat",
-
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
