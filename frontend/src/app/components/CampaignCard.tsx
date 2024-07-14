@@ -11,6 +11,7 @@ import { Campaign } from "../types/campaign";
 import { useRouter } from "next/navigation";
 import users from "../mocks/user";
 import contributions from "../mocks/contribution";
+import { useUser } from "../hooks/useUser";
 
 interface CampaignCardProps {
   campaign: Campaign;
@@ -29,9 +30,22 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
 
   const datetime: string = campaign.createdAt.toLocaleString("pt-BR", TIME_FORMAT);
 
-  const user = users.find((element) => element.id == campaign.userId)!;
+  const { user, isPending, isError } = useUser(campaign.userId);
 
-  const listOfContributions = contributions.filter((element) => element.campaignId == campaign.id)!;
+  if (isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error</div>;
+  }
+
+  if (!user) {
+    return <div>User not found</div>;
+  }
+
+  const listOfContributions =
+    contributions.filter((element) => element.campaignId == campaign.id) ?? 0;
 
   const totalContributions = listOfContributions.reduce(
     (sum, contribution) => sum + contribution.amount,
