@@ -4,6 +4,7 @@ import userRouter from "../resources/user/user.router";
 import authRouter from "../resources/auth/auth.router";
 import campaignRouter from "../resources/campaign/campaign.router"
 import paymentMethodRouter from "../resources/paymentMethod/paymentMethod.router"
+import contributionRouter from "../resources/contribution/contribution.router"
 
 const router = Router();
 
@@ -21,5 +22,8 @@ campaignRouter);
 
 router.use("/paymentMethod", // #swagger.tags = ['PaymentMethod'])
 paymentMethodRouter);
+
+router.use("/contribution", // #swagger.tags = ['Contributions'])
+    contributionRouter);
 
 export default router;

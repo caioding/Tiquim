@@ -3,7 +3,7 @@ import { CreatePaymentMethodDto } from "./paymentMethod.types";
 import {
   createPaymentMethod,
   deletePaymentMethod,
-  listPaymentMethod,
+  listPaymentMethods,
   readPaymentMethod,
   updatePaymentMethod,
 } from "./paymentMethod.service";
@@ -24,15 +24,15 @@ const index = async (req: Request, res: Response) => {
       */
     const skip = req.query.skip ? parseInt(req.query.skip.toString()) : undefined;
     const take = req.query.take ? parseInt(req.query.take.toString()) : undefined;
-    const campaigns = await listPaymentMethod(req, skip, take);
-    res.status(StatusCodes.OK).json(campaigns);
+    const paymentMethods = await listPaymentMethods(req, skip, take);
+    res.status(StatusCodes.OK).json(paymentMethods);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }
 };
 
 const create = async (req: Request, res: Response) => {
-  const campaign = req.body as CreatePaymentMethodDto;
+  const paymentMethod = req.body as CreatePaymentMethodDto;
   try {
     /*
       #swagger.summary = 'Cria um usuário novo.'
@@ -46,8 +46,8 @@ const create = async (req: Request, res: Response) => {
       }
       */
 
-    const newCampaign = await createPaymentMethod(campaign, req);
-    res.status(StatusCodes.OK).json(newCampaign);
+    const nemPaymentMethod = await createPaymentMethod(paymentMethod, req);
+    res.status(StatusCodes.OK).json(nemPaymentMethod);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }
@@ -67,9 +67,9 @@ const read = async (req: Request, res: Response) => {
       }
       */
     const { id } = req.params;
-    const campaign = await readPaymentMethod(id, req);
-    if (!campaign) return res.status(StatusCodes.NOT_FOUND).json(ReasonPhrases.NOT_FOUND);
-    res.status(StatusCodes.OK).json(campaign);
+    const paymentMethod = await readPaymentMethod(id, req);
+    if (!paymentMethod) return res.status(StatusCodes.NOT_FOUND).json(ReasonPhrases.NOT_FOUND);
+    res.status(StatusCodes.OK).json(paymentMethod);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }
@@ -88,22 +88,22 @@ const update = async (req: Request, res: Response) => {
   }
   */
   const { id } = req.params;
-  const updatedCampaign = req.body as CreatePaymentMethodDto;
+  const updatedPaymentMethod = req.body as CreatePaymentMethodDto;
 
   try {
-    const campaign = await updatePaymentMethod(id, updatedCampaign, req);
+    const paymentMethod = await updatePaymentMethod(id, updatedPaymentMethod, req);
 
-    if (!campaign) {
+    if (!paymentMethod) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ message: "Campanha não encontrada ou usuário não autorizado" });
+        .json({ message: "Método de pagamento não encontrado ou usuário não autorizado" });
     }
 
-    return res.status(StatusCodes.OK).json(campaign);
+    return res.status(StatusCodes.OK).json(paymentMethod);
   } catch (error) {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Erro ao atualizar a campanha", error });
+      .json({ message: "Erro ao atualizar o método de pagamento", error });
   }
 };
 

@@ -24,7 +24,7 @@ export const createPaymentMethod = async (
   });
 };
 
-export const listPaymentMethod = async (
+export const listPaymentMethods = async (
   req: Request,
   skip?: number,
   take?: number,
@@ -42,15 +42,12 @@ export const listPaymentMethod = async (
     take,
   });
   if (!paymentMethods) {
-    throw new Error("Método de pagamento não encontrado");
+    throw new Error("Nenhum método de pagamento foi encontrado");
   }
   return paymentMethods;
 };
 
-export const readPaymentMethod = async (
-  id: string,
-  req: Request,
-): Promise<PaymentMethodDto | null> => {
+export const readPaymentMethod = async (id: string, req: Request): Promise<PaymentMethodDto> => {
   const paymentMethod = await prisma.paymentMethod.findUnique({
     select: {
       id: true,
@@ -65,7 +62,7 @@ export const readPaymentMethod = async (
     throw new Error("Método de pagamento não encontrado");
   }
   if (paymentMethod.userId !== req.session.uid) {
-    throw new Error("Usuário não autorizado a atualizar esta campanha");
+    throw new Error("Usuário não autorizado a visualizar este método de pagamento");
   }
   return paymentMethod;
 };
@@ -74,18 +71,18 @@ export const updatePaymentMethod = async (
   id: string,
   updatedPaymentMethod: CreatePaymentMethodDto,
   req: Request,
-): Promise<PaymentMethodDto | null> => {
+): Promise<PaymentMethodDto> => {
   const paymentMethod = await prisma.paymentMethod.findUnique({
     select: { userId: true },
     where: { id },
   });
 
   if (!paymentMethod) {
-    throw new Error("Campanha não encontrada");
+    throw new Error("Método de pagamento não encontrado");
   }
 
   if (paymentMethod.userId !== req.session.uid) {
-    throw new Error("Usuário não autorizado a atualizar esta campanha");
+    throw new Error("Usuário não autorizado a atualizar este método de pagamento");
   }
 
   return await prisma.paymentMethod.update({
@@ -94,18 +91,18 @@ export const updatePaymentMethod = async (
   });
 };
 
-export const deletePaymentMethod = async (id: string, req: Request): Promise<PaymentMethod> => {
+export const deletePaymentMethod = async (id: string, req: Request): Promise<PaymentMethodDto> => {
   const paymentMethod = await prisma.paymentMethod.findUnique({
     select: { userId: true },
     where: { id },
   });
 
   if (!paymentMethod) {
-    throw new Error("Campanha não encontrada");
+    throw new Error("Método de pagamento não encontrado");
   }
 
   if (paymentMethod.userId !== req.session.uid) {
-    throw new Error("Usuário não autorizado a remover esta campanha");
+    throw new Error("Usuário não autorizado a remover este método de pagamento");
   }
   return await prisma.paymentMethod.delete({ where: { id } });
 };
