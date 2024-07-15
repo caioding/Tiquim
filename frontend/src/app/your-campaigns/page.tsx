@@ -1,12 +1,13 @@
 "use client";
 import React from "react";
-import { CampaignsHeader } from "./components/CampaignsHeader";
-import { Box, Container, Typography } from "@mui/material";
-import { CampaignCard } from "./components/CampaignCard";
-import { useCampaigns } from "./hooks/useCampaigns";
+import { Box, Container, Fab, Typography } from "@mui/material";
+import { CampaignCard } from "../components/CampaignCard";
+import { YourCampaignsHeader } from "../components/YourCampaignsHeader";
+import { useYourCampaigns } from "../hooks/useYourCampaigns";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function Campanhas() {
-  const { campaigns, isPending, isError } = useCampaigns();
+  const { campaigns, isPending, isError } = useYourCampaigns();
 
   const showCampaigns = () => {
     if (isPending) {
@@ -24,7 +25,7 @@ export default function Campanhas() {
     } else if (campaigns?.length == 0) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Não há campanhas disponíveis no momento.
+          Você ainda não criou campanhas.
         </Typography>
       );
     } else {
@@ -32,9 +33,14 @@ export default function Campanhas() {
     }
   };
 
+  const handleAddCampaign = (e: React.SyntheticEvent) => {
+    // TODO: ir para a página de criação de campanha
+    e.stopPropagation();
+  };
+
   return (
     <Container>
-      <CampaignsHeader />
+      <YourCampaignsHeader />
       <Box
         height="auto"
         width="100%"
@@ -48,6 +54,18 @@ export default function Campanhas() {
       >
         {showCampaigns()}
       </Box>
+      <Fab
+        color="success"
+        aria-label="add"
+        onClick={handleAddCampaign}
+        sx={{
+          position: "fixed",
+          bottom: 50,
+          right: 80,
+        }}
+      >
+        <AddIcon />
+      </Fab>
     </Container>
   );
 }

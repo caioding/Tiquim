@@ -8,3 +8,8 @@ export async function getCampaigns(): Promise<Campaign[]> {
 export async function getCampaignDetails(id: string): Promise<Campaign> {
   return api.get(`/campaign/${id}`).then((response) => response.data);
 }
+
+export async function getYourCampaigns(): Promise<Campaign[]> {
+  // TODO: Atualizar endpoint
+  return api.get("/campaign").then((response) => response.data);
+}

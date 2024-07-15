@@ -25,7 +25,24 @@ interface Props {
 }
 
 const drawerWidth = 240;
-const navItems = ["Todas as Campanhas", "Suas Campanhas", "Mensagem", "Perfil"];
+const navItems = [
+  {
+    name: "Todas as Campanhas",
+    path: "/",
+  },
+  {
+    name: "Suas Campanhas",
+    path: "/your-campaigns",
+  },
+  {
+    name: "Mensagem",
+    path: "#",
+  },
+  {
+    name: "Perfil",
+    path: "#",
+  },
+];
 
 export default function Navbar(props: Props) {
   // Path for pages
@@ -50,9 +67,9 @@ export default function Navbar(props: Props) {
       <Divider />
       <List>
         {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: "center" }}>
-              <ListItemText primary={item} />
+          <ListItem key={item.name} disablePadding>
+            <ListItemButton href={item.path} sx={{ textAlign: "center" }}>
+              <ListItemText primary={item.name} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -97,10 +114,11 @@ export default function Navbar(props: Props) {
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (
               <Button
-                key={item}
+                key={item.name}
+                href={item.path}
                 sx={{ mr: 2, color: "text.primary", textTransform: "none", fontWeight: "bold" }}
               >
-                {item}
+                {item.name}
               </Button>
             ))}
             <Button
