@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import { CreateUserDto, TypeUser, UpdateUserDto, UserDto } from "./user.types";
+import { CreateUserDto, TypeUser, UpdateUserDto } from "./user.types";
 import { createUser, deleteUser, listUsers, readUser, updateUser } from "./user.service";
 
 const index = async (req: Request, res: Response) => {
