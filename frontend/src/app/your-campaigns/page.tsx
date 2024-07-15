@@ -5,9 +5,11 @@ import { CampaignCard } from "../components/CampaignCard";
 import { YourCampaignsHeader } from "../components/YourCampaignsHeader";
 import { useYourCampaigns } from "../hooks/useYourCampaigns";
 import AddIcon from "@mui/icons-material/Add";
+import { useRouter } from "next/navigation";
 
 export default function Campanhas() {
   const { campaigns, isPending, isError } = useYourCampaigns();
+  const router = useRouter();
 
   const showCampaigns = () => {
     if (isPending) {
@@ -34,8 +36,8 @@ export default function Campanhas() {
   };
 
   const handleAddCampaign = (e: React.SyntheticEvent) => {
-    // TODO: ir para a página de criação de campanha
     e.stopPropagation();
+    router.push('/create-campaigns'); // Navega para a página de criação de campanhas
   };
 
   return (

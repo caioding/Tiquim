@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "downlevelIteration": true, // downlevelIteration adicionados para fazer funcionar a busta do input de categorias
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
