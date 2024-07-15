@@ -13,34 +13,57 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Copyright } from "../components/Copyright";
 import { Link, Typography } from "@mui/material";
+import useAuthContext from "../hooks/useAuthContext";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter();
+  const { user, setUser } = useAuthContext();
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-    const credentials = {
-      email: data.get("email") as string,
-      password: data.get("password") as string,
-    };
 
-    try {
-      const response = await fetch("http://localhost:9000/v1/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
-      });
+    if (user.id !== undefined) {
+      // TODO: Adicionar o que tem que fazer quando já tem alguém logado
+      console.log("Ja tem um user logado");
+      router.push("/");
+    } else {
+      const data = new FormData(event.currentTarget);
 
-      if (!response) {
-        throw new Error("Error on login attempt");
+      const credentials = {
+        email: data.get("email") as string,
+        password: data.get("password") as string,
+      };
+
+      try {
+        const response = await fetch("http://localhost:9000/v1/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(credentials),
+        });
+
+        if (!response.ok) {
+          throw new Error("Erro na resposta da API");
+        }
+
+        const data = await response.json();
+
+        setUser({
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          userTypeId: data.userTypeId,
+          avatarUrl: data.avatarUrl,
+          createdAt: data.createdAt,
+          updatedAt: data.updatedAt,
+        });
+
+        router.push("/");
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -78,7 +101,7 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Login
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <Box component="form" noValidate method="POST" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required

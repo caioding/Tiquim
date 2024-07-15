@@ -8,3 +8,5 @@ export default interface User {
   updatedAt: Date;
   userTypeId: string;
 }
+
+export type UserDto = Omit<User, "password">;
