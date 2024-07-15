@@ -9,6 +9,5 @@ router.post("/", userController.create);
 router.get("/:id", userController.read);
 router.put("/:id", isAdmin, userController.update);
 router.delete("/:id", isAdmin, userController.remove);
-router.post("/login", userController.login);
 
 export default router;

@@ -28,7 +28,7 @@ export default function Login() {
     };
 
     try {
-      const response = await fetch("http://localhost:9000/v1/user/login", {
+      const response = await fetch("http://localhost:9000/v1/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export default function Login() {
       });
 
       if (!response) {
-        throw new Error("Erro ao fazer login");
+        throw new Error("Error on login attempt");
       }
     } catch (error) {
       console.log(error);
