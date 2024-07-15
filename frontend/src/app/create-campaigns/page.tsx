@@ -1,9 +1,10 @@
 "use client";
 
 import { Box, Button, Container, CssBaseline, Grid, InputLabel, TextField, Typography } from "@mui/material";
+import Grouped from "../components/CategoriesInput";
 
 export default function CreateCampaigns() {
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async () => {
   };
 
   return (
@@ -53,14 +54,16 @@ export default function CreateCampaigns() {
                 fullWidth
                 id="goal"
                 name="goal"
-                type="number"
                 autoComplete="goal"
                 variant="outlined"
                 margin="normal"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <InputLabel htmlFor="category" sx={{ color: 'black' }}>Categoria</InputLabel>
+              <InputLabel htmlFor="category" sx={{ color: 'black' }}>Categorias</InputLabel>
+              <Grouped>
+              </Grouped>
+              {/* <InputLabel htmlFor="category" sx={{ color: 'black' }}>Categoria</InputLabel>
               <TextField
                 required
                 fullWidth
@@ -69,7 +72,7 @@ export default function CreateCampaigns() {
                 autoComplete="category"
                 variant="outlined"
                 margin="normal"
-              />
+              /> */}
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputLabel htmlFor="deadline" sx={{ color: 'black' }} >Prazo</InputLabel>
