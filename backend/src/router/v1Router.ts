@@ -3,6 +3,7 @@ import languageRouter from "../resources/language/language.router";
 import userRouter from "../resources/user/user.router";
 import authRouter from "../resources/auth/auth.router";
 import campaignRouter from "../resources/campaign/campaign.router"
+import paymentMethodRouter from "../resources/paymentMethod/paymentMethod.router"
 
 const router = Router();
 
@@ -17,5 +18,8 @@ authRouter);
 
 router.use("/campaign", // #swagger.tags = ['Campaign']
 campaignRouter);
+
+router.use("/paymentMethod", // #swagger.tags = ['PaymentMethod'])
+paymentMethodRouter);
 
 export default router;
