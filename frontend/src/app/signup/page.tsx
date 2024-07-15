@@ -14,17 +14,20 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Copyright } from "../components/Copyright";
+import SuccessSnackbar from "../components/SuccessSnackbar";
+import ErrorSnackbar from "../components/ErrorSnackbar";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-export default function Cadastro() {
+export default function SignUp() {
+  const router = useRouter();
+
+  const [open, setOpen] = useState(0);
+  const [message, setMessage] = useState("");
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-
-    console.log({
-      name: `${data.get("firstName")} ${data.get("lastName")}`,
-      email: data.get("email"),
-      password: data.get("password"),
-    });
 
     const user = {
       name: `${data.get("firstName")} ${data.get("lastName")}`,
@@ -42,13 +45,19 @@ export default function Cadastro() {
       });
 
       if (!response.ok) {
+        setMessage("Erro ao efetuar o cadastro");
+        setOpen(2);
         throw new Error("Error on Sign on a new user");
       }
 
-      const result = await response.json();
-      console.log(result);
+      setMessage("Cadastro efetuado com sucesso!");
+      setOpen(1);
+
+      router.push("/login");
     } catch (err) {
       console.log(err);
+      setMessage("Erro ao efetuar o cadastro!");
+      setOpen(2);
     }
   };
 
@@ -145,6 +154,9 @@ export default function Cadastro() {
         </Box>
       </Box>
       <Copyright sx={{ mt: 5 }} />
+
+      <SuccessSnackbar message={message} open={open == 1} setOpen={setOpen} />
+      <ErrorSnackbar message={message} open={open == 2} setOpen={setOpen} />
     </Container>
   );
 }

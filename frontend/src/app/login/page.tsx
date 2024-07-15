@@ -15,17 +15,24 @@ import { Copyright } from "../components/Copyright";
 import { Link, Typography } from "@mui/material";
 import useAuthContext from "../hooks/useAuthContext";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import SuccessSnackbar from "../components/SuccessSnackbar";
+import ErrorSnackbar from "../components/ErrorSnackbar";
+import WarningSnackbar from "../components/WarningSnackbar";
 
 export default function Login() {
   const router = useRouter();
   const { user, setUser } = useAuthContext();
 
+  const [open, setOpen] = useState(0);
+  const [message, setMessage] = useState("");
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (user.id !== undefined) {
-      // TODO: Adicionar o que tem que fazer quando já tem alguém logado
-      console.log("Ja tem um user logado");
+      setMessage("Usuário já logado no sistema");
+      setOpen(3);
       router.push("/");
     } else {
       const data = new FormData(event.currentTarget);
@@ -45,7 +52,9 @@ export default function Login() {
         });
 
         if (!response.ok) {
-          throw new Error("Erro na resposta da API");
+          setMessage("Erro ao efetuar o login");
+          setOpen(2);
+          throw new Error("Error on login attempt");
         }
 
         const data = await response.json();
@@ -60,9 +69,13 @@ export default function Login() {
           updatedAt: data.updatedAt,
         });
 
+        setMessage("Login efetuado com sucesso!");
+        setOpen(1);
         router.push("/");
       } catch (error) {
         console.log(error);
+        setMessage("Erro ao efetuar o login!");
+        setOpen(2);
       }
     }
   };
@@ -156,6 +169,10 @@ export default function Login() {
           </Box>
         </Box>
       </Grid>
+
+      <SuccessSnackbar message={message} open={open == 1} setOpen={setOpen} />
+      <ErrorSnackbar message={message} open={open == 2} setOpen={setOpen} />
+      <WarningSnackbar message={message} open={open == 3} setOpen={setOpen} />
     </Grid>
   );
 }
