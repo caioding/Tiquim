@@ -15,44 +15,40 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { usePathname } from "next/navigation";
+import useAuthContext from "../hooks/useAuthContext";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
   window?: () => Window;
 }
 
 const drawerWidth = 240;
 const navItems = [
-  {
-    name: "Todas as Campanhas",
-    path: "/",
-  },
-  {
-    name: "Suas Campanhas",
-    path: "/your-campaigns",
-  },
-  {
-    name: "Mensagem",
-    path: "#",
-  },
-  {
-    name: "Perfil",
-    path: "#",
-  },
+  { name: "Todas as Campanhas", path: "/" },
+  { name: "Suas Campanhas", path: "/your-campaigns" },
+  { name: "Mensagem", path: "#" },
+  { name: "Perfil", path: "#" },
 ];
 
 export default function Navbar(props: Props) {
-  // Path for pages
   const path = usePathname();
+  const { window } = props;
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const { user } = useAuthContext();
+  const [hydrated, setHydrated] = React.useState(false);
+
+  const container = window !== undefined ? () => window().document.body : undefined;
+
+  const isLoggedIn = hydrated && user.id !== undefined;
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
   if (path === "/login" || path === "/cadastro") {
     return null;
   }
-
-  const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -61,7 +57,6 @@ export default function Navbar(props: Props) {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        {/* Nome no Hamburger */}
         Tiquim
       </Typography>
       <Divider />
@@ -73,16 +68,20 @@ export default function Navbar(props: Props) {
             </ListItemButton>
           </ListItem>
         ))}
-        <ListItem key={"Sair"} disablePadding>
+        <ListItem key={"Sair"} disablePadding sx={{ display: isLoggedIn ? "inline" : "none" }}>
           <ListItemButton sx={{ textAlign: "center" }}>
             <ListItemText primary={"Sair"} />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem key={"Login"} disablePadding sx={{ display: !isLoggedIn ? "inline" : "none" }}>
+          <ListItemButton href="/login" sx={{ textAlign: "center" }}>
+            <ListItemText primary={"Login"} />
           </ListItemButton>
         </ListItem>
       </List>
     </Box>
   );
-
-  const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -108,7 +107,6 @@ export default function Navbar(props: Props) {
               fontWeight: "bold",
             }}
           >
-            {/* Nome do projeto */}
             Tiquim
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
@@ -126,16 +124,36 @@ export default function Navbar(props: Props) {
               size="small"
               sx={{
                 mr: 4,
-                color: "withe",
+                color: "white",
                 textTransform: "none",
                 backgroundColor: "black",
                 fontWeight: "bold",
+                display: isLoggedIn ? null : "none",
                 "&:hover": {
                   backgroundColor: "black",
                 },
               }}
             >
               Sair
+            </Button>
+
+            <Button
+              variant="contained"
+              href="/login"
+              size="small"
+              sx={{
+                mr: 4,
+                color: "white",
+                textTransform: "none",
+                backgroundColor: "black",
+                fontWeight: "bold",
+                display: !isLoggedIn ? null : "none",
+                "&:hover": {
+                  backgroundColor: "black",
+                },
+              }}
+            >
+              Login
             </Button>
           </Box>
         </Toolbar>
@@ -147,7 +165,7 @@ export default function Navbar(props: Props) {
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: "block", sm: "none" },

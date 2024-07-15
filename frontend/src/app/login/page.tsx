@@ -13,34 +13,70 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Copyright } from "../components/Copyright";
 import { Link, Typography } from "@mui/material";
+import useAuthContext from "../hooks/useAuthContext";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import SuccessSnackbar from "../components/SuccessSnackbar";
+import ErrorSnackbar from "../components/ErrorSnackbar";
+import WarningSnackbar from "../components/WarningSnackbar";
 
 export default function Login() {
+  const router = useRouter();
+  const { user, setUser } = useAuthContext();
+
+  const [open, setOpen] = useState(0);
+  const [message, setMessage] = useState("");
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-    const credentials = {
-      email: data.get("email") as string,
-      password: data.get("password") as string,
-    };
 
-    try {
-      const response = await fetch("http://localhost:9000/v1/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
-      });
+    if (user.id !== undefined) {
+      setMessage("Usuário já logado no sistema");
+      setOpen(3);
+      router.push("/");
+    } else {
+      const data = new FormData(event.currentTarget);
 
-      if (!response) {
-        throw new Error("Error on login attempt");
+      const credentials = {
+        email: data.get("email") as string,
+        password: data.get("password") as string,
+      };
+
+      try {
+        const response = await fetch("http://localhost:9000/v1/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(credentials),
+        });
+
+        if (!response.ok) {
+          setMessage("Erro ao efetuar o login");
+          setOpen(2);
+          throw new Error("Error on login attempt");
+        }
+
+        const data = await response.json();
+
+        setUser({
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          userTypeId: data.userTypeId,
+          avatarUrl: data.avatarUrl,
+          createdAt: data.createdAt,
+          updatedAt: data.updatedAt,
+        });
+
+        setMessage("Login efetuado com sucesso!");
+        setOpen(1);
+        router.push("/");
+      } catch (error) {
+        console.log(error);
+        setMessage("Erro ao efetuar o login!");
+        setOpen(2);
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -78,7 +114,7 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Login
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <Box component="form" noValidate method="POST" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -124,7 +160,7 @@ export default function Login() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/cadastro" variant="body2">
+                <Link href="/signup" variant="body2">
                   {"Não tem uma conta? Criar conta"}
                 </Link>
               </Grid>
@@ -133,6 +169,10 @@ export default function Login() {
           </Box>
         </Box>
       </Grid>
+
+      <SuccessSnackbar message={message} open={open == 1} setOpen={setOpen} />
+      <ErrorSnackbar message={message} open={open == 2} setOpen={setOpen} />
+      <WarningSnackbar message={message} open={open == 3} setOpen={setOpen} />
     </Grid>
   );
 }
