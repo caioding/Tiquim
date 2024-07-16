@@ -61,4 +61,15 @@ const logout = async (req: Request, res: Response) => {
   }
 };
 
-export default { signup, login, logout };
+const logged = async (req: Request, res: Response) => {
+  /*
+  #swagger.summary = 'Retorna o usuário logado.'
+  */
+  if (req.session.uid) {
+    res.status(StatusCodes.OK).json(req.session.uid);
+  } else {
+    res.status(StatusCodes.UNAUTHORIZED).json(ReasonPhrases.UNAUTHORIZED);
+  }
+};
+
+export default { signup, login, logout, logged };
