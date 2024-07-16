@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Box,
   Button,
@@ -11,10 +10,10 @@ import {
   Typography,
 } from "@mui/material";
 import Grouped from "../components/CategoriesInput";
-import InputFileUpload from "../components/FileUpload";
+import FormattedInputs from "../components/NumberFormat";
 
 export default function CreateCampaigns() {
-  const handleSubmit = async () => { };
+  const handleSubmit = async () => {};
 
   return (
     <Container component="main" maxWidth="md">
@@ -69,15 +68,7 @@ export default function CreateCampaigns() {
               <InputLabel htmlFor="goal" sx={{ color: "black" }}>
                 Meta
               </InputLabel>
-              <TextField
-                required
-                fullWidth
-                id="goal"
-                name="goal"
-                autoComplete="goal"
-                variant="outlined"
-                margin="normal"
-              />
+              <FormattedInputs></FormattedInputs>
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputLabel htmlFor="category" sx={{ color: "black" }}>
@@ -103,8 +94,10 @@ export default function CreateCampaigns() {
                 margin="normal"
               />
             </Grid>
-            {/* <Grid item xs={12} sm={6}>
-              <InputLabel htmlFor="ImageURL" sx={{ color: 'black' }}>ImageURL</InputLabel>
+            <Grid item xs={12} sm={6}>
+              <InputLabel htmlFor="ImageURL" sx={{ color: "black" }}>
+                ImageURL
+              </InputLabel>
               <TextField
                 required
                 fullWidth
@@ -114,7 +107,7 @@ export default function CreateCampaigns() {
                 variant="outlined"
                 margin="normal"
               />
-            </Grid> */}
+            </Grid>
             <Grid item xs={12}>
               <InputLabel htmlFor="preview" sx={{ color: "black" }}>
                 Preview
@@ -146,9 +139,9 @@ export default function CreateCampaigns() {
                 margin="normal"
               />
             </Grid>
-            <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+            {/* <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
               <InputFileUpload />
-            </Grid>
+            </Grid> */}
           </Grid>
         </Box>
       </Box>
