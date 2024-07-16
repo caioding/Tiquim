@@ -4,7 +4,9 @@ import {
   createCampaign,
   deleteCampaign,
   listCampaigns,
+  listUserCampaigns,
   readCampaign,
+  searchCampaigns,
   updateCampaign,
 } from "./campaign.service";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
@@ -121,4 +123,34 @@ const remove = async (req: Request, res: Response) => {
   }
 };
 
-export default { index, create, read, update, remove };
+const indexUser = async (req: Request, res: Response) => {
+  try {
+    const skip = req.query.skip ? parseInt(req.query.skip.toString()) : undefined;
+    const take = req.query.take ? parseInt(req.query.take.toString()) : undefined;
+    const campaigns = await listUserCampaigns(req, skip, take);
+    res.status(StatusCodes.OK).json(campaigns);
+  } catch (err) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
+  }
+};
+
+const search = async (req: Request, res: Response) => {
+  try {
+    const searchTerm = req.query.q ? req.query.q.toString() : "";
+    const skip = req.query.skip ? parseInt(req.query.skip.toString()) : undefined;
+    const take = req.query.take ? parseInt(req.query.take.toString()) : undefined;
+
+    if (!searchTerm) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: "É necessário fazer digitar alguma coisa na consulta" });
+    }
+
+    const campaigns = await searchCampaigns(req, searchTerm, skip, take);
+    res.status(StatusCodes.OK).json(campaigns);
+  } catch (err) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
+  }
+};
+
+export default { index, create, read, update, remove, indexUser, search };

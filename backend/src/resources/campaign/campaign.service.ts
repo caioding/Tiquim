@@ -50,6 +50,31 @@ export const listCampaigns = async (skip?: number, take?: number): Promise<Campa
   });
 };
 
+export const listUserCampaigns = async (
+  req: Request,
+  skip?: number,
+  take?: number,
+): Promise<CampaignDto[]> => {
+  return await prisma.campaign.findMany({
+    select: {
+      id: true,
+      goal: true,
+      deadline: true,
+      title: true,
+      description: true,
+      preview: true,
+      category: true,
+      imageUrl: true,
+      userId: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+    where: { userId: req.session.uid },
+    skip,
+    take,
+  });
+};
+
 export const readCampaign = async (id: string): Promise<CampaignDto | null> => {
   return await prisma.campaign.findUnique({
     select: {
@@ -107,4 +132,21 @@ export const deleteCampaign = async (id: string, req: Request): Promise<Campaign
     throw new Error("Usuário não autorizado a remover esta campanha");
   }
   return await prisma.campaign.delete({ where: { id } });
+};
+
+export const searchCampaigns = async (
+  req: Request,
+  searchTerm: string,
+  skip?: number,
+  take?: number,
+) => {
+  return await prisma.campaign.findMany({
+    where: {
+      title: {
+        contains: searchTerm,
+      },
+    },
+    skip: skip,
+    take: take,
+  });
 };
