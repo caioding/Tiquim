@@ -63,16 +63,6 @@ export default function CreateCampaigns() {
               <InputLabel htmlFor="category" sx={{ color: 'black' }}>Categorias</InputLabel>
               <Grouped>
               </Grouped>
-              {/* <InputLabel htmlFor="category" sx={{ color: 'black' }}>Categoria</InputLabel>
-              <TextField
-                required
-                fullWidth
-                id="category"
-                name="category"
-                autoComplete="category"
-                variant="outlined"
-                margin="normal"
-              /> */}
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputLabel htmlFor="deadline" sx={{ color: 'black' }} >Prazo</InputLabel>
@@ -86,6 +76,31 @@ export default function CreateCampaigns() {
                   shrink: true,
                 }}
                 autoComplete="deadline"
+                variant="outlined"
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputLabel htmlFor="ImageURL" sx={{ color: 'black' }}>ImageURL</InputLabel>
+              <TextField
+                required
+                fullWidth
+                id="ImageURL"
+                name="ImageURL"
+                autoComplete="ImageURL"
+                variant="outlined"
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <InputLabel htmlFor="preview" sx={{ color: 'black' }}>Preview</InputLabel>
+              <TextField
+                required
+                fullWidth
+                id="preview"
+                name="preview"
+                autoComplete="preview"
+                autoFocus
                 variant="outlined"
                 margin="normal"
               />
