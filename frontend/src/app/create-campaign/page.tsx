@@ -148,3 +148,5 @@ export default function CreateCampaigns() {
     </Container>
   );
 }
+
+//commit com as imagens e containers apagados
