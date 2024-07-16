@@ -37,7 +37,7 @@ export default function Campanhas() {
 
   const handleAddCampaign = (e: React.SyntheticEvent) => {
     e.stopPropagation();
-    router.push('/create-campaigns'); // Navega para a página de criação de campanhas
+    router.push("/create-campaigns"); // Navega para a página de criação de campanhas
   };
 
   return (

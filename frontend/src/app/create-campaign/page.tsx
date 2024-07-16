@@ -1,12 +1,20 @@
 "use client";
 
-import { Box, Button, Container, CssBaseline, Grid, InputLabel, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  Grid,
+  InputLabel,
+  TextField,
+  Typography,
+} from "@mui/material";
 import Grouped from "../components/CategoriesInput";
 import InputFileUpload from "../components/FileUpload";
 
 export default function CreateCampaigns() {
-  const handleSubmit = async () => {
-  };
+  const handleSubmit = async () => { };
 
   return (
     <Container component="main" maxWidth="md">
@@ -17,7 +25,7 @@ export default function CreateCampaigns() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          marginBottom: '50px'
+          marginBottom: "50px",
         }}
       >
         <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
@@ -27,16 +35,25 @@ export default function CreateCampaigns() {
             </Typography>
           </Grid>
           <Grid item>
-            <Button variant="contained" sx={{ textTransform: "none", backgroundColor: 'black', color: 'white', '&:hover': { backgroundColor: 'black' } }}
+            <Button
+              variant="contained"
+              sx={{
+                textTransform: "none",
+                backgroundColor: "#32a852",
+                color: "white",
+                "&:hover": { backgroundColor: "#008000" },
+              }}
             >
               Salvar
             </Button>
           </Grid>
         </Grid>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, width: '100%' }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, width: "100%" }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <InputLabel htmlFor="title" sx={{ color: 'black' }}>Título</InputLabel>
+              <InputLabel htmlFor="title" sx={{ color: "black" }}>
+                Título
+              </InputLabel>
               <TextField
                 required
                 fullWidth
@@ -49,7 +66,9 @@ export default function CreateCampaigns() {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <InputLabel htmlFor="goal" sx={{ color: 'black' }}>Meta</InputLabel>
+              <InputLabel htmlFor="goal" sx={{ color: "black" }}>
+                Meta
+              </InputLabel>
               <TextField
                 required
                 fullWidth
@@ -61,12 +80,15 @@ export default function CreateCampaigns() {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <InputLabel htmlFor="category" sx={{ color: 'black' }}>Categorias</InputLabel>
-              <Grouped>
-              </Grouped>
+              <InputLabel htmlFor="category" sx={{ color: "black" }}>
+                Categorias
+              </InputLabel>
+              <Grouped></Grouped>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <InputLabel htmlFor="deadline" sx={{ color: 'black' }} >Prazo</InputLabel>
+              <InputLabel htmlFor="deadline" sx={{ color: "black" }}>
+                Prazo
+              </InputLabel>
               <TextField
                 required
                 fullWidth
@@ -81,7 +103,7 @@ export default function CreateCampaigns() {
                 margin="normal"
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            {/* <Grid item xs={12} sm={6}>
               <InputLabel htmlFor="ImageURL" sx={{ color: 'black' }}>ImageURL</InputLabel>
               <TextField
                 required
@@ -92,9 +114,11 @@ export default function CreateCampaigns() {
                 variant="outlined"
                 margin="normal"
               />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12}>
-              <InputLabel htmlFor="preview" sx={{ color: 'black' }}>Preview</InputLabel>
+              <InputLabel htmlFor="preview" sx={{ color: "black" }}>
+                Preview
+              </InputLabel>
               <TextField
                 required
                 fullWidth
@@ -107,7 +131,9 @@ export default function CreateCampaigns() {
               />
             </Grid>
             <Grid item xs={12}>
-              <InputLabel htmlFor="description" sx={{ color: 'black' }}>Descrição</InputLabel>
+              <InputLabel htmlFor="description" sx={{ color: "black" }}>
+                Descrição
+              </InputLabel>
               <TextField
                 required
                 fullWidth
@@ -120,7 +146,7 @@ export default function CreateCampaigns() {
                 margin="normal"
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
               <InputFileUpload />
             </Grid>
           </Grid>
@@ -128,4 +154,4 @@ export default function CreateCampaigns() {
       </Box>
     </Container>
   );
-} 
+}
