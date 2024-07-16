@@ -2,6 +2,7 @@
 
 import { Box, Button, Container, CssBaseline, Grid, InputLabel, TextField, Typography } from "@mui/material";
 import Grouped from "../components/CategoriesInput";
+import InputFileUpload from "../components/FileUpload";
 
 export default function CreateCampaigns() {
   const handleSubmit = async () => {
@@ -118,6 +119,9 @@ export default function CreateCampaigns() {
                 variant="outlined"
                 margin="normal"
               />
+            </Grid>
+            <Grid item xs={12}>
+              <InputFileUpload />
             </Grid>
           </Grid>
         </Box>
