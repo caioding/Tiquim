@@ -62,6 +62,7 @@ export default function CreateCampaigns() {
                 autoFocus
                 variant="outlined"
                 margin="normal"
+                inputProps={{ maxLength: 50 }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -121,6 +122,7 @@ export default function CreateCampaigns() {
                 autoFocus
                 variant="outlined"
                 margin="normal"
+                inputProps={{ maxLength: 120 }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -137,6 +139,7 @@ export default function CreateCampaigns() {
                 autoComplete="description"
                 variant="outlined"
                 margin="normal"
+                inputProps={{ maxLength: 1000 }}
               />
             </Grid>
             {/* <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
