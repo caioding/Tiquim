@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
 import { Box, Container, Fab, Typography } from "@mui/material";
-import { CampaignCard } from "../components/CampaignCard";
 import { YourCampaignsHeader } from "../components/YourCampaignsHeader";
 import { useYourCampaigns } from "../hooks/useYourCampaigns";
 import AddIcon from "@mui/icons-material/Add";
 import { useRouter } from "next/navigation";
+import { YourCampaignCard } from "../components/YourCampaignCard";
 
 export default function Campanhas() {
   const { campaigns, isPending, isError } = useYourCampaigns();
@@ -31,7 +31,9 @@ export default function Campanhas() {
         </Typography>
       );
     } else {
-      return campaigns?.map((campaign) => <CampaignCard key={campaign.id} campaign={campaign} />);
+      return campaigns?.map((campaign) => (
+        <YourCampaignCard key={campaign.id} campaign={campaign} />
+      ));
     }
   };
 

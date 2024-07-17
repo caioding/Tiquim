@@ -13,7 +13,7 @@ export function CardHearder({ title, author, createdAt, completedPercentage }: C
   return (
     <Stack direction="row" justifyContent="space-between" alignItems="center">
       <Box sx={{ width: "calc(100% - 60px)" }}>
-        <Typography variant="h6" noWrap sx={{ fontWeight: "bold", overflow: "hidden" }}>
+        <Typography variant="body1" component={"h1"} sx={{ fontWeight: "bold", fontSize: "17px" }}>
           {title}
         </Typography>
 
