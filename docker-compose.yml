@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   backend:
@@ -11,20 +11,19 @@ services:
       - ${BACKEND_PORT}:${BACKEND_PORT}
     env_file:
       - ./backend/.env
-    restart:
-      on-failure
+    restart: on-failure
     depends_on:
       - mysql
 
-  frontend:
-    container_name: frontend_tiquim
-    build: 
-      context: ./frontend
-    volumes:
-      - ./frontend:/app
-    ports:
-      - ${FRONTEND_PORT}:${FRONTEND_PORT}
-  
+  # frontend:
+  #   container_name: frontend_tiquim
+  #   build:
+  #     context: ./frontend
+  #   volumes:
+  #     - ./frontend:/app
+  #   ports:
+  #     - ${FRONTEND_PORT}:${FRONTEND_PORT}
+
   mysql:
     container_name: db_tiquim
     image: mysql:latest
