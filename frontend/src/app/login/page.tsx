@@ -30,7 +30,7 @@ export default function Login() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (user.id !== undefined) {
+    if (user !== "") {
       setMessage("Usuário já logado no sistema");
       setOpen(3);
       router.push("/");
@@ -59,15 +59,7 @@ export default function Login() {
 
         const data = await response.json();
 
-        setUser({
-          id: data.id,
-          name: data.name,
-          email: data.email,
-          userTypeId: data.userTypeId,
-          avatarUrl: data.avatarUrl,
-          createdAt: data.createdAt,
-          updatedAt: data.updatedAt,
-        });
+        setUser(data.id);
 
         setMessage("Login efetuado com sucesso!");
         setOpen(1);

@@ -40,7 +40,7 @@ export default function Navbar(props: Props) {
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
-  const isLoggedIn = hydrated && user.id !== undefined;
+  const isLoggedIn = hydrated && user !== "";
 
   useEffect(() => {
     setHydrated(true);

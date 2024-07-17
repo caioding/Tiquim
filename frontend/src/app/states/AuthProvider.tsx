@@ -1,11 +1,11 @@
 "use client";
 
 import React, { createContext, useEffect, useState } from "react";
-import { UserDto } from "../types/user";
+import { getLogged } from "../services/auth";
 
 interface IAuthContext {
-  user: UserDto;
-  setUser: React.Dispatch<React.SetStateAction<UserDto>>;
+  user: string;
+  setUser: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface AuthContextProps {
@@ -13,25 +13,27 @@ interface AuthContextProps {
 }
 
 export const AuthContext = createContext<IAuthContext>({
-  user: {} as UserDto,
+  user: "",
   setUser: () => {},
 });
 
 const AuthProvider = ({ children }: AuthContextProps) => {
-  const [user, setUser] = useState<UserDto>(() => {
-    if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("user");
-      return storedUser ? JSON.parse(storedUser) : ({} as UserDto);
-    }
-    return {} as UserDto;
-  });
+  const [user, setUser] = useState<string>("");
 
   useEffect(() => {
-    if (user && Object.keys(user).length > 0) {
-      localStorage.setItem("user", JSON.stringify(user));
-    } else {
-      localStorage.removeItem("user");
-    }
+    const checkLogged = async () => {
+      try {
+        const logged = await getLogged();
+        if (logged) {
+          setUser(logged);
+        }
+
+        console.log(logged);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    checkLogged();
   }, [user]);
 
   return <AuthContext.Provider value={{ user, setUser }}>{children}</AuthContext.Provider>;
