@@ -8,12 +8,15 @@ import {
   Container,
   CssBaseline,
   Grid,
+  IconButton,
   Tab,
   Tabs,
   Typography,
 } from "@mui/material";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -83,6 +86,16 @@ export default function YourCampaign() {
     setTabValue(newValue);
   };
 
+  const handleEdit = (e: React.SyntheticEvent) => {
+    // TODO: ir para a página editar campanha
+    e.stopPropagation();
+  };
+
+  const handleDelete = (e: React.SyntheticEvent) => {
+    // TODO: excluir campanha
+    e.stopPropagation();
+  };
+
   return (
     <Container sx={{ width: "80%", m: "auto" }}>
       <Grid container component="main" sx={{ height: "487px" }}>
@@ -110,10 +123,26 @@ export default function YourCampaign() {
               ml: { xs: 0, sm: 6, md: 10 },
             }}
           >
-            <Chip
-              label={campaign.category}
-              sx={{ backgroundColor: "#32A852", color: "white", mb: 3 }}
-            />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 3,
+              }}
+            >
+              <Chip label={campaign.category} sx={{ backgroundColor: "#32A852", color: "white" }} />
+              <Box>
+                <IconButton aria-label="edit" color="success" onClick={handleEdit}>
+                  <EditIcon />
+                </IconButton>
+
+                <IconButton aria-label="delete" color="success" onClick={handleDelete}>
+                  <DeleteIcon />
+                </IconButton>
+              </Box>
+            </Box>
             <Typography variant="h4" sx={{ fontWeight: "bold" }}>
               {campaign.title}
             </Typography>
@@ -122,20 +151,6 @@ export default function YourCampaign() {
               {campaign.preview}
             </Typography>
           </Box>
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{
-              width: { xs: "70%", md: "80%" },
-              mt: { xs: 0, sm: 2, md: 3 },
-              ml: { xs: 0, sm: 6, md: 10 },
-              backgroundColor: "#32a852",
-              "&:hover": { backgroundColor: "#008000" },
-              textTransform: "none",
-            }}
-          >
-            Doar
-          </Button>
         </Grid>
       </Grid>
 

@@ -4,7 +4,6 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { CardHearder } from "./CardHeader";
 import { Campaign } from "../types/campaign";
@@ -62,11 +61,16 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
     campaign?.imageUrl && campaign.imageUrl.length > 0 ? campaign.imageUrl : "/placeholder.png";
 
   const openCampaignDetails = (idCampaign: string) => {
-    router.push(`/campaign/${idCampaign}`);
+    router.push(`/your-campaign/${idCampaign}`);
   };
 
-  const handleDonateToCampaign = (e: React.SyntheticEvent) => {
-    // TODO: ir para a página de doação
+  const handleEdit = (e: React.SyntheticEvent) => {
+    // TODO: ir para a página editar campanha
+    e.stopPropagation();
+  };
+
+  const handleDelete = (e: React.SyntheticEvent) => {
+    // TODO: excluir campanha
     e.stopPropagation();
   };
 
@@ -94,11 +98,11 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
         </Typography>
       </CardContent>
       <CardActions sx={{ m: 2, mb: 2, display: "flex", justifyContent: "end" }}>
-        <IconButton aria-label="edit" color="success">
+        <IconButton aria-label="edit" color="success" onClick={handleEdit}>
           <EditIcon />
         </IconButton>
 
-        <IconButton aria-label="delete" color="success">
+        <IconButton aria-label="delete" color="success" onClick={handleDelete}>
           <DeleteIcon />
         </IconButton>
       </CardActions>

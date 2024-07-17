@@ -86,7 +86,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
           createdAt={datetime}
           completedPercentage={completedPercentage}
         />
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" sx={{ fontSize: "14px" }}>
           {campaign.preview}
         </Typography>
       </CardContent>
