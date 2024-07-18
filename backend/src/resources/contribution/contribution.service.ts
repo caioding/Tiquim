@@ -1,14 +1,21 @@
-import { Request, Response } from "express";
-import { Campaign, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { ContributionDto, CreateContributionDto } from "./contribution.types";
 
 const prisma = new PrismaClient();
 
 export const createContribution = async (
   contribution: CreateContributionDto,
-  req: Request,
+  uid: string,
 ): Promise<ContributionDto> => {
-  const userId = req.session.uid as string;
+  const paymentMethod = await prisma.paymentMethod.findUnique({
+    select: {
+      id: true,
+    },
+    where: { id: contribution.paymentMethodId, userId: uid },
+  });
+  if (!paymentMethod) {
+    throw new Error("Método de pagamento não pertence ao usuário logado");
+  }
   return await prisma.contribution.create({
     select: {
       id: true,
@@ -21,38 +28,55 @@ export const createContribution = async (
     },
     data: {
       ...contribution,
-      userId: userId,
+      userId: uid,
     },
   });
 };
 
 export const listContributions = async (
-  req: Request,
+  campaignId: string,
+  uid: string,
   skip?: number,
   take?: number,
 ): Promise<ContributionDto[]> => {
-  const contributions = await prisma.contribution.findMany({
-    select: {
-      id: true,
-      amount: true,
-      userId: true,
-      campaignId: true,
-      paymentMethodId: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-    where: { userId: req.session.uid },
-    skip,
-    take,
-  });
-  if (!contributions) {
-    throw new Error("Nenhuma contribuição foi encontrada");
+  if (campaignId) {
+    return await prisma.contribution.findMany({
+      select: {
+        id: true,
+        amount: true,
+        userId: true,
+        campaignId: true,
+        paymentMethodId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      where: { campaignId: campaignId },
+      skip,
+      take,
+    });
+  } else {
+    return await prisma.contribution.findMany({
+      select: {
+        id: true,
+        amount: true,
+        userId: true,
+        campaignId: true,
+        paymentMethodId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      where: { userId: uid },
+      skip,
+      take,
+    });
   }
-  return contributions;
 };
 
-export const readContribution = async (id: string, req: Request): Promise<ContributionDto> => {
-  const contribution = await prisma.contribution.findUnique({
+export const readContribution = async (
+  id: string,
+  uid: string,
+): Promise<ContributionDto | null> => {
+  return await prisma.contribution.findUnique({
     select: {
       id: true,
       amount: true,
@@ -62,14 +86,6 @@ export const readContribution = async (id: string, req: Request): Promise<Contri
       createdAt: true,
       updatedAt: true,
     },
-    where: { id },
+    where: { id: id, userId: uid },
   });
-  if (!contribution) {
-    throw new Error("Contribuição não encontrada");
-  }
-
-  if (contribution.userId !== req.session.uid) {
-    throw new Error("Usuário não autorizado a ver esta contribuição");
-  }
-  return contribution;
 };
