@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CreateContributionDto, ContributionDto } from "./contribution.types";
+import { CreateContributionDto } from "./contribution.types";
 import { createContribution, listContributions, readContribution } from "./contribution.service";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 
@@ -15,10 +15,12 @@ const index = async (req: Request, res: Response) => {
       #swagger.responses[200] = {
       schema: { $ref: '#/definitions/Usuario' }
       }
-      */
+    */
+    const campaignId = req.query.campaign ? req.query.campaign.toString() : "";
     const skip = req.query.skip ? parseInt(req.query.skip.toString()) : undefined;
     const take = req.query.take ? parseInt(req.query.take.toString()) : undefined;
-    const contributions = await listContributions(req, skip, take);
+    const uid = req.session.uid ? req.session.uid : "";
+    const contributions = await listContributions(campaignId, uid, skip, take);
     res.status(StatusCodes.OK).json(contributions);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
@@ -39,8 +41,8 @@ const create = async (req: Request, res: Response) => {
       schema: { $ref: '#/definitions/Usuario' }
       }
       */
-
-    const newContribution = await createContribution(contribution, req);
+    const uid = req.session.uid!;
+    const newContribution = await createContribution(contribution, uid);
     res.status(StatusCodes.OK).json(newContribution);
   } catch (err) {
     console.log(err);
@@ -62,7 +64,8 @@ const read = async (req: Request, res: Response) => {
       }
       */
     const { id } = req.params;
-    const contribution = await readContribution(id, req);
+    const uid = req.session.uid!;
+    const contribution = await readContribution(id, uid);
     if (!contribution) return res.status(StatusCodes.NOT_FOUND).json(ReasonPhrases.NOT_FOUND);
     res.status(StatusCodes.OK).json(contribution);
   } catch (err) {

@@ -5,6 +5,7 @@ import { isAuth } from "../../middlewares/isAdmin";
 const router = Router();
 
 router.get("/", campaignController.index);
+router.get("/user", isAuth, campaignController.indexUser);
 router.post("/", isAuth, campaignController.create);
 router.get("/:id", campaignController.read);
 router.put("/:id", isAuth, campaignController.update);

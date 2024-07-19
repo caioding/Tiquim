@@ -24,7 +24,8 @@ const index = async (req: Request, res: Response) => {
       */
     const skip = req.query.skip ? parseInt(req.query.skip.toString()) : undefined;
     const take = req.query.take ? parseInt(req.query.take.toString()) : undefined;
-    const paymentMethods = await listPaymentMethods(req, skip, take);
+    const uid = req.session.uid!;
+    const paymentMethods = await listPaymentMethods(uid, skip, take);
     res.status(StatusCodes.OK).json(paymentMethods);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
@@ -45,8 +46,8 @@ const create = async (req: Request, res: Response) => {
       schema: { $ref: '#/definitions/Usuario' }
       }
       */
-
-    const nemPaymentMethod = await createPaymentMethod(paymentMethod, req);
+    const uid = req.session.uid!;
+    const nemPaymentMethod = await createPaymentMethod(paymentMethod, uid);
     res.status(StatusCodes.OK).json(nemPaymentMethod);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
@@ -67,7 +68,8 @@ const read = async (req: Request, res: Response) => {
       }
       */
     const { id } = req.params;
-    const paymentMethod = await readPaymentMethod(id, req);
+    const uid = req.session.uid!;
+    const paymentMethod = await readPaymentMethod(id, uid);
     if (!paymentMethod) return res.status(StatusCodes.NOT_FOUND).json(ReasonPhrases.NOT_FOUND);
     res.status(StatusCodes.OK).json(paymentMethod);
   } catch (err) {
@@ -88,10 +90,11 @@ const update = async (req: Request, res: Response) => {
   }
   */
   const { id } = req.params;
+  const uid = req.session.uid!;
   const updatedPaymentMethod = req.body as CreatePaymentMethodDto;
 
   try {
-    const paymentMethod = await updatePaymentMethod(id, updatedPaymentMethod, req);
+    const paymentMethod = await updatePaymentMethod(id, updatedPaymentMethod, uid);
 
     if (!paymentMethod) {
       return res
@@ -112,9 +115,10 @@ const remove = async (req: Request, res: Response) => {
   #swagger.summary = 'Apaga um usuário com base no ID.'
   #swagger.parameters['id'] = { description: 'ID do usuário' }
   */
+  const uid = req.session.uid!;
   const { id } = req.params;
   try {
-    const deletedProduct = await deletePaymentMethod(id, req);
+    const deletedProduct = await deletePaymentMethod(id, uid);
     res.status(StatusCodes.NO_CONTENT).json();
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);

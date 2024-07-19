@@ -4,6 +4,7 @@ import {
   createCampaign,
   deleteCampaign,
   listCampaigns,
+  listUserCampaigns,
   readCampaign,
   updateCampaign,
 } from "./campaign.service";
@@ -22,9 +23,10 @@ const index = async (req: Request, res: Response) => {
       schema: { $ref: '#/definitions/Usuario' }
       }
       */
+    const searchTerm = req.query.q ? req.query.q.toString() : "";
     const skip = req.query.skip ? parseInt(req.query.skip.toString()) : undefined;
     const take = req.query.take ? parseInt(req.query.take.toString()) : undefined;
-    const campaigns = await listCampaigns(skip, take);
+    const campaigns = await listCampaigns(searchTerm, skip, take);
     res.status(StatusCodes.OK).json(campaigns);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
@@ -45,8 +47,8 @@ const create = async (req: Request, res: Response) => {
       schema: { $ref: '#/definitions/Usuario' }
       }
       */
-
-    const newCampaign = await createCampaign(campaign, req);
+    const uid = req.session.uid!;
+    const newCampaign = await createCampaign(campaign, uid);
     res.status(StatusCodes.OK).json(newCampaign);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
@@ -88,10 +90,11 @@ const update = async (req: Request, res: Response) => {
   }
   */
   const { id } = req.params;
+  const uid = req.session.uid!;
   const updatedCampaign = req.body as UpdateCampaignDto;
 
   try {
-    const campaign = await updateCampaign(id, updatedCampaign, req);
+    const campaign = await updateCampaign(id, updatedCampaign, uid);
 
     if (!campaign) {
       return res
@@ -113,12 +116,25 @@ const remove = async (req: Request, res: Response) => {
   #swagger.parameters['id'] = { description: 'ID do usuário' }
   */
   const { id } = req.params;
+  const uid = req.session.uid!;
   try {
-    const deletedProduct = await deleteCampaign(id, req);
+    const deletedProduct = await deleteCampaign(id, uid);
     res.status(StatusCodes.NO_CONTENT).json();
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }
 };
 
-export default { index, create, read, update, remove };
+const indexUser = async (req: Request, res: Response) => {
+  const uid = req.session.uid!;
+  try {
+    const skip = req.query.skip ? parseInt(req.query.skip.toString()) : undefined;
+    const take = req.query.take ? parseInt(req.query.take.toString()) : undefined;
+    const campaigns = await listUserCampaigns(uid, skip, take);
+    res.status(StatusCodes.OK).json(campaigns);
+  } catch (err) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
+  }
+};
+
+export default { index, create, read, update, remove, indexUser };
