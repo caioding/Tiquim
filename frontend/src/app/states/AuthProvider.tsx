@@ -4,8 +4,8 @@ import React, { createContext, useEffect, useState } from "react";
 import { getLogged } from "../services/auth";
 
 interface IAuthContext {
-  user: string;
-  setUser: React.Dispatch<React.SetStateAction<string>>;
+  id: string;
+  setId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface AuthContextProps {
@@ -13,30 +13,30 @@ interface AuthContextProps {
 }
 
 export const AuthContext = createContext<IAuthContext>({
-  user: "",
-  setUser: () => {},
+  id: "",
+  setId: () => {},
 });
 
 const AuthProvider = ({ children }: AuthContextProps) => {
-  const [user, setUser] = useState<string>("");
+  const [id, setId] = useState<string>("");
 
   useEffect(() => {
     const checkLogged = async () => {
       try {
         const logged = await getLogged();
-        if (logged) {
-          setUser(logged);
-        }
 
-        console.log(logged);
+        if (logged) {
+          setId(logged);
+        }
       } catch (error) {
         console.log(error);
       }
     };
-    checkLogged();
-  }, [user]);
 
-  return <AuthContext.Provider value={{ user, setUser }}>{children}</AuthContext.Provider>;
+    checkLogged();
+  }, [id]);
+
+  return <AuthContext.Provider value={{ id, setId }}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;

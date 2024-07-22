@@ -22,7 +22,7 @@ import WarningSnackbar from "../components/WarningSnackbar";
 
 export default function Login() {
   const router = useRouter();
-  const { user, setUser } = useAuthContext();
+  const { id, setId } = useAuthContext();
 
   const [open, setOpen] = useState(0);
   const [message, setMessage] = useState("");
@@ -30,7 +30,7 @@ export default function Login() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (user !== "") {
+    if (id !== "") {
       setMessage("Usuário já logado no sistema");
       setOpen(3);
       router.push("/");
@@ -49,6 +49,7 @@ export default function Login() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(credentials),
+          credentials: "include",
         });
 
         if (!response.ok) {
@@ -59,7 +60,7 @@ export default function Login() {
 
         const data = await response.json();
 
-        setUser(data.id);
+        setId(data.id);
 
         setMessage("Login efetuado com sucesso!");
         setOpen(1);
