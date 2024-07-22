@@ -70,7 +70,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
   return (
     <Card
       sx={{
-        maxWidth: 345,
+        width: 345,
         height: 400,
         display: "flex",
         flexDirection: "column",
@@ -79,18 +79,18 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
       onClick={() => openCampaignDetails(campaign.id)}
     >
       <CardMedia component="img" alt={campaign.title} height="140" image={imageUrl} />
-      <CardContent sx={{ mx: 1.5, overflow: "hidden" }}>
+      <CardContent sx={{ flexGrow: 1, mx: 1.5, overflow: "hidden" }}>
         <CardHearder
           title={campaign.title}
           author={user.name}
           createdAt={datetime}
           completedPercentage={completedPercentage}
         />
-        <Typography variant="body2" color="text.secondary" sx={{ fontSize: "14px" }}>
+        <Typography variant="body2" color="text.secondary" sx={{ fontSize: "14px", mt: 1 }}>
           {campaign.preview}
         </Typography>
       </CardContent>
-      <CardActions sx={{ m: 2, mb: 3.5 }}>
+      <CardActions sx={{ mb: 3, mx: 2 }}>
         <Button
           variant="contained"
           sx={{

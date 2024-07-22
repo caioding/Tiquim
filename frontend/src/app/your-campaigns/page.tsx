@@ -6,13 +6,22 @@ import { useYourCampaigns } from "../hooks/useYourCampaigns";
 import AddIcon from "@mui/icons-material/Add";
 import { useRouter } from "next/navigation";
 import { YourCampaignCard } from "../components/YourCampaignCard";
+import useAuthContext from "../hooks/useAuthContext";
 
 export default function Campanhas() {
-  const { campaigns, isPending, isError } = useYourCampaigns();
   const router = useRouter();
+  const { id } = useAuthContext();
+
+  const { campaigns, isPending, isError } = useYourCampaigns();
 
   const showCampaigns = () => {
-    if (isPending) {
+    if (id === "") {
+      return (
+        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
+          Realize o login para visualizar suas campanhas.
+        </Typography>
+      );
+    } else if (isPending) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
           Carregando...

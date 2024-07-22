@@ -13,7 +13,7 @@ import Grouped from "../components/CategoriesInput";
 import FormattedInputs from "../components/NumberFormat";
 import InputFileUpload from "../components/FileUpload";
 
-export default function CreateCampaigns() {
+export default function EditCampaigns() {
   const handleSubmit = async () => {};
 
   return (
@@ -31,7 +31,7 @@ export default function CreateCampaigns() {
         <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
           <Grid item>
             <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-              Criar Campanha
+              Editar Campanha
             </Typography>
           </Grid>
           <Grid item>
@@ -44,7 +44,7 @@ export default function CreateCampaigns() {
                 "&:hover": { backgroundColor: "#008000" },
               }}
             >
-              Salvar
+              Editar
             </Button>
           </Grid>
         </Grid>

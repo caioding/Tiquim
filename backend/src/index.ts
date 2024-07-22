@@ -28,6 +28,7 @@ app.use(
     origin: "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   }),
 );
 
@@ -36,8 +37,11 @@ app.use(
   session({
     genid: () => uuidv4(),
     secret: "d0141e8d-99d4-4682-872f-9e1993a169bd",
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000,
+    },
   }),
 );
 app.use(setCookieLang);

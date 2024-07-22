@@ -17,6 +17,8 @@ import Button from "@mui/material/Button";
 import { usePathname } from "next/navigation";
 import useAuthContext from "../hooks/useAuthContext";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { logout } from "../services/auth";
 
 interface Props {
   window?: () => Window;
@@ -34,23 +36,36 @@ export default function Navbar(props: Props) {
   const path = usePathname();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const { user } = useAuthContext();
+  const { id, setId } = useAuthContext();
   const [hydrated, setHydrated] = React.useState(false);
+  const router = useRouter();
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
-  const isLoggedIn = hydrated && user.id !== undefined;
+  const isLoggedIn = hydrated && id !== "";
 
   useEffect(() => {
     setHydrated(true);
   }, []);
 
-  if (path === "/login" || path === "/cadastro") {
+  if (path === "/login" || path === "/signup") {
     return null;
   }
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const result = await logout();
+      if (result === "OK") {
+        setId("");
+        router.push("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const drawer = (
@@ -67,7 +82,12 @@ export default function Navbar(props: Props) {
             </ListItemButton>
           </ListItem>
         ))}
-        <ListItem key={"Sair"} disablePadding sx={{ display: isLoggedIn ? "inline" : "none" }}>
+        <ListItem
+          key={"Sair"}
+          disablePadding
+          sx={{ display: isLoggedIn ? "inline" : "none" }}
+          onClick={handleLogout}
+        >
           <ListItemButton sx={{ textAlign: "center" }}>
             <ListItemText primary={"Sair"} />
           </ListItemButton>
@@ -132,6 +152,7 @@ export default function Navbar(props: Props) {
                   backgroundColor: "black",
                 },
               }}
+              onClick={handleLogout}
             >
               Sair
             </Button>
