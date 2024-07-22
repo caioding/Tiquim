@@ -97,6 +97,7 @@ export default function YourCampaign() {
   const handleDelete = (e: React.SyntheticEvent) => {
     // TODO: excluir campanha
     e.stopPropagation();
+    router.push(`/delete-campaign/${campaign.id}`);
   };
 
   return (
