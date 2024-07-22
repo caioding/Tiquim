@@ -89,10 +89,9 @@ export default function YourCampaign() {
     setTabValue(newValue);
   };
 
-  const handleEdit = (e: React.SyntheticEvent) => {
+  const handleEdit = (idCampaign: string) => {
     // TODO: ir para a página editar campanha
-    e.stopPropagation();
-    router.push('/edit-campaign');
+    router.push(`/edit-campaign/${idCampaign}`);
   };
 
   const handleDelete = (e: React.SyntheticEvent) => {
@@ -138,7 +137,7 @@ export default function YourCampaign() {
             >
               <Chip label={campaign.category} sx={{ backgroundColor: "#32A852", color: "white" }} />
               <Box>
-                <IconButton aria-label="edit" color="success" onClick={handleEdit}>
+                <IconButton aria-label="edit" color="success" onClick={() => handleEdit(campaign.id)}>
                   <EditIcon />
                 </IconButton>
 

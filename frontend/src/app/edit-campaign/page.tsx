@@ -145,9 +145,9 @@ export default function EditCampaigns() {
                 inputProps={{ maxLength: 1000 }}
               />
             </Grid>
-            <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+            {/* <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
               <InputFileUpload />
-            </Grid>
+            </Grid> */}
           </Grid>
         </Box>
       </Box>
