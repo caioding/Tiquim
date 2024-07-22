@@ -156,7 +156,6 @@ export default function Navbar(props: Props) {
             >
               Sair
             </Button>
-
             <Button
               variant="contained"
               href="/login"
