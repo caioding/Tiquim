@@ -77,7 +77,7 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
   return (
     <Card
       sx={{
-        maxWidth: 345,
+        width: 345,
         height: 400,
         display: "flex",
         flexDirection: "column",
@@ -86,7 +86,7 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
       onClick={() => openCampaignDetails(campaign.id)}
     >
       <CardMedia component="img" alt={campaign.title} height="140" image={imageUrl} />
-      <CardContent sx={{ mx: 1.5, overflow: "hidden" }}>
+      <CardContent sx={{ flexGrow: 1, mx: 1.5, overflow: "hidden" }}>
         <CardHearder
           title={campaign.title}
           author={user.name}
