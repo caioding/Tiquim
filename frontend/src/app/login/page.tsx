@@ -19,57 +19,55 @@ import { useState } from "react";
 import SuccessSnackbar from "../components/SuccessSnackbar";
 import ErrorSnackbar from "../components/ErrorSnackbar";
 import WarningSnackbar from "../components/WarningSnackbar";
+import useRedirectIfLoggedIn from "../hooks/useRedirectIfLoggedIn";
 
 export default function Login() {
   const router = useRouter();
-  const { id, setId } = useAuthContext();
-
   const [open, setOpen] = useState(0);
   const [message, setMessage] = useState("");
+  const { setId } = useAuthContext();
+  const isLoggedIn = useRedirectIfLoggedIn();
+
+  if (isLoggedIn) {
+    return null;
+  }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const data = new FormData(event.currentTarget);
 
-    if (id !== "") {
-      setMessage("Usuário já logado no sistema");
-      setOpen(3);
-      router.push("/");
-    } else {
-      const data = new FormData(event.currentTarget);
+    const credentials = {
+      email: data.get("email") as string,
+      password: data.get("password") as string,
+    };
 
-      const credentials = {
-        email: data.get("email") as string,
-        password: data.get("password") as string,
-      };
+    try {
+      const response = await fetch("http://localhost:9000/v1/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+        credentials: "include",
+      });
 
-      try {
-        const response = await fetch("http://localhost:9000/v1/auth/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(credentials),
-          credentials: "include",
-        });
-
-        if (!response.ok) {
-          setMessage("Erro ao efetuar o login");
-          setOpen(2);
-          throw new Error("Error on login attempt");
-        }
-
-        const data = await response.json();
-
-        setId(data.id);
-
-        setMessage("Login efetuado com sucesso!");
-        setOpen(1);
-        router.push("/");
-      } catch (error) {
-        console.log(error);
-        setMessage("Erro ao efetuar o login!");
+      if (!response.ok) {
+        setMessage("Erro ao efetuar o login");
         setOpen(2);
+        throw new Error("Error on login attempt");
       }
+
+      const data = await response.json();
+
+      setId(data.id);
+
+      setMessage("Login efetuado com sucesso!");
+      setOpen(1);
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+      setMessage("Erro ao efetuar o login!");
+      setOpen(2);
     }
   };
 
