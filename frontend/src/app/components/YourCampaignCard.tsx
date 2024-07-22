@@ -64,9 +64,10 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
     router.push(`/your-campaign/${idCampaign}`);
   };
 
-  const handleEdit = (idCampaign: string) => {
+  const handleEdit = (e: React.SyntheticEvent) => {
     // TODO: ir para a página editar campanha
-    router.push(`/edit-campaign/${idCampaign}`);
+    e.stopPropagation();
+    router.push(`/edit-campaign/${campaign.id}`);
   };
 
   const handleDelete = (e: React.SyntheticEvent) => {
@@ -98,7 +99,7 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
         </Typography>
       </CardContent>
       <CardActions sx={{ m: 2, mb: 2, display: "flex", justifyContent: "end" }}>
-        <IconButton aria-label="edit" color="success" onClick={() => handleEdit(campaign.id)}>
+        <IconButton aria-label="edit" color="success" onClick={handleEdit}>
           <EditIcon />
         </IconButton>
 
