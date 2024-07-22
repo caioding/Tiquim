@@ -17,13 +17,13 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body>
-        <AuthProvider>
-          <ReactQueryClientProvider>
+        <ReactQueryClientProvider>
+          <AuthProvider>
             <Navbar />
             {children}
             <Footer />
-          </ReactQueryClientProvider>
-        </AuthProvider>
+          </AuthProvider>
+        </ReactQueryClientProvider>
       </body>
     </html>
   );

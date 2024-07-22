@@ -35,12 +35,12 @@ export default function Navbar(props: Props) {
   const path = usePathname();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const { user } = useAuthContext();
+  const { id } = useAuthContext();
   const [hydrated, setHydrated] = React.useState(false);
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
-  const isLoggedIn = hydrated && user.id !== undefined;
+  const isLoggedIn = hydrated && id !== "";
 
   useEffect(() => {
     setHydrated(true);
