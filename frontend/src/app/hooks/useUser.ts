@@ -3,7 +3,7 @@ import { getUser } from "../services/user";
 
 export function useUser(id: string) {
   const { data, isPending, isError } = useQuery({
-    queryKey: ["user"],
+    queryKey: ["user", id],
     queryFn: () => getUser(id),
   });
 

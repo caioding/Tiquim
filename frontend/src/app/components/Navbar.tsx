@@ -46,7 +46,7 @@ export default function Navbar(props: Props) {
     setHydrated(true);
   }, []);
 
-  if (path === "/login" || path === "/cadastro") {
+  if (path === "/login" || path === "/signup") {
     return null;
   }
 
