@@ -1,6 +1,12 @@
 import { Request, Response } from "express";
 import { CreateRewardDto } from "./reward.types";
-import { createReward, listRewards, readReward, deleteReward, updateReward } from "./reward.service";
+import {
+  createReward,
+  listRewards,
+  readReward,
+  deleteReward,
+  updateReward,
+} from "./reward.service";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 
 // Listar recompensas

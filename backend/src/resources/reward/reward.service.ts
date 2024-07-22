@@ -1,5 +1,5 @@
-import { PrismaClient, Reward } from "@prisma/client";  // Certifique-se de que o tipo Reward está sendo importado corretamente
-import { CreateRewardDto, RewardDto } from "./reward.types"; 
+import { PrismaClient, Reward } from "@prisma/client"; // Certifique-se de que o tipo Reward está sendo importado corretamente
+import { CreateRewardDto, RewardDto } from "./reward.types";
 
 const prisma = new PrismaClient();
 
@@ -15,7 +15,11 @@ const mapToRewardDto = (reward: Reward): RewardDto => ({
   updatedAt: reward.updatedAt,
 });
 
-export const listRewards = async (campaignId: string, skip?: number, take?: number): Promise<RewardDto[]> => {
+export const listRewards = async (
+  campaignId: string,
+  skip?: number,
+  take?: number,
+): Promise<RewardDto[]> => {
   const rewards = await prisma.reward.findMany({
     where: { campaignId },
     skip,
@@ -38,7 +42,10 @@ export const readReward = async (id: string): Promise<RewardDto | null> => {
   return reward ? mapToRewardDto(reward) : null;
 };
 
-export const updateReward = async (id: string, data: Partial<CreateRewardDto>): Promise<RewardDto | null> => {
+export const updateReward = async (
+  id: string,
+  data: Partial<CreateRewardDto>,
+): Promise<RewardDto | null> => {
   const updatedReward = await prisma.reward.update({
     where: { id },
     data,

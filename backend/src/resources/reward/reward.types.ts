@@ -5,7 +5,7 @@ import { Decimal } from "@prisma/client/runtime/library";
 export type CreateRewardDto = {
   title: string;
   description: string;
-  minimumAmount: Decimal; 
+  minimumAmount: Decimal;
   imageUrl?: string | null;
   campaignId: string;
 };
@@ -15,7 +15,7 @@ export type RewardDto = {
   id: string;
   title: string;
   description: string;
-  minimumAmount: Decimal; 
+  minimumAmount: Decimal;
   imageUrl?: string | null;
   campaignId: string;
   createdAt: Date;
