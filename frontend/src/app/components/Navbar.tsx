@@ -17,7 +17,8 @@ import Button from "@mui/material/Button";
 import { usePathname } from "next/navigation";
 import useAuthContext from "../hooks/useAuthContext";
 import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import { logout } from "../services/auth";
 
 interface Props {
   window?: () => Window;
@@ -35,8 +36,9 @@ export default function Navbar(props: Props) {
   const path = usePathname();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const { id } = useAuthContext();
+  const { id, setId } = useAuthContext();
   const [hydrated, setHydrated] = React.useState(false);
+  const router = useRouter();
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
@@ -52,6 +54,18 @@ export default function Navbar(props: Props) {
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const result = await logout();
+      if (result === "OK") {
+        setId("");
+        router.push("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const drawer = (
@@ -133,6 +147,7 @@ export default function Navbar(props: Props) {
                   backgroundColor: "black",
                 },
               }}
+              onClick={handleLogout}
             >
               Sair
             </Button>
