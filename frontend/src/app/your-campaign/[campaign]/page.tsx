@@ -17,6 +17,7 @@ import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useRouter } from "next/navigation";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -41,6 +42,8 @@ function CustomTabPanel(props: TabPanelProps) {
 }
 
 export default function YourCampaign() {
+  const router = useRouter();
+
   const params = useParams();
 
   const [tabValue, setTabValue] = useState(0);
@@ -89,6 +92,7 @@ export default function YourCampaign() {
   const handleEdit = (e: React.SyntheticEvent) => {
     // TODO: ir para a página editar campanha
     e.stopPropagation();
+    router.push('/edit-campaign');
   };
 
   const handleDelete = (e: React.SyntheticEvent) => {

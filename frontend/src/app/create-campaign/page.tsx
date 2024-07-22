@@ -26,6 +26,8 @@ export default function CreateCampaigns() {
           flexDirection: "column",
           alignItems: "center",
           marginBottom: "50px",
+          backgroundColor: "#f8fafa",
+          border: "20px solid #f8fafa",
         }}
       >
         <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
