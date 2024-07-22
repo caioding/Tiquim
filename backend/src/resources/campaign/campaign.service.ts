@@ -65,28 +65,42 @@ export const listCampaigns = async (
 };
 
 export const listUserCampaigns = async (
+  searchTerm: string,
   uid: string,
   skip?: number,
   take?: number,
 ): Promise<CampaignDto[]> => {
-  return await prisma.campaign.findMany({
-    select: {
-      id: true,
-      goal: true,
-      deadline: true,
-      title: true,
-      description: true,
-      preview: true,
-      category: true,
-      imageUrl: true,
-      userId: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-    where: { userId: uid },
-    skip,
-    take,
-  });
+  if (searchTerm) {
+    return await prisma.campaign.findMany({
+      where: {
+        title: {
+          contains: searchTerm,
+        },
+        userId: uid,
+      },
+      skip: skip,
+      take: take,
+    });
+  } else {
+    return await prisma.campaign.findMany({
+      select: {
+        id: true,
+        goal: true,
+        deadline: true,
+        title: true,
+        description: true,
+        preview: true,
+        category: true,
+        imageUrl: true,
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      where: { userId: uid },
+      skip,
+      take,
+    });
+  }
 };
 
 export const readCampaign = async (id: string): Promise<CampaignDto | null> => {

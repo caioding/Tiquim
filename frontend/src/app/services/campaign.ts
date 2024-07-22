@@ -9,6 +9,6 @@ export async function getCampaignDetails(id: string): Promise<Campaign> {
   return api.get(`/campaign/${id}`).then((response) => response.data);
 }
 
-export async function getYourCampaigns(): Promise<Campaign[]> {
-  return api.get("/campaign/user").then((response) => response.data);
+export async function getYourCampaigns(searchQuery: string): Promise<Campaign[]> {
+  return api.get(`/campaign/user?q=${searchQuery}`).then((response) => response.data);
 }
