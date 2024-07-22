@@ -9,12 +9,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import Grouped from "../components/CategoriesInput";
-import FormattedInputs from "../components/NumberFormat";
-import InputFileUpload from "../components/FileUpload";
+import Grouped from "../../components/CategoriesInput";
+import FormattedInputs from "../../components/NumberFormat";
+import InputFileUpload from "../../components/FileUpload";
 
 export default function EditCampaigns() {
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => { };
 
   return (
     <Container component="main" maxWidth="md">
@@ -26,6 +26,8 @@ export default function EditCampaigns() {
           flexDirection: "column",
           alignItems: "center",
           marginBottom: "50px",
+          backgroundColor: "#f8fafa",
+          border: "20px solid #f8fafa",
         }}
       >
         <Grid container justifyContent="space-between" alignItems="center" spacing={2}>

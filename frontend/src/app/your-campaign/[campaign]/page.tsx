@@ -17,6 +17,7 @@ import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useRouter } from "next/navigation";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -41,6 +42,8 @@ function CustomTabPanel(props: TabPanelProps) {
 }
 
 export default function YourCampaign() {
+  const router = useRouter();
+
   const params = useParams();
 
   const [tabValue, setTabValue] = useState(0);
@@ -86,14 +89,15 @@ export default function YourCampaign() {
     setTabValue(newValue);
   };
 
-  const handleEdit = (e: React.SyntheticEvent) => {
+  const handleEdit = (idCampaign: string) => {
     // TODO: ir para a página editar campanha
-    e.stopPropagation();
+    router.push(`/edit-campaign/${idCampaign}`);
   };
 
   const handleDelete = (e: React.SyntheticEvent) => {
     // TODO: excluir campanha
     e.stopPropagation();
+    router.push(`/delete-campaign/${campaign.id}`);
   };
 
   return (
@@ -134,7 +138,7 @@ export default function YourCampaign() {
             >
               <Chip label={campaign.category} sx={{ backgroundColor: "#32A852", color: "white" }} />
               <Box>
-                <IconButton aria-label="edit" color="success" onClick={handleEdit}>
+                <IconButton aria-label="edit" color="success" onClick={() => handleEdit(campaign.id)}>
                   <EditIcon />
                 </IconButton>
 

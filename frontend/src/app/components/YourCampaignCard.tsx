@@ -67,6 +67,7 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
   const handleEdit = (e: React.SyntheticEvent) => {
     // TODO: ir para a página editar campanha
     e.stopPropagation();
+    router.push(`/edit-campaign/${campaign.id}`);
   };
 
   const handleDelete = (e: React.SyntheticEvent) => {
