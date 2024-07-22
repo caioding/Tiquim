@@ -82,7 +82,12 @@ export default function Navbar(props: Props) {
             </ListItemButton>
           </ListItem>
         ))}
-        <ListItem key={"Sair"} disablePadding sx={{ display: isLoggedIn ? "inline" : "none" }}>
+        <ListItem
+          key={"Sair"}
+          disablePadding
+          sx={{ display: isLoggedIn ? "inline" : "none" }}
+          onClick={handleLogout}
+        >
           <ListItemButton sx={{ textAlign: "center" }}>
             <ListItemText primary={"Sair"} />
           </ListItemButton>
