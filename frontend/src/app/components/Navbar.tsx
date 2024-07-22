@@ -14,8 +14,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/icons-material/Search";
 import { usePathname } from "next/navigation";
 import useAuthContext from "../hooks/useAuthContext";
 import { useEffect } from "react";
@@ -38,7 +36,6 @@ export default function Navbar(props: Props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const { user } = useAuthContext();
   const [hydrated, setHydrated] = React.useState(false);
-  const [searchQuery, setSearchQuery] = React.useState("");
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
@@ -54,20 +51,6 @@ export default function Navbar(props: Props) {
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
-  };
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
-  };
-
-  const handleSearchSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    try {
-      const response = await fetch(`http://localhost:9000/v1/campaign/?q=${searchQuery}`);
-      const data = await response.json();
-    } catch (error) {
-      console.error("Erro na busca:", error);
-    }
   };
 
   const drawer = (
@@ -125,33 +108,6 @@ export default function Navbar(props: Props) {
           >
             Tiquim
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSearchSubmit}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              backgroundColor: "rgba(0, 0, 0, 0.4)",
-              borderRadius: 2,
-              mr: 3,
-            }}
-          >
-            <SearchIcon sx={{ padding: 0.5, color: "inherit" }} />
-            <InputBase
-              placeholder="Pesquisar…"
-              inputProps={{ "aria-label": "search" }}
-              value={searchQuery}
-              onChange={handleSearchChange}
-              sx={{
-                color: "inherit",
-                paddingLeft: 1,
-                "& .MuiInputBase-input": {
-                  padding: 1,
-                  width: "100%",
-                },
-              }}
-            />
-          </Box>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (
               <Button
