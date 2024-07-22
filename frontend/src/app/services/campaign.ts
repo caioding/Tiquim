@@ -10,6 +10,5 @@ export async function getCampaignDetails(id: string): Promise<Campaign> {
 }
 
 export async function getYourCampaigns(): Promise<Campaign[]> {
-  // TODO: Atualizar endpoint
-  return api.get("/campaign").then((response) => response.data);
+  return api.get("/campaign/user").then((response) => response.data);
 }
