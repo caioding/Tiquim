@@ -9,9 +9,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import Grouped from "../components/CategoriesInput";
-import FormattedInputs from "../components/NumberFormat";
-import InputFileUpload from "../components/FileUpload";
+import Grouped from "../../components/CategoriesInput";
+import FormattedInputs from "../../components/NumberFormat";
+import InputFileUpload from "../../components/FileUpload";
 
 export default function EditCampaigns() {
   const handleSubmit = async () => { };
