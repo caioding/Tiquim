@@ -30,7 +30,7 @@ export default function InputFileUpload() {
         "&:hover": { backgroundColor: "#008000" },
       }}
     >
-      Upload file
+      Upload de Imagem
       <VisuallyHiddenInput type="file" />
     </Button>
   );

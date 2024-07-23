@@ -46,7 +46,7 @@ export default function EditCampaigns() {
                 "&:hover": { backgroundColor: "#008000" },
               }}
             >
-              Editar
+              Salvar
             </Button>
           </Grid>
         </Grid>
@@ -68,19 +68,19 @@ export default function EditCampaigns() {
                 inputProps={{ maxLength: 50 }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            {/* <Grid item xs={12} sm={6}>
               <InputLabel htmlFor="goal" sx={{ color: "black" }}>
                 Meta
               </InputLabel>
               <FormattedInputs></FormattedInputs>
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            </Grid> */}
+            {/* <Grid item xs={12} sm={6}>
               <InputLabel htmlFor="category" sx={{ color: "black" }}>
                 Categorias
               </InputLabel>
               <Grouped></Grouped>
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            </Grid> */}
+            {/* <Grid item xs={12} sm={6}>
               <InputLabel htmlFor="deadline" sx={{ color: "black" }}>
                 Prazo
               </InputLabel>
@@ -97,21 +97,7 @@ export default function EditCampaigns() {
                 variant="outlined"
                 margin="normal"
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputLabel htmlFor="ImageURL" sx={{ color: "black" }}>
-                ImageURL
-              </InputLabel>
-              <TextField
-                required
-                fullWidth
-                id="ImageURL"
-                name="ImageURL"
-                autoComplete="ImageURL"
-                variant="outlined"
-                margin="normal"
-              />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12}>
               <InputLabel htmlFor="preview" sx={{ color: "black" }}>
                 Preview
@@ -145,6 +131,20 @@ export default function EditCampaigns() {
                 inputProps={{ maxLength: 1000 }}
               />
             </Grid>
+                        <Grid item xs={12} sm={6}>
+              <InputLabel htmlFor="ImageURL" sx={{ color: "black" }}>
+                ImageURL
+              </InputLabel>
+              <TextField
+                required
+                fullWidth
+                id="ImageURL"
+                name="ImageURL"
+                autoComplete="ImageURL"
+                variant="outlined"
+                margin="normal"
+              />
+            </Grid>zz
             {/* <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
               <InputFileUpload />
             </Grid> */}
