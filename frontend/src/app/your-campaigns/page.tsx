@@ -17,44 +17,49 @@ export default function Campanhas() {
   const [searchQuery, setSearchQuery] = React.useState("");
   const { campaigns, isPending, isError } = useYourCampaigns(searchQuery);
 
+  if (id === "") {
+    return (
+      <Container sx={{ width: "80%" }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+          Realize o login para visualizar suas campanhas.
+        </Typography>
+      </Container>
+    );
+  }
+  if (isPending) {
+    return (
+      <Container sx={{ width: "80%" }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+          Carregando...
+        </Typography>
+      </Container>
+    );
+  }
+  if (isError) {
+    return (
+      <Container sx={{ width: "80%" }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+          Ocorreu um erro ao carregar as campanhas.
+        </Typography>
+      </Container>
+    );
+  }
+  if (campaigns?.length == 0) {
+    return (
+      <Container sx={{ width: "80%" }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+          Você ainda não criou campanhas.
+        </Typography>
+      </Container>
+    );
+  }
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
 
   const handleSearchSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  };
-
-  const showCampaigns = () => {
-    if (id === "") {
-      return (
-        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Realize o login para visualizar suas campanhas.
-        </Typography>
-      );
-    } else if (isPending) {
-      return (
-        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Carregando...
-        </Typography>
-      );
-    } else if (isError) {
-      return (
-        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Ocorreu um erro ao carregar as campanhas.
-        </Typography>
-      );
-    } else if (campaigns?.length == 0) {
-      return (
-        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Você ainda não criou campanhas.
-        </Typography>
-      );
-    } else {
-      return campaigns?.map((campaign) => (
-        <YourCampaignCard key={campaign.id} campaign={campaign} />
-      ));
-    }
   };
 
   const handleAddCampaign = (e: React.SyntheticEvent) => {
@@ -114,7 +119,7 @@ export default function Campanhas() {
         gap={4}
         p={2}
       >
-        {showCampaigns()}
+        {campaigns?.map((campaign) => <YourCampaignCard key={campaign.id} campaign={campaign} />)}
       </Box>
       <Fab
         color="success"

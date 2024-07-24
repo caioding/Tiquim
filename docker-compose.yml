@@ -15,14 +15,14 @@ services:
     depends_on:
       - mysql
 
-  frontend:
-    container_name: frontend_tiquim
-    build:
-      context: ./frontend
-    volumes:
-      - ./frontend:/app
-    ports:
-      - ${FRONTEND_PORT}:${FRONTEND_PORT}
+  # frontend:
+  #   container_name: frontend_tiquim
+  #   build:
+  #     context: ./frontend
+  #   volumes:
+  #     - ./frontend:/app
+  #   ports:
+  #     - ${FRONTEND_PORT}:${FRONTEND_PORT}
 
   mysql:
     container_name: db_tiquim

@@ -13,7 +13,7 @@ import Grouped from "../components/CategoriesInput";
 import FormattedInputs from "../components/NumberFormat";
 import InputFileUpload from "../components/FileUpload";
 
-export default function CreateCampaigns() {
+export default function CreateCampaign() {
   const handleSubmit = async () => {};
 
   return (
