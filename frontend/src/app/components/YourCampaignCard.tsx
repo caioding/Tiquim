@@ -83,6 +83,7 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        m: { xs: "auto", sm: 0 },
       }}
       onClick={() => openCampaignDetails(campaign.id)}
     >
