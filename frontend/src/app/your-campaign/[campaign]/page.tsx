@@ -1,9 +1,7 @@
 "use client";
 import { AboutTabPanel } from "@/app/components/AboutTabPanel";
-import { useCampaignDetails } from "@/app/hooks/useCampaignDetails";
 import {
   Box,
-  Button,
   Chip,
   Container,
   CssBaseline,
@@ -18,6 +16,7 @@ import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useRouter } from "next/navigation";
+import useCampaignOwner from "@/app/hooks/useCampaignOwner";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -50,10 +49,7 @@ export default function YourCampaign() {
 
   const idCampaign = params.campaign as string;
 
-  const { campaign, isPending, isError } = useCampaignDetails(idCampaign);
-
-  const imageUrl =
-    campaign?.imageUrl && campaign.imageUrl.length > 0 ? campaign.imageUrl : "/placeholder.png";
+  const { isPending, isError, isOwner, campaign } = useCampaignOwner(idCampaign);
 
   if (isPending) {
     return (
@@ -69,7 +65,7 @@ export default function YourCampaign() {
     return (
       <Container sx={{ width: "80%" }}>
         <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
-          Ocorreu um erro ao carregar as informações da campanha.
+          Ocorreu um erro ao carregar as informações da campanha ou a campanha não existe.
         </Typography>
       </Container>
     );
@@ -85,19 +81,30 @@ export default function YourCampaign() {
     );
   }
 
+  if (!isOwner) {
+    return (
+      <Container sx={{ width: "80%" }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+          Você não tem permissão para acessar essa página.
+        </Typography>
+      </Container>
+    );
+  }
+
+  const imageUrl =
+    campaign.imageUrl && campaign.imageUrl.length > 0 ? campaign.imageUrl : "/placeholder.png";
+
   const handleTabChange = (e: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 
   const handleEdit = (idCampaign: string) => {
-    // TODO: ir para a página editar campanha
     router.push(`/edit-campaign/${idCampaign}`);
   };
 
   const handleDelete = (e: React.SyntheticEvent) => {
     // TODO: excluir campanha
     e.stopPropagation();
-    router.push(`/delete-campaign/${campaign.id}`);
   };
 
   return (
@@ -138,7 +145,11 @@ export default function YourCampaign() {
             >
               <Chip label={campaign.category} sx={{ backgroundColor: "#32A852", color: "white" }} />
               <Box>
-                <IconButton aria-label="edit" color="success" onClick={() => handleEdit(campaign.id)}>
+                <IconButton
+                  aria-label="edit"
+                  color="success"
+                  onClick={() => handleEdit(campaign.id)}
+                >
                   <EditIcon />
                 </IconButton>
 

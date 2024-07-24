@@ -12,9 +12,60 @@ import {
 import Grouped from "../../components/CategoriesInput";
 import FormattedInputs from "../../components/NumberFormat";
 import InputFileUpload from "../../components/FileUpload";
+import useCampaignOwner from "@/app/hooks/useCampaignOwner";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 
-export default function EditCampaigns() {
-  const handleSubmit = async () => { };
+export default function EditCampaign() {
+  const params = useParams();
+
+  const idCampaign = params.campaign as string;
+
+  const { isPending, isError, isOwner, campaign } = useCampaignOwner(idCampaign);
+
+  if (isPending) {
+    return (
+      <Container sx={{ width: "80%" }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+          Carregando...
+        </Typography>
+      </Container>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Container sx={{ width: "80%" }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+          Ocorreu um erro ao carregar as informações da campanha ou a campanha não existe.
+        </Typography>
+      </Container>
+    );
+  }
+
+  if (!campaign) {
+    return (
+      <Container sx={{ width: "80%" }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+          Não há detalhes disponíveis para esta campanha no momento.
+        </Typography>
+      </Container>
+    );
+  }
+
+  if (!isOwner) {
+    return (
+      <Container sx={{ width: "80%" }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+          Você não tem permissão para acessar essa página.
+        </Typography>
+      </Container>
+    );
+  }
+
+  const [campaignInfo, setCampaignInfo] = useState(campaign);
+
+  const handleSubmit = async () => {};
 
   return (
     <Container component="main" maxWidth="md">
@@ -66,6 +117,8 @@ export default function EditCampaigns() {
                 variant="outlined"
                 margin="normal"
                 inputProps={{ maxLength: 50 }}
+                value={campaignInfo.title}
+                onChange={(e) => setCampaignInfo({ ...campaignInfo, title: e.target.value })}
               />
             </Grid>
             {/* <Grid item xs={12} sm={6}>
@@ -99,6 +152,22 @@ export default function EditCampaigns() {
               />
             </Grid> */}
             <Grid item xs={12}>
+              <InputLabel htmlFor="ImageURL" sx={{ color: "black" }}>
+                ImageURL
+              </InputLabel>
+              <TextField
+                required
+                fullWidth
+                id="ImageURL"
+                name="ImageURL"
+                autoComplete="ImageURL"
+                variant="outlined"
+                margin="normal"
+                value={campaignInfo.imageUrl}
+                onChange={(e) => setCampaignInfo({ ...campaignInfo, imageUrl: e.target.value })}
+              />
+            </Grid>
+            <Grid item xs={12}>
               <InputLabel htmlFor="preview" sx={{ color: "black" }}>
                 Preview
               </InputLabel>
@@ -112,6 +181,8 @@ export default function EditCampaigns() {
                 variant="outlined"
                 margin="normal"
                 inputProps={{ maxLength: 120 }}
+                value={campaignInfo.preview}
+                onChange={(e) => setCampaignInfo({ ...campaignInfo, preview: e.target.value })}
               />
             </Grid>
             <Grid item xs={12}>
@@ -129,22 +200,11 @@ export default function EditCampaigns() {
                 variant="outlined"
                 margin="normal"
                 inputProps={{ maxLength: 1000 }}
+                value={campaignInfo.description}
+                onChange={(e) => setCampaignInfo({ ...campaignInfo, description: e.target.value })}
               />
             </Grid>
-                        <Grid item xs={12} sm={6}>
-              <InputLabel htmlFor="ImageURL" sx={{ color: "black" }}>
-                ImageURL
-              </InputLabel>
-              <TextField
-                required
-                fullWidth
-                id="ImageURL"
-                name="ImageURL"
-                autoComplete="ImageURL"
-                variant="outlined"
-                margin="normal"
-              />
-            </Grid>zz
+
             {/* <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
               <InputFileUpload />
             </Grid> */}
