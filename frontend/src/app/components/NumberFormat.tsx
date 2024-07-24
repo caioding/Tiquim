@@ -58,6 +58,7 @@ export default function FormattedInputs() {
         }}
         variant="outlined"
         margin="normal"
+        sx={{ backgroundColor: "white" }}
       />
     </Stack>
   );
