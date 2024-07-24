@@ -72,6 +72,7 @@ export default function Campanhas() {
       <Box
         sx={{
           display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
           alignItems: "center",
           justifyContent: "space-between",
           padding: 1,
@@ -88,6 +89,7 @@ export default function Campanhas() {
             border: 1,
             borderColor: "rgba(150, 150, 150, 1)",
             borderRadius: 3,
+            mt: { xs: 4 },
           }}
         >
           <SearchIcon sx={{ padding: 0.5, color: "rgba(150, 150, 150, 1)" }} />
@@ -117,7 +119,7 @@ export default function Campanhas() {
         alignItems="center"
         my={4}
         gap={4}
-        p={2}
+        sx={{ p: { xs: 0, sm: 2 } }}
       >
         {campaigns?.map((campaign) => <YourCampaignCard key={campaign.id} campaign={campaign} />)}
       </Box>

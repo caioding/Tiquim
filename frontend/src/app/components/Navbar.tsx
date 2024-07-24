@@ -19,6 +19,7 @@ import useAuthContext from "../hooks/useAuthContext";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { logout } from "../services/auth";
+import LogoTiquim from "./LogoTiquim";
 
 interface Props {
   window?: () => Window;
@@ -115,11 +116,12 @@ export default function Navbar(props: Props) {
           >
             <MenuIcon />
           </IconButton>
+          <LogoTiquim sx={{ ml: { xs: "auto", sm: 2 } }} />
           <Typography
             variant="h6"
             component="div"
             sx={{
-              ml: 4,
+              ml: 1,
               flexGrow: 1,
               display: { xs: "none", sm: "block" },
               color: "text.primary",
