@@ -16,7 +16,7 @@ import FormattedInputs from "../components/NumberFormat";
 import InputFileUpload from "../components/FileUpload";
 
 export default function CreateCampaign() {
-  const handleSubmit = async () => { };
+  const handleSubmit = async () => {};
 
   return (
     <Container component="main" maxWidth="md">

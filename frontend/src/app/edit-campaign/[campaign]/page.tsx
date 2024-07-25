@@ -16,7 +16,8 @@ import FormattedInputs from "../../components/NumberFormat";
 import InputFileUpload from "../../components/FileUpload";
 import useCampaignOwner from "@/app/hooks/useCampaignOwner";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Campaign } from "@/app/types/campaign";
 
 export default function EditCampaign() {
   const params = useParams();
@@ -24,6 +25,26 @@ export default function EditCampaign() {
   const idCampaign = params.campaign as string;
 
   const { isPending, isError, isOwner, campaign } = useCampaignOwner(idCampaign);
+
+  const [campaignInfo, setCampaignInfo] = useState<Campaign>({
+    id: "",
+    title: "",
+    preview: "",
+    description: "",
+    imageUrl: "",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    deadline: new Date(),
+    category: "",
+    goal: 0,
+    userId: "",
+  });
+
+  useEffect(() => {
+    if (campaign) {
+      setCampaignInfo(campaign);
+    }
+  }, [campaign]);
 
   if (isPending) {
     return (
@@ -65,9 +86,7 @@ export default function EditCampaign() {
     );
   }
 
-  const [campaignInfo, setCampaignInfo] = useState(campaign);
-
-  const handleSubmit = async () => { };
+  const handleSubmit = async () => {};
 
   return (
     <Container component="main" maxWidth="md">
@@ -128,7 +147,7 @@ export default function EditCampaign() {
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
                     inputProps={{ maxLength: 50 }}
-                    value={campaignInfo.title}
+                    value={campaignInfo?.title}
                     onChange={(e) => setCampaignInfo({ ...campaignInfo, title: e.target.value })}
                   />
                 </Grid>
@@ -185,7 +204,9 @@ export default function EditCampaign() {
                     sx={{ backgroundColor: "white" }}
                     inputProps={{ maxLength: 1000 }}
                     value={campaignInfo.description}
-                    onChange={(e) => setCampaignInfo({ ...campaignInfo, description: e.target.value })}
+                    onChange={(e) =>
+                      setCampaignInfo({ ...campaignInfo, description: e.target.value })
+                    }
                   />
                 </Grid>
               </Grid>
