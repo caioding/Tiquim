@@ -86,7 +86,7 @@ export default function EditCampaign() {
     );
   }
 
-  const handleSubmit = async () => { };
+  const handleSubmit = async () => {};
 
   return (
     <Container component="main" maxWidth="md">
@@ -147,7 +147,7 @@ export default function EditCampaign() {
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
                     inputProps={{ maxLength: 50 }}
-                    value={campaignInfo.title}
+                    value={campaignInfo?.title}
                     onChange={(e) => setCampaignInfo({ ...campaignInfo, title: e.target.value })}
                   />
                 </Grid>
@@ -204,7 +204,9 @@ export default function EditCampaign() {
                     sx={{ backgroundColor: "white" }}
                     inputProps={{ maxLength: 1000 }}
                     value={campaignInfo.description}
-                    onChange={(e) => setCampaignInfo({ ...campaignInfo, description: e.target.value })}
+                    onChange={(e) =>
+                      setCampaignInfo({ ...campaignInfo, description: e.target.value })
+                    }
                   />
                 </Grid>
               </Grid>
