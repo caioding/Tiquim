@@ -14,9 +14,44 @@ import {
 import Grouped from "../components/CategoriesInput";
 import FormattedInputs from "../components/NumberFormat";
 import InputFileUpload from "../components/FileUpload";
+import { useState } from "react";
+import { Campaign } from "../types/campaign";
 
 export default function CreateCampaign() {
-  const handleSubmit = async () => {};
+
+  const [campaignInfo, setCampaignInfo] = useState<Campaign>({
+    id: "",
+    title: "",
+    preview: "",
+    description: "",
+    imageUrl: "",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    deadline: new Date(),
+    category: "",
+    goal: 0,
+    userId: "",
+  });
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const newErrors: { [key: string]: string } = {};
+
+    if (!campaignInfo.title) newErrors.title = "O título é obrigatório.";
+    if (!campaignInfo.category) newErrors.title = "A categoria é obrigatório.";
+    if (!campaignInfo.imageUrl) newErrors.imageUrl = "A URL da imagem é obrigatória.";
+    if (!campaignInfo.preview) newErrors.preview = "O preview é obrigatório.";
+    if (!campaignInfo.description) newErrors.description = "A descrição é obrigatória.";
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      // Para salvar a campanha
+      console.log("Salvando campanha...", campaignInfo);
+    }
+  };
 
   return (
     <Container component="main" maxWidth="md">
@@ -55,6 +90,7 @@ export default function CreateCampaign() {
                     color: "white",
                     "&:hover": { backgroundColor: "#008000" },
                   }}
+                  onClick={handleSubmit}
                 >
                   Salvar
                 </Button>
@@ -77,6 +113,8 @@ export default function CreateCampaign() {
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
                     inputProps={{ maxLength: 50 }}
+                    error={!!errors.title}
+                    helperText={errors.title}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -123,6 +161,8 @@ export default function CreateCampaign() {
                     variant="outlined"
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
+                    error={!!errors.imageUrl}
+                    helperText={errors.imageUrl}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -140,6 +180,8 @@ export default function CreateCampaign() {
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
                     inputProps={{ maxLength: 120 }}
+                    error={!!errors.preview}
+                    helperText={errors.preview}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -158,6 +200,8 @@ export default function CreateCampaign() {
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
                     inputProps={{ maxLength: 1000 }}
+                    error={!!errors.description}
+                    helperText={errors.description}
                   />
                 </Grid>
                 {/* <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>

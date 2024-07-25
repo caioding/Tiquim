@@ -40,6 +40,8 @@ export default function EditCampaign() {
     userId: "",
   });
 
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
   useEffect(() => {
     if (campaign) {
       setCampaignInfo(campaign);
@@ -86,7 +88,22 @@ export default function EditCampaign() {
     );
   }
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const newErrors: { [key: string]: string } = {};
+
+    if (!campaignInfo.title) newErrors.title = "O título é obrigatório.";
+    if (!campaignInfo.imageUrl) newErrors.imageUrl = "A URL da imagem é obrigatória.";
+    if (!campaignInfo.preview) newErrors.preview = "O preview é obrigatório.";
+    if (!campaignInfo.description) newErrors.description = "A descrição é obrigatória.";
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      // Para salvar a campanha
+      console.log("Salvando campanha...", campaignInfo);
+    }
+  };
 
   return (
     <Container component="main" maxWidth="md">
@@ -125,6 +142,7 @@ export default function EditCampaign() {
                     color: "white",
                     "&:hover": { backgroundColor: "#008000" },
                   }}
+                  onClick={handleSubmit}
                 >
                   Salvar
                 </Button>
@@ -149,6 +167,8 @@ export default function EditCampaign() {
                     inputProps={{ maxLength: 50 }}
                     value={campaignInfo?.title}
                     onChange={(e) => setCampaignInfo({ ...campaignInfo, title: e.target.value })}
+                    error={!!errors.title}
+                    helperText={errors.title}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -166,6 +186,8 @@ export default function EditCampaign() {
                     sx={{ backgroundColor: "white" }}
                     value={campaignInfo.imageUrl}
                     onChange={(e) => setCampaignInfo({ ...campaignInfo, imageUrl: e.target.value })}
+                    error={!!errors.imageUrl}
+                    helperText={errors.imageUrl}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -185,6 +207,8 @@ export default function EditCampaign() {
                     inputProps={{ maxLength: 120 }}
                     value={campaignInfo.preview}
                     onChange={(e) => setCampaignInfo({ ...campaignInfo, preview: e.target.value })}
+                    error={!!errors.preview}
+                    helperText={errors.preview}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -207,6 +231,8 @@ export default function EditCampaign() {
                     onChange={(e) =>
                       setCampaignInfo({ ...campaignInfo, description: e.target.value })
                     }
+                    error={!!errors.description}
+                    helperText={errors.description}
                   />
                 </Grid>
               </Grid>
