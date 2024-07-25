@@ -22,7 +22,9 @@ export default function Grouped() {
       groupBy={(option) => option.firstLetter}
       getOptionLabel={(option) => option.title}
       fullWidth
-      renderInput={(params) => <TextField {...params} label="" margin="normal" />}
+      renderInput={(params) => (
+        <TextField {...params} label="" margin="normal" sx={{ backgroundColor: "white" }} />
+      )}
     />
   );
 }
