@@ -15,10 +15,10 @@ import Grouped from "../components/CategoriesInput";
 import FormattedInputs from "../components/NumberFormat";
 import InputFileUpload from "../components/FileUpload";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Campaign } from "../types/campaign";
 
 export default function CreateCampaign() {
-
   const [campaignInfo, setCampaignInfo] = useState<Campaign>({
     id: "",
     title: "",
@@ -33,24 +33,14 @@ export default function CreateCampaign() {
     userId: "",
   });
 
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Campaign>();
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    const newErrors: { [key: string]: string } = {};
-
-    if (!campaignInfo.title) newErrors.title = "O título é obrigatório.";
-    if (!campaignInfo.category) newErrors.title = "A categoria é obrigatório.";
-    if (!campaignInfo.imageUrl) newErrors.imageUrl = "A URL da imagem é obrigatória.";
-    if (!campaignInfo.preview) newErrors.preview = "O preview é obrigatório.";
-    if (!campaignInfo.description) newErrors.description = "A descrição é obrigatória.";
-
-    setErrors(newErrors);
-
-    if (Object.keys(newErrors).length === 0) {
-      // Para salvar a campanha
-      console.log("Salvando campanha...", campaignInfo);
-    }
+  const handleFormSubmit = (data: Campaign) => {
+    console.log(data);
   };
 
   return (
@@ -90,13 +80,17 @@ export default function CreateCampaign() {
                     color: "white",
                     "&:hover": { backgroundColor: "#008000" },
                   }}
-                  onClick={handleSubmit}
+                  onClick={handleSubmit(handleFormSubmit)}
                 >
                   Salvar
                 </Button>
               </Grid>
             </Grid>
-            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, width: "100%" }}>
+            <Box
+              component="form"
+              onSubmit={handleSubmit(handleFormSubmit)}
+              sx={{ mt: 3, width: "100%" }}
+            >
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="title" sx={{ color: "black" }}>
@@ -106,28 +100,29 @@ export default function CreateCampaign() {
                     required
                     fullWidth
                     id="title"
-                    name="title"
                     autoComplete="title"
                     autoFocus
                     variant="outlined"
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
                     inputProps={{ maxLength: 50 }}
-                    error={!!errors.title}
-                    helperText={errors.title}
+                    {...register("title", { required: true })}
                   />
+                  {errors.title?.type === "required" && (
+                    <span className="text-danger">Esse campo é obrigatório</span>
+                  )}
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <InputLabel htmlFor="goal" sx={{ color: "black" }}>
                     Meta
                   </InputLabel>
-                  <FormattedInputs></FormattedInputs>
+                  <FormattedInputs />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <InputLabel htmlFor="category" sx={{ color: "black" }}>
                     Categorias
                   </InputLabel>
-                  <Grouped></Grouped>
+                  <Grouped />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <InputLabel htmlFor="deadline" sx={{ color: "black" }}>
@@ -137,7 +132,6 @@ export default function CreateCampaign() {
                     required
                     fullWidth
                     id="deadline"
-                    name="deadline"
                     type="date"
                     sx={{ backgroundColor: "white" }}
                     InputLabelProps={{
@@ -146,24 +140,29 @@ export default function CreateCampaign() {
                     autoComplete="deadline"
                     variant="outlined"
                     margin="normal"
+                    {...register("deadline", { required: true })}
                   />
+                  {errors.deadline?.type === "required" && (
+                    <span className="text-danger">Esse campo é obrigatório</span>
+                  )}
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <InputLabel htmlFor="ImageURL" sx={{ color: "black" }}>
+                  <InputLabel htmlFor="imageUrl" sx={{ color: "black" }}>
                     ImageURL
                   </InputLabel>
                   <TextField
                     required
                     fullWidth
-                    id="ImageURL"
-                    name="ImageURL"
-                    autoComplete="ImageURL"
+                    id="imageUrl"
+                    autoComplete="imageUrl"
                     variant="outlined"
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
-                    error={!!errors.imageUrl}
-                    helperText={errors.imageUrl}
+                    {...register("imageUrl", { required: true })}
                   />
+                  {errors.imageUrl?.type === "required" && (
+                    <span className="text-danger">Esse campo é obrigatório</span>
+                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="preview" sx={{ color: "black" }}>
@@ -173,16 +172,17 @@ export default function CreateCampaign() {
                     required
                     fullWidth
                     id="preview"
-                    name="preview"
                     autoComplete="preview"
                     autoFocus
                     variant="outlined"
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
                     inputProps={{ maxLength: 120 }}
-                    error={!!errors.preview}
-                    helperText={errors.preview}
+                    {...register("preview", { required: true })}
                   />
+                  {errors.preview?.type === "required" && (
+                    <span className="text-danger">Esse campo é obrigatório</span>
+                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="description" sx={{ color: "black" }}>
@@ -192,7 +192,6 @@ export default function CreateCampaign() {
                     required
                     fullWidth
                     id="description"
-                    name="description"
                     multiline
                     rows={4}
                     autoComplete="description"
@@ -200,9 +199,11 @@ export default function CreateCampaign() {
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
                     inputProps={{ maxLength: 1000 }}
-                    error={!!errors.description}
-                    helperText={errors.description}
+                    {...register("description", { required: true })}
                   />
+                  {errors.description?.type === "required" && (
+                    <span className="text-danger">Esse campo é obrigatório</span>
+                  )}
                 </Grid>
                 {/* <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
               <InputFileUpload />
