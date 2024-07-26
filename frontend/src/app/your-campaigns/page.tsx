@@ -65,7 +65,6 @@ export default function YourCampaigns() {
     }
   };
 
-
   const handleAddCampaign = (e: React.SyntheticEvent) => {
     e.stopPropagation();
     router.push("/create-campaign"); // Navega para a página de criação de campanhas
@@ -99,6 +98,7 @@ export default function YourCampaigns() {
           <InputBase
             placeholder="Pesquisar…"
             inputProps={{ "aria-label": "search" }}
+            autoFocus
             value={searchQuery}
             onChange={handleSearchChange}
             sx={{

@@ -18,11 +18,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Campaign } from "../types/campaign";
 
-
 const formatDate = (date: Date): string => {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
 
@@ -54,7 +53,6 @@ export default function CreateCampaign() {
       updatedAt: campaignInfo.updatedAt.toISOString(),
       deadline: campaignInfo.deadline.toISOString(),
     };
-    console.log(formattedData)
   };
 
   return (
@@ -125,7 +123,8 @@ export default function CreateCampaign() {
                     onChange={(e) => setCampaignInfo({ ...campaignInfo, title: e.target.value })}
                   />
                   {errors.title?.type === "required" && (
-                    <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
+                    <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
+                  )}
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <InputLabel htmlFor="goal" sx={{ color: "black" }}>
@@ -169,10 +168,13 @@ export default function CreateCampaign() {
                     margin="normal"
                     {...register("deadline", { required: true })}
                     value={formatDate(campaignInfo.deadline)}
-                    onChange={(e) => setCampaignInfo({ ...campaignInfo, deadline: new Date(e.target.value) })}
+                    onChange={(e) =>
+                      setCampaignInfo({ ...campaignInfo, deadline: new Date(e.target.value) })
+                    }
                   />
                   {errors.deadline?.type === "required" && (
-                    <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
+                    <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
+                  )}
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <InputLabel htmlFor="imageUrl" sx={{ color: "black" }}>
@@ -191,7 +193,8 @@ export default function CreateCampaign() {
                     onChange={(e) => setCampaignInfo({ ...campaignInfo, imageUrl: e.target.value })}
                   />
                   {errors.imageUrl?.type === "required" && (
-                    <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
+                    <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
+                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="preview" sx={{ color: "black" }}>
@@ -212,7 +215,8 @@ export default function CreateCampaign() {
                     onChange={(e) => setCampaignInfo({ ...campaignInfo, preview: e.target.value })}
                   />
                   {errors.preview?.type === "required" && (
-                    <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
+                    <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
+                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="description" sx={{ color: "black" }}>
@@ -231,10 +235,13 @@ export default function CreateCampaign() {
                     inputProps={{ maxLength: 1000 }}
                     {...register("description", { required: true })}
                     value={campaignInfo.description}
-                    onChange={(e) => setCampaignInfo({ ...campaignInfo, description: e.target.value })}
+                    onChange={(e) =>
+                      setCampaignInfo({ ...campaignInfo, description: e.target.value })
+                    }
                   />
                   {errors.description?.type === "required" && (
-                    <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
+                    <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
+                  )}
                 </Grid>
                 {/* <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
               <InputFileUpload />

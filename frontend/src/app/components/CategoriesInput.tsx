@@ -5,7 +5,12 @@ import campaigns from "../mocks/campaigns";
 import { FormattedInputsProps } from "../types/FormattedInputsProps";
 import { Box } from "@mui/material";
 
-export default function Grouped({ campaignInfo, setCampaignInfo, register, errors }: FormattedInputsProps) {
+export default function Grouped({
+  campaignInfo,
+  setCampaignInfo,
+  register,
+  errors,
+}: FormattedInputsProps) {
   // Extrai categorias únicas das campanhas
   const uniqueCategories = [...new Set(campaigns.map((campaign) => campaign.category))].map(
     (category) => {
@@ -40,7 +45,7 @@ export default function Grouped({ campaignInfo, setCampaignInfo, register, error
         )}
       />
       {errors.category?.type === "required" && (
-        <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>
+        <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
       )}
     </>
   );

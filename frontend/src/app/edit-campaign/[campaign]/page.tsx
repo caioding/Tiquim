@@ -53,9 +53,7 @@ export default function EditCampaign() {
     }
   }, [campaign, setValue]);
 
-  const handleFormSubmit = (data: Campaign) => {
-    // console.log(data);
-  };
+  const handleFormSubmit = (data: Campaign) => {};
 
   if (isPending) {
     return (
@@ -96,8 +94,6 @@ export default function EditCampaign() {
       </Container>
     );
   }
-
-  // console.log(campaignInfo);
 
   return (
     <Container component="main" maxWidth="md">
@@ -168,7 +164,8 @@ export default function EditCampaign() {
                     }}
                   />
                   {errors.title?.type === "required" && (
-                    <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
+                    <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
+                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="imageUrl" sx={{ color: "black" }}>
@@ -189,7 +186,8 @@ export default function EditCampaign() {
                     }}
                   />
                   {errors.imageUrl?.type === "required" && (
-                    <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
+                    <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
+                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="preview" sx={{ color: "black" }}>
@@ -211,7 +209,8 @@ export default function EditCampaign() {
                     }}
                   />
                   {errors.preview?.type === "required" && (
-                    <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
+                    <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
+                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="description" sx={{ color: "black" }}>
@@ -235,7 +234,8 @@ export default function EditCampaign() {
                     }}
                   />
                   {errors.description?.type === "required" && (
-                    <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
+                    <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
+                  )}
                 </Grid>
               </Grid>
             </Box>

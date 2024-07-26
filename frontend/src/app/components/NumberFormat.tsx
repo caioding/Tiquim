@@ -42,7 +42,6 @@ export default function FormattedInputs({
   register,
   errors,
 }: FormattedInputsProps) {
-
   return (
     <Stack>
       <TextField
@@ -61,10 +60,10 @@ export default function FormattedInputs({
         onChange={(e) => setCampaignInfo({ ...campaignInfo, goal: parseFloat(e.target.value) })}
       />
       {errors.goal?.type === "required" && (
-        <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>
+        <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
       )}
       {errors.goal?.type === "min" && (
-        <Box sx={{ color: 'error.main' }}>O valor deve ser no mínimo 1</Box>
+        <Box sx={{ color: "error.main" }}>O valor deve ser no mínimo 1</Box>
       )}
     </Stack>
   );

@@ -2,9 +2,9 @@ import { FieldErrors, UseFormHandleSubmit, UseFormRegister } from "react-hook-fo
 import { Campaign } from "./campaign";
 
 export interface FormattedInputsProps {
-    campaignInfo: Campaign;
-    setCampaignInfo: React.Dispatch<React.SetStateAction<Campaign>>;
-    register: UseFormRegister<Campaign>;
-    handleSubmit: UseFormHandleSubmit<Campaign>;
-    errors: FieldErrors<Campaign>;
+  campaignInfo: Campaign;
+  setCampaignInfo: React.Dispatch<React.SetStateAction<Campaign>>;
+  register: UseFormRegister<Campaign>;
+  handleSubmit: UseFormHandleSubmit<Campaign>;
+  errors: FieldErrors<Campaign>;
 }
