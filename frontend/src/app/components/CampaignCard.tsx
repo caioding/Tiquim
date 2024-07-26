@@ -63,8 +63,8 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
   };
 
   const handleDonateToCampaign = (e: React.SyntheticEvent) => {
-    // TODO: ir para a página de doação
     e.stopPropagation();
+    router.push(`/contribution`);
   };
 
   return (
@@ -101,9 +101,10 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
           }}
           onClick={handleDonateToCampaign}
         >
-          Doar
+          Doar 
         </Button>
       </CardActions>
     </Card>
   );
+
 }
