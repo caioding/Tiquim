@@ -173,7 +173,6 @@ export default function EditCampaign() {
                     required
                     fullWidth
                     id="imageUrl"
-                    autoComplete="imageUrl"
                     variant="outlined"
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
