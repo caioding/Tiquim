@@ -93,7 +93,7 @@ export default function EditCampaign() {
       </Container>
     );
   }
-
+  console.log(errors.imageUrl);
   return (
     <Container component="main" maxWidth="md">
       <CssBaseline />
@@ -151,8 +151,6 @@ export default function EditCampaign() {
                     required
                     fullWidth
                     id="title"
-                    autoComplete="title"
-                    autoFocus
                     variant="outlined"
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
@@ -162,8 +160,7 @@ export default function EditCampaign() {
                     onChange={(e) => setCampaignInfo({ ...campaignInfo, title: e.target.value })}
                   />
                   {errors.title?.type === "required" && (
-                    <span className="text-danger">Esse campo é obrigatório</span>
-                  )}
+                    <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="imageUrl" sx={{ color: "black" }}>
@@ -181,8 +178,7 @@ export default function EditCampaign() {
                     onChange={(e) => setCampaignInfo({ ...campaignInfo, imageUrl: e.target.value })}
                   />
                   {errors.imageUrl?.type === "required" && (
-                    <span className="text-danger">Esse campo é obrigatório</span>
-                  )}
+                    <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="preview" sx={{ color: "black" }}>
@@ -192,7 +188,6 @@ export default function EditCampaign() {
                     required
                     fullWidth
                     id="preview"
-                    autoComplete="preview"
                     variant="outlined"
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
@@ -202,8 +197,7 @@ export default function EditCampaign() {
                     onChange={(e) => setCampaignInfo({ ...campaignInfo, preview: e.target.value })}
                   />
                   {errors.preview?.type === "required" && (
-                    <span className="text-danger">Esse campo é obrigatório</span>
-                  )}
+                    <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="description" sx={{ color: "black" }}>
@@ -215,7 +209,6 @@ export default function EditCampaign() {
                     id="description"
                     multiline
                     rows={4}
-                    autoComplete="description"
                     variant="outlined"
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
@@ -227,8 +220,7 @@ export default function EditCampaign() {
                     }
                   />
                   {errors.description?.type === "required" && (
-                    <span className="text-danger">Esse campo é obrigatório</span>
-                  )}
+                    <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
                 </Grid>
               </Grid>
             </Box>

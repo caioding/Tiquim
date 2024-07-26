@@ -18,6 +18,14 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Campaign } from "../types/campaign";
 
+
+const formatDate = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 export default function CreateCampaign() {
   const [campaignInfo, setCampaignInfo] = useState<Campaign>({
     id: "",
@@ -107,22 +115,35 @@ export default function CreateCampaign() {
                     sx={{ backgroundColor: "white" }}
                     inputProps={{ maxLength: 50 }}
                     {...register("title", { required: true })}
+                    value={campaignInfo?.title}
+                    onChange={(e) => setCampaignInfo({ ...campaignInfo, title: e.target.value })}
                   />
                   {errors.title?.type === "required" && (
-                    <span className="text-danger">Esse campo é obrigatório</span>
-                  )}
+                    <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <InputLabel htmlFor="goal" sx={{ color: "black" }}>
                     Meta
                   </InputLabel>
-                  <FormattedInputs />
+                  <FormattedInputs
+                    campaignInfo={campaignInfo}
+                    setCampaignInfo={setCampaignInfo}
+                    register={register}
+                    handleSubmit={handleSubmit}
+                    errors={errors}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <InputLabel htmlFor="category" sx={{ color: "black" }}>
                     Categorias
                   </InputLabel>
-                  <Grouped />
+                  <Grouped
+                    campaignInfo={campaignInfo}
+                    setCampaignInfo={setCampaignInfo}
+                    register={register}
+                    handleSubmit={handleSubmit}
+                    errors={errors} 
+                    />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <InputLabel htmlFor="deadline" sx={{ color: "black" }}>
@@ -141,10 +162,11 @@ export default function CreateCampaign() {
                     variant="outlined"
                     margin="normal"
                     {...register("deadline", { required: true })}
+                    value={formatDate(campaignInfo.deadline)}
+                    onChange={(e) => setCampaignInfo({ ...campaignInfo, deadline: new Date(e.target.value) })}
                   />
                   {errors.deadline?.type === "required" && (
-                    <span className="text-danger">Esse campo é obrigatório</span>
-                  )}
+                    <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <InputLabel htmlFor="imageUrl" sx={{ color: "black" }}>
@@ -159,10 +181,11 @@ export default function CreateCampaign() {
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
                     {...register("imageUrl", { required: true })}
+                    value={campaignInfo.imageUrl}
+                    onChange={(e) => setCampaignInfo({ ...campaignInfo, imageUrl: e.target.value })}
                   />
                   {errors.imageUrl?.type === "required" && (
-                    <span className="text-danger">Esse campo é obrigatório</span>
-                  )}
+                    <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="preview" sx={{ color: "black" }}>
@@ -179,10 +202,11 @@ export default function CreateCampaign() {
                     sx={{ backgroundColor: "white" }}
                     inputProps={{ maxLength: 120 }}
                     {...register("preview", { required: true })}
+                    value={campaignInfo.preview}
+                    onChange={(e) => setCampaignInfo({ ...campaignInfo, preview: e.target.value })}
                   />
                   {errors.preview?.type === "required" && (
-                    <span className="text-danger">Esse campo é obrigatório</span>
-                  )}
+                    <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="description" sx={{ color: "black" }}>
@@ -200,10 +224,11 @@ export default function CreateCampaign() {
                     sx={{ backgroundColor: "white" }}
                     inputProps={{ maxLength: 1000 }}
                     {...register("description", { required: true })}
+                    value={campaignInfo.description}
+                    onChange={(e) => setCampaignInfo({ ...campaignInfo, description: e.target.value })}
                   />
                   {errors.description?.type === "required" && (
-                    <span className="text-danger">Esse campo é obrigatório</span>
-                  )}
+                    <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
                 </Grid>
                 {/* <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
               <InputFileUpload />
