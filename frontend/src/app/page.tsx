@@ -7,16 +7,12 @@ import { Box, Container, Typography } from "@mui/material";
 import { CampaignCard } from "./components/CampaignCard";
 import { useCampaigns } from "./hooks/useCampaigns";
 
-export default function Campanhas() {
+export default function Campaigns() {
   const [searchQuery, setSearchQuery] = React.useState("");
   const { campaigns, isPending, isError } = useCampaigns(searchQuery);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
-  };
-
-  const handleSearchSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
   };
 
   const showCampaigns = () => {
@@ -57,7 +53,6 @@ export default function Campanhas() {
         <CampaignsHeader />
         <Box
           component="form"
-          onSubmit={handleSearchSubmit}
           sx={{
             display: "flex",
             alignItems: "center",
