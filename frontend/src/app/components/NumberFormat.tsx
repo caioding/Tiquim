@@ -5,7 +5,6 @@ import { NumericFormat } from "react-number-format";
 import TextField from "@mui/material/TextField";
 import { Box } from "@mui/material";
 import { FieldErrors, UseFormHandleSubmit, UseFormRegister } from "react-hook-form";
-import { Campaign } from "../types/campaign";
 import { FormattedInputsProps } from "../types/FormattedInputsProps";
 
 interface CustomProps {
@@ -31,7 +30,7 @@ const NumericFormatCustom = React.forwardRef<NumericFormatProps, CustomProps>(
         }}
         thousandSeparator="."
         decimalSeparator=","
-      // prefix="R$ "
+        // prefix="R$ "
       />
     );
   },
@@ -43,12 +42,7 @@ export default function FormattedInputs({
   register,
   errors,
 }: FormattedInputsProps) {
-  const [] = React.useState({
-    numberformat: "", //aparecer no input
-  });
 
-  console.log(campaignInfo)
-  
   return (
     <Stack>
       <TextField

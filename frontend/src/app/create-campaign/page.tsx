@@ -47,8 +47,14 @@ export default function CreateCampaign() {
     formState: { errors },
   } = useForm<Campaign>();
 
-  const handleFormSubmit = (data: Campaign) => {
-    console.log(data);
+  const handleFormSubmit = () => {
+    const formattedData = {
+      ...campaignInfo,
+      createdAt: campaignInfo.createdAt.toISOString(),
+      updatedAt: campaignInfo.updatedAt.toISOString(),
+      deadline: campaignInfo.deadline.toISOString(),
+    };
+    console.log(formattedData)
   };
 
   return (
@@ -142,8 +148,8 @@ export default function CreateCampaign() {
                     setCampaignInfo={setCampaignInfo}
                     register={register}
                     handleSubmit={handleSubmit}
-                    errors={errors} 
-                    />
+                    errors={errors}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <InputLabel htmlFor="deadline" sx={{ color: "black" }}>

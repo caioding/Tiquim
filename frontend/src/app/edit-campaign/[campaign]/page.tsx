@@ -19,11 +19,8 @@ import { Campaign } from "@/app/types/campaign";
 
 export default function EditCampaign() {
   const params = useParams();
-
   const idCampaign = params.campaign as string;
-
   const { isPending, isError, isOwner, campaign } = useCampaignOwner(idCampaign);
-
   const [campaignInfo, setCampaignInfo] = useState<Campaign>({
     id: "",
     title: "",
@@ -38,20 +35,26 @@ export default function EditCampaign() {
     userId: "",
   });
 
-  useEffect(() => {
-    if (campaign) {
-      setCampaignInfo(campaign);
-    }
-  }, [campaign]);
-
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<Campaign>();
 
+  useEffect(() => {
+    if (campaign) {
+      setCampaignInfo(campaign);
+      // Update form values
+      setValue("title", campaign.title);
+      setValue("imageUrl", campaign.imageUrl);
+      setValue("preview", campaign.preview);
+      setValue("description", campaign.description);
+    }
+  }, [campaign, setValue]);
+
   const handleFormSubmit = (data: Campaign) => {
-    console.log(data);
+    // console.log(data);
   };
 
   if (isPending) {
@@ -93,7 +96,9 @@ export default function EditCampaign() {
       </Container>
     );
   }
-  console.log(errors.imageUrl);
+
+  // console.log(campaignInfo);
+
   return (
     <Container component="main" maxWidth="md">
       <CssBaseline />
@@ -157,7 +162,10 @@ export default function EditCampaign() {
                     inputProps={{ maxLength: 50 }}
                     {...register("title", { required: true })}
                     value={campaignInfo?.title}
-                    onChange={(e) => setCampaignInfo({ ...campaignInfo, title: e.target.value })}
+                    onChange={(e) => {
+                      setCampaignInfo({ ...campaignInfo, title: e.target.value });
+                      setValue("title", e.target.value);
+                    }}
                   />
                   {errors.title?.type === "required" && (
                     <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
@@ -175,7 +183,10 @@ export default function EditCampaign() {
                     sx={{ backgroundColor: "white" }}
                     {...register("imageUrl", { required: true })}
                     value={campaignInfo.imageUrl}
-                    onChange={(e) => setCampaignInfo({ ...campaignInfo, imageUrl: e.target.value })}
+                    onChange={(e) => {
+                      setCampaignInfo({ ...campaignInfo, imageUrl: e.target.value });
+                      setValue("imageUrl", e.target.value);
+                    }}
                   />
                   {errors.imageUrl?.type === "required" && (
                     <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
@@ -194,7 +205,10 @@ export default function EditCampaign() {
                     inputProps={{ maxLength: 120 }}
                     {...register("preview", { required: true })}
                     value={campaignInfo.preview}
-                    onChange={(e) => setCampaignInfo({ ...campaignInfo, preview: e.target.value })}
+                    onChange={(e) => {
+                      setCampaignInfo({ ...campaignInfo, preview: e.target.value });
+                      setValue("preview", e.target.value);
+                    }}
                   />
                   {errors.preview?.type === "required" && (
                     <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
@@ -215,9 +229,10 @@ export default function EditCampaign() {
                     inputProps={{ maxLength: 1000 }}
                     {...register("description", { required: true })}
                     value={campaignInfo.description}
-                    onChange={(e) =>
-                      setCampaignInfo({ ...campaignInfo, description: e.target.value })
-                    }
+                    onChange={(e) => {
+                      setCampaignInfo({ ...campaignInfo, description: e.target.value });
+                      setValue("description", e.target.value);
+                    }}
                   />
                   {errors.description?.type === "required" && (
                     <Box sx={{ color: 'error.main' }}>Esse campo é obrigatório</Box>)}
