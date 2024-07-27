@@ -4,7 +4,6 @@ import Stack from "@mui/material/Stack";
 import { NumericFormat } from "react-number-format";
 import TextField from "@mui/material/TextField";
 import { Box } from "@mui/material";
-import { FieldErrors, UseFormHandleSubmit, UseFormRegister } from "react-hook-form";
 import { FormattedInputsProps } from "../types/FormattedInputsProps";
 
 interface CustomProps {
@@ -30,7 +29,10 @@ const NumericFormatCustom = React.forwardRef<NumericFormatProps, CustomProps>(
         }}
         thousandSeparator="."
         decimalSeparator=","
-        // prefix="R$ "
+        decimalScale={2}
+        fixedDecimalScale
+        displayType="input"
+        allowNegative={false}
       />
     );
   },
@@ -47,8 +49,8 @@ export default function FormattedInputs({
       <TextField
         label=""
         fullWidth
-        type="goal"
-        value={campaignInfo.goal}
+        type="text"
+        value={(campaignInfo.goal?.toFixed(2).replace('.', ',') || "")}
         id="goal"
         InputProps={{
           inputComponent: NumericFormatCustom as any,
@@ -56,14 +58,21 @@ export default function FormattedInputs({
         variant="outlined"
         margin="normal"
         sx={{ backgroundColor: "white" }}
-        {...register("goal", { required: true, min: 1 })}
-        onChange={(e) => setCampaignInfo({ ...campaignInfo, goal: parseFloat(e.target.value) })}
+        {...register("goal", {
+          required: "Esse campo é obrigatório",
+          validate: (value) => {
+            // Confirma se o valor é uma string e substitui a vírgula por ponto
+            const numericValue = parseFloat(value.toString().replace(',', '.'));
+            return numericValue >= 1 || "Deve ser no mínimo 1";
+          }
+        })}
+        onChange={(e) => {
+          // Converte o valor para número ao definir o estado
+          setCampaignInfo({ ...campaignInfo, goal: parseFloat(e.target.value.replace(',', '.')) });
+        }}
       />
-      {errors.goal?.type === "required" && (
-        <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
-      )}
-      {errors.goal?.type === "min" && (
-        <Box sx={{ color: "error.main" }}>O valor deve ser no mínimo 1</Box>
+      {errors.goal && (
+        <Box sx={{ color: "error.main" }}>{errors.goal.message}</Box>
       )}
     </Stack>
   );
