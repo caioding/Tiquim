@@ -11,21 +11,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import Grouped from "../../components/CategoriesInput";
-import FormattedInputs from "../../components/NumberFormat";
-import InputFileUpload from "../../components/FileUpload";
 import useCampaignOwner from "@/app/hooks/useCampaignOwner";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Campaign } from "@/app/types/campaign";
 
 export default function EditCampaign() {
   const params = useParams();
-
   const idCampaign = params.campaign as string;
-
   const { isPending, isError, isOwner, campaign } = useCampaignOwner(idCampaign);
-
   const [campaignInfo, setCampaignInfo] = useState<Campaign>({
     id: "",
     title: "",
@@ -40,11 +35,25 @@ export default function EditCampaign() {
     userId: "",
   });
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm<Campaign>();
+
   useEffect(() => {
     if (campaign) {
       setCampaignInfo(campaign);
+      // Update form values
+      setValue("title", campaign.title);
+      setValue("imageUrl", campaign.imageUrl);
+      setValue("preview", campaign.preview);
+      setValue("description", campaign.description);
     }
-  }, [campaign]);
+  }, [campaign, setValue]);
+
+  const handleFormSubmit = (data: Campaign) => {};
 
   if (isPending) {
     return (
@@ -86,8 +95,6 @@ export default function EditCampaign() {
     );
   }
 
-  const handleSubmit = async () => {};
-
   return (
     <Container component="main" maxWidth="md">
       <CssBaseline />
@@ -125,12 +132,17 @@ export default function EditCampaign() {
                     color: "white",
                     "&:hover": { backgroundColor: "#008000" },
                   }}
+                  onClick={handleSubmit(handleFormSubmit)}
                 >
                   Salvar
                 </Button>
               </Grid>
             </Grid>
-            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, width: "100%" }}>
+            <Box
+              component="form"
+              onSubmit={handleSubmit(handleFormSubmit)}
+              sx={{ mt: 3, width: "100%" }}
+            >
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="title" sx={{ color: "black" }}>
@@ -140,33 +152,42 @@ export default function EditCampaign() {
                     required
                     fullWidth
                     id="title"
-                    name="title"
-                    autoComplete="title"
-                    autoFocus
                     variant="outlined"
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
                     inputProps={{ maxLength: 50 }}
+                    {...register("title", { required: true })}
                     value={campaignInfo?.title}
-                    onChange={(e) => setCampaignInfo({ ...campaignInfo, title: e.target.value })}
+                    onChange={(e) => {
+                      setCampaignInfo({ ...campaignInfo, title: e.target.value });
+                      setValue("title", e.target.value);
+                    }}
                   />
+                  {errors.title?.type === "required" && (
+                    <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
+                  )}
                 </Grid>
                 <Grid item xs={12}>
-                  <InputLabel htmlFor="ImageURL" sx={{ color: "black" }}>
+                  <InputLabel htmlFor="imageUrl" sx={{ color: "black" }}>
                     ImageURL
                   </InputLabel>
                   <TextField
                     required
                     fullWidth
-                    id="ImageURL"
-                    name="ImageURL"
-                    autoComplete="ImageURL"
+                    id="imageUrl"
                     variant="outlined"
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
+                    {...register("imageUrl", { required: true })}
                     value={campaignInfo.imageUrl}
-                    onChange={(e) => setCampaignInfo({ ...campaignInfo, imageUrl: e.target.value })}
+                    onChange={(e) => {
+                      setCampaignInfo({ ...campaignInfo, imageUrl: e.target.value });
+                      setValue("imageUrl", e.target.value);
+                    }}
                   />
+                  {errors.imageUrl?.type === "required" && (
+                    <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
+                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="preview" sx={{ color: "black" }}>
@@ -176,16 +197,20 @@ export default function EditCampaign() {
                     required
                     fullWidth
                     id="preview"
-                    name="preview"
-                    autoComplete="preview"
-                    autoFocus
                     variant="outlined"
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
                     inputProps={{ maxLength: 120 }}
+                    {...register("preview", { required: true })}
                     value={campaignInfo.preview}
-                    onChange={(e) => setCampaignInfo({ ...campaignInfo, preview: e.target.value })}
+                    onChange={(e) => {
+                      setCampaignInfo({ ...campaignInfo, preview: e.target.value });
+                      setValue("preview", e.target.value);
+                    }}
                   />
+                  {errors.preview?.type === "required" && (
+                    <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
+                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="description" sx={{ color: "black" }}>
@@ -195,19 +220,22 @@ export default function EditCampaign() {
                     required
                     fullWidth
                     id="description"
-                    name="description"
                     multiline
                     rows={4}
-                    autoComplete="description"
                     variant="outlined"
                     margin="normal"
                     sx={{ backgroundColor: "white" }}
                     inputProps={{ maxLength: 1000 }}
+                    {...register("description", { required: true })}
                     value={campaignInfo.description}
-                    onChange={(e) =>
-                      setCampaignInfo({ ...campaignInfo, description: e.target.value })
-                    }
+                    onChange={(e) => {
+                      setCampaignInfo({ ...campaignInfo, description: e.target.value });
+                      setValue("description", e.target.value);
+                    }}
                   />
+                  {errors.description?.type === "required" && (
+                    <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
+                  )}
                 </Grid>
               </Grid>
             </Box>

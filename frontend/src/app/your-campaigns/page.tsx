@@ -10,12 +10,16 @@ import { useRouter } from "next/navigation";
 import { YourCampaignCard } from "../components/YourCampaignCard";
 import useAuthContext from "../hooks/useAuthContext";
 
-export default function Campanhas() {
+export default function YourCampaigns() {
   const router = useRouter();
   const { id } = useAuthContext();
 
   const [searchQuery, setSearchQuery] = React.useState("");
   const { campaigns, isPending, isError } = useYourCampaigns(searchQuery);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
 
   if (id === "") {
     return (
@@ -44,22 +48,21 @@ export default function Campanhas() {
       </Container>
     );
   }
-  if (campaigns?.length == 0) {
-    return (
-      <Container sx={{ width: "80%" }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
-          Você ainda não criou campanhas.
-        </Typography>
-      </Container>
-    );
-  }
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
-  };
-
-  const handleSearchSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const loadCampaigns = () => {
+    if (campaigns?.length == 0) {
+      return (
+        <Container sx={{ width: "80%" }}>
+          <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+            Nenhuma campanha encontrada!
+          </Typography>
+        </Container>
+      );
+    } else {
+      return campaigns?.map((campaign) => (
+        <YourCampaignCard key={campaign.id} campaign={campaign} />
+      ));
+    }
   };
 
   const handleAddCampaign = (e: React.SyntheticEvent) => {
@@ -81,7 +84,6 @@ export default function Campanhas() {
         <YourCampaignsHeader />
         <Box
           component="form"
-          onSubmit={handleSearchSubmit}
           sx={{
             display: "flex",
             alignItems: "center",
@@ -96,6 +98,7 @@ export default function Campanhas() {
           <InputBase
             placeholder="Pesquisar…"
             inputProps={{ "aria-label": "search" }}
+            autoFocus
             value={searchQuery}
             onChange={handleSearchChange}
             sx={{
@@ -121,7 +124,7 @@ export default function Campanhas() {
         gap={4}
         sx={{ p: { xs: 0, sm: 2 } }}
       >
-        {campaigns?.map((campaign) => <YourCampaignCard key={campaign.id} campaign={campaign} />)}
+        {loadCampaigns()}
       </Box>
       <Fab
         color="success"
