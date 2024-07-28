@@ -20,9 +20,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Campaign } from "../types/campaign";
-import SuccessSnackbar from "../components/SuccessSnackbar";
-import ErrorSnackbar from "../components/ErrorSnackbar";
-import WarningSnackbar from "../components/WarningSnackbar";
+import useSnackbar from "../hooks/useSnackbar";
 
 const formatDate = (date: Date): string => {
   const year = date.getFullYear();
@@ -51,11 +49,8 @@ export default function CreateCampaign() {
     handleSubmit,
     formState: { errors },
   } = useForm<Campaign>();
-  const [open, setOpen] = useState(0);
-  const [message, setMessage] = useState("");
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
+
+  const { setSnackbar } = useSnackbar();
 
   const handleFormSubmit = async () => {
     const formattedData = {
@@ -78,18 +73,16 @@ export default function CreateCampaign() {
       });
 
       if(!response.ok) {
-        setMessage("Erro ao criar a campanha");
-        setOpen(2);
+        setSnackbar("Erro ao criar a campanha", "error");
         throw new Error(`Error on handle submit creating campaign: ${response.statusText}`)
       } 
       
       const data = await response.json();
-      setMessage("Campanha criada com sucesso!");
-      setOpen(1);
+
+      setSnackbar("Campanha criada com sucesso!");
       router.push("/");
     } catch (error) {
-      setMessage("Erro ao efetuar o login");
-      setOpen(2);
+      setSnackbar("Erro ao efetuar o login");
     }
 
   };
@@ -159,7 +152,7 @@ export default function CreateCampaign() {
                     inputProps={{ maxLength: 50 }}
                     {...register("title", { required: true })}
                     value={campaignInfo?.title}
-                    onChange={(e : React.ChangeEvent<HTMLFormElement>) => setCampaignInfo({ ...campaignInfo, title: e.target.value })}
+                    onChange={(e) => setCampaignInfo({ ...campaignInfo, title: e.target.value })}
                   />
                   {errors.title?.type === "required" && (
                     <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
@@ -290,9 +283,6 @@ export default function CreateCampaign() {
           </CardContent>
         </Card>
       </Box>
-      <SuccessSnackbar message={message} open={open == 1} setOpen={setOpen} />
-      <ErrorSnackbar message={message} open={open == 2} setOpen={setOpen} />
-      <WarningSnackbar message={message} open={open == 3} setOpen={setOpen} />
     </Container>
   );
 }

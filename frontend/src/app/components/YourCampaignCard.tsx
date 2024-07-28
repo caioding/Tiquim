@@ -13,6 +13,8 @@ import { useUser } from "../hooks/useUser";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
+import useSnackbar from "../hooks/useSnackbar";
+import useDeleteCampaign from "../hooks/useDeleteCampaign";
 
 interface CampaignCardProps {
   campaign: Campaign;
@@ -28,13 +30,16 @@ const TIME_FORMAT: Intl.DateTimeFormatOptions = {
 
 export function YourCampaignCard({ campaign }: CampaignCardProps) {
   const router = useRouter();
-
+  
   const createdAt = new Date(campaign.createdAt);
 
   const datetime: string = createdAt.toLocaleString("pt-BR", TIME_FORMAT);
 
   const { user, isPending, isError } = useUser(campaign.userId);
 
+  const {deleteCampaign, isDeleting, isError: deleteError} = useDeleteCampaign(campaign.id)
+  
+  const { setSnackbar } = useSnackbar();
   if (isPending) {
     return <div>Loading...</div>;
   }
@@ -70,9 +75,17 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
     router.push(`/edit-campaign/${campaign.id}`);
   };
 
-  const handleDelete = (e: React.SyntheticEvent) => {
+  const handleDelete = async (e: React.SyntheticEvent,idCampaign: string) => {
     // TODO: excluir campanha
     e.stopPropagation();
+    const success = await deleteCampaign(idCampaign)
+    if(success) {
+      setSnackbar("Campanha deletada com sucesso!");
+      router.push("/");
+    }
+    else {
+      setSnackbar("Erro ao deletar campanha");
+    }
   };
 
   return (
@@ -104,7 +117,7 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
           <EditIcon />
         </IconButton>
 
-        <IconButton aria-label="delete" color="success" onClick={handleDelete}>
+        <IconButton aria-label="delete" color="success" onClick={(e) => handleDelete(e, campaign.id)}>
           <DeleteIcon />
         </IconButton>
       </CardActions>
