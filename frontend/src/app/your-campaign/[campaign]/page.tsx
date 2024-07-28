@@ -52,7 +52,7 @@ export default function YourCampaign() {
   const idCampaign = params.campaign as string;
 
   const { isPending, isError, isOwner, campaign } = useCampaignOwner(idCampaign);
-  const {deleteCampaign, isDeleting, isError: deleteError} = useDeleteCampaign(idCampaign)
+  const { deleteCampaign, isDeleting, isError: deleteError } = useDeleteCampaign(idCampaign);
 
   if (isPending) {
     return (
@@ -107,15 +107,14 @@ export default function YourCampaign() {
 
   const handleDelete = async (e: React.SyntheticEvent, idCampaign: string) => {
     // TODO: excluir campanha
-    //valeu por sinalizar onde ficava 
+    //valeu por sinalizar onde ficava
     e.stopPropagation();
-    const success = await deleteCampaign(idCampaign)
-    
-    if(success) {
+    const success = await deleteCampaign(idCampaign);
+
+    if (success) {
       setSnackbar("Campanha deletada com sucesso!");
       router.push("/");
-    }
-    else {
+    } else {
       setSnackbar("Erro ao deletar campanha");
     }
   };
@@ -166,10 +165,11 @@ export default function YourCampaign() {
                   <EditIcon />
                 </IconButton>
 
-                <IconButton 
-                  aria-label="delete" 
-                  color="success" 
-                  onClick={(e) => handleDelete(e, campaign.id)}>
+                <IconButton
+                  aria-label="delete"
+                  color="success"
+                  onClick={(e) => handleDelete(e, campaign.id)}
+                >
                   <DeleteIcon />
                 </IconButton>
               </Box>
@@ -205,7 +205,6 @@ export default function YourCampaign() {
           Item Four
         </CustomTabPanel>
       </Box>
-
     </Container>
   );
 }

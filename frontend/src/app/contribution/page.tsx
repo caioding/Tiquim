@@ -8,7 +8,7 @@ import {
   Grid,
   InputLabel,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 
 export default function CreateContribution() {
@@ -39,21 +39,21 @@ export default function CreateContribution() {
     const contributionData = { amount, userId, campaignId, paymentMethodId };
 
     try {
-      const response = await fetch('/api/contribution', {
-        method: 'POST',
+      const response = await fetch("/api/contribution", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(contributionData),
       });
 
       if (response.ok) {
-        console.log('Contribution created successfully');
+        console.log("Contribution created successfully");
       } else {
-        console.error('Failed to create contribution');
+        console.error("Failed to create contribution");
       }
     } catch (error) {
-      console.error('Error creating contribution:', error);
+      console.error("Error creating contribution:", error);
     }
   };
 
@@ -74,7 +74,7 @@ export default function CreateContribution() {
             <Typography variant="h5" sx={{ fontWeight: "bold" }}>
               Tela Contribuição {campaignTitle}
             </Typography>
-          </Grid>          
+          </Grid>
         </Grid>
 
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, width: "100%" }}>
@@ -82,7 +82,7 @@ export default function CreateContribution() {
             <Grid item xs={12} sm={6}>
               <InputLabel htmlFor="amount" sx={{ color: "black" }}>
                 Valor
-              </InputLabel>              
+              </InputLabel>
               <TextField
                 required
                 fullWidth
@@ -95,24 +95,24 @@ export default function CreateContribution() {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 inputProps={{ maxLength: 50 }}
-              />                         
+              />
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputLabel htmlFor="paymentMethodId" sx={{ color: "black" }}>
                 Forma de Pagamento
-              </InputLabel>              
+              </InputLabel>
               <TextField
                 required
                 fullWidth
                 id="paymentMethodId"
                 name="paymentMethodId"
-                autoComplete="paymentMethodId"                
+                autoComplete="paymentMethodId"
                 variant="outlined"
                 margin="normal"
                 value={paymentMethodId}
                 onChange={(e) => setPaymentMethodId(e.target.value)}
                 inputProps={{ maxLength: 50 }}
-              />                         
+              />
             </Grid>
 
             <Grid item xs={12} sm={6}>

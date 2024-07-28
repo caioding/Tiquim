@@ -18,29 +18,27 @@ export default function Grouped({
   errors,
 }: FormattedInputsProps) {
   // Extrai categorias únicas das campanhas
-  const uniqueCategories: CategoryOption[] = [...new Set(campaigns.map((campaign) => campaign.category))].map(
-    (category) => {
-      const firstLetter = category[0].toUpperCase();
-      return {
-        firstLetter: /[0-9]/.test(firstLetter) ? "0-9" : firstLetter,
-        title: category, // Se tirar some os nomes da categoria
-      };
-    },
-  );
+  const uniqueCategories: CategoryOption[] = [
+    ...new Set(campaigns.map((campaign) => campaign.category)),
+  ].map((category) => {
+    const firstLetter = category[0].toUpperCase();
+    return {
+      firstLetter: /[0-9]/.test(firstLetter) ? "0-9" : firstLetter,
+      title: category, // Se tirar some os nomes da categoria
+    };
+  });
 
   return (
     <>
       <Autocomplete
         id="grouped-demo"
         options={uniqueCategories.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
-        groupBy={(option : CategoryOption) => option.firstLetter}
+        groupBy={(option: CategoryOption) => option.firstLetter}
         getOptionLabel={(option: CategoryOption) => option.title}
         fullWidth
-        onChange={(event: React.SyntheticEvent, value : CategoryOption) => {
-          setCampaignInfo({...campaignInfo, category: value ? value.title : "" })
+        onChange={(event: React.SyntheticEvent, value: CategoryOption) => {
+          setCampaignInfo({ ...campaignInfo, category: value ? value.title : "" });
         }}
-      
-
         renderInput={(params: AutocompleteRenderInputParams) => (
           <TextField
             {...params}
