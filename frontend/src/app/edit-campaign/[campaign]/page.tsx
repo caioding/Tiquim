@@ -12,27 +12,23 @@ import {
   Typography,
 } from "@mui/material";
 import useCampaignOwner from "@/app/hooks/useCampaignOwner";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Campaign } from "@/app/types/campaign";
+import { Campaign, UpdateCampaignDto } from "@/app/types/campaign";
+import { updateCampaign } from "@/app/services/campaign";
+import useSnackbar from "@/app/hooks/useSnackbar";
 
 export default function EditCampaign() {
   const params = useParams();
+  const router = useRouter();
   const idCampaign = params.campaign as string;
   const { isPending, isError, isOwner, campaign } = useCampaignOwner(idCampaign);
-  const [campaignInfo, setCampaignInfo] = useState<Campaign>({
-    id: "",
+  const [campaignInfo, setCampaignInfo] = useState<UpdateCampaignDto>({
     title: "",
     preview: "",
     description: "",
     imageUrl: "",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    deadline: new Date(),
-    category: "",
-    goal: 0,
-    userId: "",
   });
 
   const {
@@ -42,9 +38,16 @@ export default function EditCampaign() {
     setValue,
   } = useForm<Campaign>();
 
+  const { setSnackbar } = useSnackbar();
+
   useEffect(() => {
     if (campaign) {
-      setCampaignInfo(campaign);
+      setCampaignInfo({
+        title: campaign.title,
+        preview: campaign.preview,
+        description: campaign.description,
+        imageUrl: campaign.imageUrl,
+      });
       // Update form values
       setValue("title", campaign.title);
       setValue("imageUrl", campaign.imageUrl);
@@ -52,8 +55,6 @@ export default function EditCampaign() {
       setValue("description", campaign.description);
     }
   }, [campaign, setValue]);
-
-  const handleFormSubmit = (data: Campaign) => {};
 
   if (isPending) {
     return (
@@ -94,6 +95,21 @@ export default function EditCampaign() {
       </Container>
     );
   }
+
+  const handleFormSubmit = async () => {
+    try {
+      const response = await updateCampaign(idCampaign, campaignInfo);
+      if (response) {
+        setSnackbar("Campanha editada com sucesso!");
+
+        router.push("/your-campaigns");
+      }
+    } catch (error) {
+      setSnackbar("Erro ao editar a campanha", "error");
+
+      console.log(error);
+    }
+  };
 
   return (
     <Container component="main" maxWidth="md">

@@ -20,6 +20,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { logout } from "../services/auth";
 import LogoTiquim from "./LogoTiquim";
+import useSnackbar from "../hooks/useSnackbar";
 
 interface Props {
   window?: () => Window;
@@ -40,6 +41,7 @@ export default function Navbar(props: Props) {
   const { id, setId } = useAuthContext();
   const [hydrated, setHydrated] = React.useState(false);
   const router = useRouter();
+  const { setSnackbar } = useSnackbar();
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
@@ -62,10 +64,12 @@ export default function Navbar(props: Props) {
       const result = await logout();
       if (result === "OK") {
         setId("");
+        setSnackbar("Logout efetuado com sucesso");
         router.push("/");
       }
     } catch (error) {
       console.log(error);
+      setSnackbar("Erro ao efetuar o logout", "error");
     }
   };
 
