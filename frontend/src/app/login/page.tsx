@@ -15,18 +15,15 @@ import { Copyright } from "../components/Copyright";
 import { Link, Typography } from "@mui/material";
 import useAuthContext from "../hooks/useAuthContext";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import SuccessSnackbar from "../components/SuccessSnackbar";
-import ErrorSnackbar from "../components/ErrorSnackbar";
-import WarningSnackbar from "../components/WarningSnackbar";
 import useRedirectIfLoggedIn from "../hooks/useRedirectIfLoggedIn";
+import useSnackbar from "../hooks/useSnackbar";
 
 export default function Login() {
   const router = useRouter();
-  const [open, setOpen] = useState(0);
-  const [message, setMessage] = useState("");
   const { setId } = useAuthContext();
   const isLoggedIn = useRedirectIfLoggedIn();
+
+  const { setSnackbar } = useSnackbar();
 
   if (isLoggedIn) {
     return null;
@@ -52,8 +49,7 @@ export default function Login() {
       });
 
       if (!response.ok) {
-        setMessage("Erro ao efetuar o login");
-        setOpen(2);
+        setSnackbar("Erro ao efetuar o login", "error");
         throw new Error("Error on login attempt");
       }
 
@@ -61,13 +57,11 @@ export default function Login() {
 
       setId(data.id);
 
-      setMessage("Login efetuado com sucesso!");
-      setOpen(1);
+      setSnackbar("Login efetuado com sucesso!");
       router.push("/");
     } catch (error) {
+      setSnackbar("Erro ao efetuar o login", "error");
       console.log(error);
-      setMessage("Erro ao efetuar o login!");
-      setOpen(2);
     }
   };
 
@@ -160,10 +154,6 @@ export default function Login() {
           </Box>
         </Box>
       </Grid>
-
-      <SuccessSnackbar message={message} open={open == 1} setOpen={setOpen} />
-      <ErrorSnackbar message={message} open={open == 2} setOpen={setOpen} />
-      <WarningSnackbar message={message} open={open == 3} setOpen={setOpen} />
     </Grid>
   );
 }

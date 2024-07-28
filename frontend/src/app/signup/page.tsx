@@ -14,16 +14,12 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Copyright } from "../components/Copyright";
-import SuccessSnackbar from "../components/SuccessSnackbar";
-import ErrorSnackbar from "../components/ErrorSnackbar";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import useSnackbar from "../hooks/useSnackbar";
 
 export default function SignUp() {
   const router = useRouter();
-
-  const [open, setOpen] = useState(0);
-  const [message, setMessage] = useState("");
+  const { setSnackbar } = useSnackbar();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -46,19 +42,16 @@ export default function SignUp() {
       });
 
       if (!response.ok) {
-        setMessage("Erro ao efetuar o cadastro");
-        setOpen(2);
+        setSnackbar("Erro ao efetuar o cadastro", "error");
         throw new Error("Error on Sign on a new user");
       }
 
-      setMessage("Cadastro efetuado com sucesso!");
-      setOpen(1);
+      setSnackbar("Conta criada com sucesso");
 
       router.push("/login");
     } catch (err) {
+      setSnackbar("Erro ao efetuar o cadastro", "error");
       console.log(err);
-      setMessage("Erro ao efetuar o cadastro!");
-      setOpen(2);
     }
   };
 
@@ -155,9 +148,6 @@ export default function SignUp() {
         </Box>
       </Box>
       <Copyright sx={{ mt: 5 }} />
-
-      <SuccessSnackbar message={message} open={open == 1} setOpen={setOpen} />
-      <ErrorSnackbar message={message} open={open == 2} setOpen={setOpen} />
     </Container>
   );
 }
