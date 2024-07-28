@@ -50,7 +50,7 @@ export default function FormattedInputs({
         label=""
         fullWidth
         type="text"
-        value={(campaignInfo.goal?.toFixed(2).replace('.', ',') || "")}
+        value={campaignInfo.goal?.toFixed(2).replace(".", ",") || ""}
         id="goal"
         InputProps={{
           inputComponent: NumericFormatCustom as any,
@@ -62,18 +62,16 @@ export default function FormattedInputs({
           required: "Esse campo é obrigatório",
           validate: (value) => {
             // Confirma se o valor é uma string e substitui a vírgula por ponto
-            const numericValue = parseFloat(value.toString().replace(',', '.'));
+            const numericValue = parseFloat(value.toString().replace(",", "."));
             return numericValue >= 1 || "Deve ser no mínimo 1";
-          }
+          },
         })}
         onChange={(e) => {
           // Converte o valor para número ao definir o estado
-          setCampaignInfo({ ...campaignInfo, goal: parseFloat(e.target.value.replace(',', '.')) });
+          setCampaignInfo({ ...campaignInfo, goal: parseFloat(e.target.value.replace(",", ".")) });
         }}
       />
-      {errors.goal && (
-        <Box sx={{ color: "error.main" }}>{errors.goal.message}</Box>
-      )}
+      {errors.goal && <Box sx={{ color: "error.main" }}>{errors.goal.message}</Box>}
     </Stack>
   );
 }

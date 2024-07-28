@@ -31,7 +31,7 @@ const formatDate = (date: Date): string => {
 
 export default function CreateCampaign() {
   const router = useRouter();
-  const [campaignInfo, setCampaignInfo] = useState<Omit<Campaign , 'id'>>({
+  const [campaignInfo, setCampaignInfo] = useState<Omit<Campaign, "id">>({
     goal: 0,
     deadline: new Date(),
     title: "",
@@ -60,23 +60,22 @@ export default function CreateCampaign() {
       deadline: campaignInfo.deadline.toISOString(),
     };
 
-    
     try {
       const response = await fetch("http://localhost:9000/v1/campaign", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        
+
         body: JSON.stringify(formattedData),
-        credentials: "include"
+        credentials: "include",
       });
 
-      if(!response.ok) {
+      if (!response.ok) {
         setSnackbar("Erro ao criar a campanha", "error");
-        throw new Error(`Error on handle submit creating campaign: ${response.statusText}`)
-      } 
-      
+        throw new Error(`Error on handle submit creating campaign: ${response.statusText}`);
+      }
+
       const data = await response.json();
 
       setSnackbar("Campanha criada com sucesso!");
@@ -84,7 +83,6 @@ export default function CreateCampaign() {
     } catch (error) {
       setSnackbar("Erro ao efetuar o login");
     }
-
   };
 
   return (
@@ -200,7 +198,7 @@ export default function CreateCampaign() {
                     margin="normal"
                     {...register("deadline", { required: true })}
                     value={formatDate(campaignInfo.deadline)}
-                    onChange={(e : React.ChangeEvent<HTMLInputElement>) =>
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setCampaignInfo({ ...campaignInfo, deadline: new Date(e.target.value) })
                     }
                   />
@@ -222,7 +220,9 @@ export default function CreateCampaign() {
                     sx={{ backgroundColor: "white" }}
                     {...register("imageUrl", { required: true })}
                     value={campaignInfo.imageUrl}
-                    onChange={(e : React.ChangeEvent<HTMLInputElement>) => setCampaignInfo({ ...campaignInfo, imageUrl: e.target.value })}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setCampaignInfo({ ...campaignInfo, imageUrl: e.target.value })
+                    }
                   />
                   {errors.imageUrl?.type === "required" && (
                     <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
@@ -244,7 +244,9 @@ export default function CreateCampaign() {
                     inputProps={{ maxLength: 120 }}
                     {...register("preview", { required: true })}
                     value={campaignInfo.preview}
-                    onChange={(e : React.ChangeEvent<HTMLInputElement>) => setCampaignInfo({ ...campaignInfo, preview: e.target.value })}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setCampaignInfo({ ...campaignInfo, preview: e.target.value })
+                    }
                   />
                   {errors.preview?.type === "required" && (
                     <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
@@ -267,7 +269,7 @@ export default function CreateCampaign() {
                     inputProps={{ maxLength: 1000 }}
                     {...register("description", { required: true })}
                     value={campaignInfo.description}
-                    onChange={(e : React.ChangeEvent<HTMLInputElement>) =>
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setCampaignInfo({ ...campaignInfo, description: e.target.value })
                     }
                   />

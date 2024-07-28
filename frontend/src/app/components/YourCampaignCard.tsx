@@ -30,15 +30,15 @@ const TIME_FORMAT: Intl.DateTimeFormatOptions = {
 
 export function YourCampaignCard({ campaign }: CampaignCardProps) {
   const router = useRouter();
-  
+
   const createdAt = new Date(campaign.createdAt);
 
   const datetime: string = createdAt.toLocaleString("pt-BR", TIME_FORMAT);
 
   const { user, isPending, isError } = useUser(campaign.userId);
 
-  const {deleteCampaign, isDeleting, isError: deleteError} = useDeleteCampaign(campaign.id)
-  
+  const { deleteCampaign, isDeleting, isError: deleteError } = useDeleteCampaign(campaign.id);
+
   const { setSnackbar } = useSnackbar();
   if (isPending) {
     return <div>Loading...</div>;
@@ -75,15 +75,14 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
     router.push(`/edit-campaign/${campaign.id}`);
   };
 
-  const handleDelete = async (e: React.SyntheticEvent,idCampaign: string) => {
+  const handleDelete = async (e: React.SyntheticEvent, idCampaign: string) => {
     // TODO: excluir campanha
     e.stopPropagation();
-    const success = await deleteCampaign(idCampaign)
-    if(success) {
+    const success = await deleteCampaign(idCampaign);
+    if (success) {
       setSnackbar("Campanha deletada com sucesso!");
       router.push("/");
-    }
-    else {
+    } else {
       setSnackbar("Erro ao deletar campanha");
     }
   };
@@ -117,7 +116,11 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
           <EditIcon />
         </IconButton>
 
-        <IconButton aria-label="delete" color="success" onClick={(e) => handleDelete(e, campaign.id)}>
+        <IconButton
+          aria-label="delete"
+          color="success"
+          onClick={(e) => handleDelete(e, campaign.id)}
+        >
           <DeleteIcon />
         </IconButton>
       </CardActions>
