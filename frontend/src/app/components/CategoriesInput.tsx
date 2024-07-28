@@ -4,6 +4,12 @@ import Autocomplete from "@mui/material/Autocomplete";
 import campaigns from "../mocks/campaigns";
 import { FormattedInputsProps } from "../types/FormattedInputsProps";
 import { Box } from "@mui/material";
+import { AutocompleteRenderInputParams } from "@mui/material";
+
+interface CategoryOption {
+  firstLetter: string;
+  title: string;
+}
 
 export default function Grouped({
   campaignInfo,
@@ -12,7 +18,7 @@ export default function Grouped({
   errors,
 }: FormattedInputsProps) {
   // Extrai categorias únicas das campanhas
-  const uniqueCategories = [...new Set(campaigns.map((campaign) => campaign.category))].map(
+  const uniqueCategories: CategoryOption[] = [...new Set(campaigns.map((campaign) => campaign.category))].map(
     (category) => {
       const firstLetter = category[0].toUpperCase();
       return {
@@ -27,10 +33,15 @@ export default function Grouped({
       <Autocomplete
         id="grouped-demo"
         options={uniqueCategories.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
-        groupBy={(option) => option.firstLetter}
-        getOptionLabel={(option) => option.title}
+        groupBy={(option : CategoryOption) => option.firstLetter}
+        getOptionLabel={(option: CategoryOption) => option.title}
         fullWidth
-        renderInput={(params) => (
+        onChange={(event: React.SyntheticEvent, value : CategoryOption) => {
+          setCampaignInfo({...campaignInfo, category: value ? value.title : "" })
+        }}
+      
+
+        renderInput={(params: AutocompleteRenderInputParams) => (
           <TextField
             {...params}
             type="category"
@@ -39,8 +50,8 @@ export default function Grouped({
             margin="normal"
             sx={{ backgroundColor: "white" }}
             {...register("category", { required: true })}
-            value={campaignInfo?.category}
-            onChange={(e) => setCampaignInfo({ ...campaignInfo, category: e.target.value })}
+            //value={campaignInfo?.category}
+            //onChange={(e) => setCampaignInfo({ ...campaignInfo, category: e.target.value })}
           />
         )}
       />

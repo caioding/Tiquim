@@ -17,6 +17,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useRouter } from "next/navigation";
 import useCampaignOwner from "@/app/hooks/useCampaignOwner";
+import useDeleteCampaign from "@/app/hooks/useDeleteCampaign";
+import useSnackbar from "@/app/hooks/useSnackbar";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -42,7 +44,7 @@ function CustomTabPanel(props: TabPanelProps) {
 
 export default function YourCampaign() {
   const router = useRouter();
-
+  const { setSnackbar } = useSnackbar();
   const params = useParams();
 
   const [tabValue, setTabValue] = useState(0);
@@ -50,6 +52,7 @@ export default function YourCampaign() {
   const idCampaign = params.campaign as string;
 
   const { isPending, isError, isOwner, campaign } = useCampaignOwner(idCampaign);
+  const {deleteCampaign, isDeleting, isError: deleteError} = useDeleteCampaign(idCampaign)
 
   if (isPending) {
     return (
@@ -102,9 +105,19 @@ export default function YourCampaign() {
     router.push(`/edit-campaign/${idCampaign}`);
   };
 
-  const handleDelete = (e: React.SyntheticEvent) => {
+  const handleDelete = async (e: React.SyntheticEvent, idCampaign: string) => {
     // TODO: excluir campanha
+    //valeu por sinalizar onde ficava 
     e.stopPropagation();
+    const success = await deleteCampaign(idCampaign)
+    
+    if(success) {
+      setSnackbar("Campanha deletada com sucesso!");
+      router.push("/");
+    }
+    else {
+      setSnackbar("Erro ao deletar campanha");
+    }
   };
 
   return (
@@ -153,7 +166,10 @@ export default function YourCampaign() {
                   <EditIcon />
                 </IconButton>
 
-                <IconButton aria-label="delete" color="success" onClick={handleDelete}>
+                <IconButton 
+                  aria-label="delete" 
+                  color="success" 
+                  onClick={(e) => handleDelete(e, campaign.id)}>
                   <DeleteIcon />
                 </IconButton>
               </Box>
@@ -189,6 +205,7 @@ export default function YourCampaign() {
           Item Four
         </CustomTabPanel>
       </Box>
+
     </Container>
   );
 }

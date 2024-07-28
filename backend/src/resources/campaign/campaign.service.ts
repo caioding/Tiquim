@@ -7,25 +7,25 @@ export const createCampaign = async (
   campaign: CreateCampaignDto,
   uid: string,
 ): Promise<CampaignDto> => {
-  return await prisma.campaign.create({
-    select: {
-      id: true,
-      goal: true,
-      deadline: true,
-      title: true,
-      description: true,
-      preview: true,
-      category: true,
-      imageUrl: true,
-      userId: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-    data: {
-      ...campaign,
-      userId: uid,
-    },
-  });
+    return await prisma.campaign.create({
+      select: {
+        id: true,
+        goal: true,
+        deadline: true,
+        title: true,
+        description: true,
+        preview: true,
+        category: true,
+        imageUrl: true,
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      data: {
+        ...campaign,
+        userId: uid,
+      },
+    });  
 };
 
 export const listCampaigns = async (
