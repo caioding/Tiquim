@@ -16,7 +16,6 @@ import Container from "@mui/material/Container";
 import { Copyright } from "../components/Copyright";
 import { useRouter } from "next/navigation";
 import useSnackbar from "../hooks/useSnackbar";
-import { signup } from "../services/user";
 
 export default function SignUp() {
   const router = useRouter();
@@ -28,14 +27,21 @@ export default function SignUp() {
 
     const user = {
       name: `${data.get("firstName")} ${data.get("lastName")}`,
-      email: data.get("email")?.toString() ?? "",
-      password: data.get("password")?.toString() ?? "",
+      email: data.get("email"),
+      password: data.get("password"),
     };
 
     try {
-      const response = await signup(user);
+      const response = await fetch("http://localhost:9000/v1/user/?userType=CLIENT", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+        credentials: "include",
+      });
 
-      if (!response) {
+      if (!response.ok) {
         setSnackbar("Erro ao efetuar o cadastro", "error");
         throw new Error("Error on Sign on a new user");
       }

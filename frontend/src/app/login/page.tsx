@@ -17,7 +17,6 @@ import useAuthContext from "../hooks/useAuthContext";
 import { useRouter } from "next/navigation";
 import useRedirectIfLoggedIn from "../hooks/useRedirectIfLoggedIn";
 import useSnackbar from "../hooks/useSnackbar";
-import { login } from "../services/auth";
 
 export default function Login() {
   const router = useRouter();
@@ -40,14 +39,23 @@ export default function Login() {
     };
 
     try {
-      const response = await login(credentials);
+      const response = await fetch("http://localhost:9000/v1/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+        credentials: "include",
+      });
 
-      if (!response) {
+      if (!response.ok) {
         setSnackbar("Erro ao efetuar o login", "error");
         throw new Error("Error on login attempt");
       }
 
-      setId(response.id);
+      const data = await response.json();
+
+      setId(data.id);
 
       setSnackbar("Login efetuado com sucesso!");
       router.push("/");

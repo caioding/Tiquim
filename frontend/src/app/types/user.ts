@@ -9,9 +9,4 @@ export default interface User {
   userTypeId: string;
 }
 
-export type UserDto = Pick<User, "name" | "email" | "password">;
-
-export interface Credentials {
-  email: string;
-  password: string;
-}
+export type UserDto = Omit<User, "password">;
