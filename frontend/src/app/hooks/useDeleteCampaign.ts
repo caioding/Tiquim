@@ -1,6 +1,6 @@
 import { useState } from "react";
-
-const useDeleteCampaign = (idCampaign: string) => {
+import api from "../services/api";
+const useDeleteCampaign = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isError, setIsError] = useState(false);
 
@@ -9,19 +9,16 @@ const useDeleteCampaign = (idCampaign: string) => {
     setIsError(false);
 
     try {
-      const response = await fetch(`http://localhost:9000/v1/campaign/${idCampaign}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const response = await api.delete(`/campaign/${idCampaign}`);
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error(`Error on deleting campaign: ${response.statusText}`);
       }
 
       setIsDeleting(false);
-      return true;
+      return response.status == 200;
     } catch (error) {
-      console.log(error);
+      console.log("Unable to delete campaign:", error);
       setIsDeleting(false);
       setIsError(true);
       return false;

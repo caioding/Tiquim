@@ -37,7 +37,7 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
 
   const { user, isPending, isError } = useUser(campaign.userId);
 
-  const { deleteCampaign, isDeleting, isError: deleteError } = useDeleteCampaign(campaign.id);
+  const { deleteCampaign, isDeleting, isError: deleteError } = useDeleteCampaign();
 
   const { setSnackbar } = useSnackbar();
   if (isPending) {
@@ -78,13 +78,17 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
   const handleDelete = async (e: React.SyntheticEvent, idCampaign: string) => {
     // TODO: excluir campanha
     e.stopPropagation();
-    const success = await deleteCampaign(idCampaign);
-    if (success) {
-      setSnackbar("Campanha deletada com sucesso!");
-      router.push("/");
-    } else {
-      setSnackbar("Erro ao deletar campanha");
+    const confirmDelete = window.confirm("Tem certeza que deseja deletar essa camanha?");
+    if(confirmDelete) {
+      const success = await deleteCampaign(idCampaign);
+      if (success) {
+        setSnackbar("Campanha deletada com sucesso!");
+        router.push("/");
+      } else {
+        setSnackbar("Erro ao deletar campanha", "error");
+      }
     }
+
   };
 
   return (

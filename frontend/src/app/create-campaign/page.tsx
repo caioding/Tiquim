@@ -21,6 +21,8 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Campaign } from "../types/campaign";
 import useSnackbar from "../hooks/useSnackbar";
+import api from "../services/api";
+import { createCampaign } from "../services/campaign";
 
 const formatDate = (date: Date): string => {
   const year = date.getFullYear();
@@ -55,33 +57,23 @@ export default function CreateCampaign() {
   const handleFormSubmit = async () => {
     const formattedData = {
       ...campaignInfo,
-      createdAt: campaignInfo.createdAt.toISOString(),
-      updatedAt: campaignInfo.updatedAt.toISOString(),
-      deadline: campaignInfo.deadline.toISOString(),
+      createdAt: campaignInfo.createdAt,
+      updatedAt: campaignInfo.updatedAt,
+      deadline: campaignInfo.deadline,
     };
 
     try {
-      const response = await fetch("http://localhost:9000/v1/campaign", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const response = await createCampaign(formattedData);
 
-        body: JSON.stringify(formattedData),
-        credentials: "include",
-      });
-
-      if (!response.ok) {
+      if (response.status != 200) {
         setSnackbar("Erro ao criar a campanha", "error");
         throw new Error(`Error on handle submit creating campaign: ${response.statusText}`);
       }
 
-      const data = await response.json();
-
       setSnackbar("Campanha criada com sucesso!");
       router.push("/");
     } catch (error) {
-      setSnackbar("Erro ao efetuar o login");
+      setSnackbar("Erro na criação da campanha", "error");
     }
   };
 
