@@ -17,8 +17,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useRouter } from "next/navigation";
 import useCampaignOwner from "@/app/hooks/useCampaignOwner";
-import useDeleteCampaign from "@/app/hooks/useDeleteCampaign";
 import useSnackbar from "@/app/hooks/useSnackbar";
+import { deleteCampaign } from "@/app/services/campaign";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -52,7 +52,6 @@ export default function YourCampaign() {
   const idCampaign = params.campaign as string;
 
   const { isPending, isError, isOwner, campaign } = useCampaignOwner(idCampaign);
-  const { deleteCampaign, isDeleting, isError: deleteError } = useDeleteCampaign(idCampaign);
 
   if (isPending) {
     return (
@@ -115,7 +114,7 @@ export default function YourCampaign() {
       setSnackbar("Campanha deletada com sucesso!");
       router.push("/");
     } else {
-      setSnackbar("Erro ao deletar campanha");
+      setSnackbar("Erro ao deletar campanha", "error");
     }
   };
 

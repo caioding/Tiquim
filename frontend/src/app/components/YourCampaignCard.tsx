@@ -14,7 +14,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import useSnackbar from "../hooks/useSnackbar";
-import useDeleteCampaign from "../hooks/useDeleteCampaign";
+import { deleteCampaign } from "../services/campaign";
 
 interface CampaignCardProps {
   campaign: Campaign;
@@ -36,8 +36,6 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
   const datetime: string = createdAt.toLocaleString("pt-BR", TIME_FORMAT);
 
   const { user, isPending, isError } = useUser(campaign.userId);
-
-  const { deleteCampaign, isDeleting, isError: deleteError } = useDeleteCampaign(campaign.id);
 
   const { setSnackbar } = useSnackbar();
   if (isPending) {
@@ -78,13 +76,17 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
   const handleDelete = async (e: React.SyntheticEvent, idCampaign: string) => {
     // TODO: excluir campanha
     e.stopPropagation();
-    const success = await deleteCampaign(idCampaign);
-    if (success) {
-      setSnackbar("Campanha deletada com sucesso!");
-      router.push("/");
-    } else {
-      setSnackbar("Erro ao deletar campanha");
+    const confirmDelete = window.confirm("Tem certeza que deseja deletar essa camanha?");
+    if(confirmDelete) {
+      const success = await deleteCampaign(idCampaign);
+      if (success) {
+        setSnackbar("Campanha deletada com sucesso!");
+        router.push("/");
+      } else {
+        setSnackbar("Erro ao deletar campanha", "error");
+      }
     }
+
   };
 
   return (
