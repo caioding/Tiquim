@@ -14,7 +14,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import useSnackbar from "../hooks/useSnackbar";
-import useDeleteCampaign from "../hooks/useDeleteCampaign";
+import { deleteCampaign } from "../services/campaign";
 
 interface CampaignCardProps {
   campaign: Campaign;
@@ -36,8 +36,6 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
   const datetime: string = createdAt.toLocaleString("pt-BR", TIME_FORMAT);
 
   const { user, isPending, isError } = useUser(campaign.userId);
-
-  const { deleteCampaign, isDeleting, isError: deleteError } = useDeleteCampaign();
 
   const { setSnackbar } = useSnackbar();
   if (isPending) {

@@ -20,3 +20,7 @@ export async function updateCampaign(id: string, campaign: UpdateCampaignDto) {
 export async function createCampaign(campaign: Omit<Campaign, "id">) {
   return api.post("/campaign", campaign);
 }
+
+export async function deleteCampaign(id: string) {
+  return api.delete(`/campaign/${id}`)
+}
