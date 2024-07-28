@@ -3,6 +3,8 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { ReactQueryClientProvider } from "./components/ReactQueryClient";
 import AuthProvider from "./states/AuthProvider";
+import SnackbarStateProvider from "./states/SnackbarProvider";
+import CustomSnackbar from "./components/CustomSnackbar";
 
 export const metadata: Metadata = {
   title: "Campanhas",
@@ -18,11 +20,14 @@ export default function RootLayout({
     <html lang="pt-br">
       <body>
         <ReactQueryClientProvider>
-          <AuthProvider>
-            <Navbar />
-            {children}
-            <Footer />
-          </AuthProvider>
+          <SnackbarStateProvider>
+            <AuthProvider>
+              <Navbar />
+              {children}
+              <CustomSnackbar />
+              <Footer />
+            </AuthProvider>
+          </SnackbarStateProvider>
         </ReactQueryClientProvider>
       </body>
     </html>

@@ -11,3 +11,4 @@ export interface Campaign {
   goal: number;
   userId: string;
 }
+export type UpdateCampaignDto = Pick<Campaign, "title" | "description" | "preview" | "imageUrl">;
