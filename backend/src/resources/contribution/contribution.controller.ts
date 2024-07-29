@@ -1,6 +1,11 @@
 import { Request, Response } from "express";
 import { CreateContributionDto } from "./contribution.types";
-import { createContribution, listContributions, readContribution } from "./contribution.service";
+import {
+  calculatePercentage,
+  createContribution,
+  listContributions,
+  readContribution,
+} from "./contribution.service";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 
 const index = async (req: Request, res: Response) => {
@@ -73,4 +78,15 @@ const read = async (req: Request, res: Response) => {
   }
 };
 
-export default { index, create, read };
+const readPercentage = async (req: Request, res: Response) => {
+  const { campaignId } = req.params;
+  try {
+    const sum = await calculatePercentage(campaignId);
+    if (!sum) return res.status(StatusCodes.OK).json(0);
+    res.status(StatusCodes.OK).json(sum);
+  } catch (err) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
+  }
+};
+
+export default { index, create, read, readPercentage };

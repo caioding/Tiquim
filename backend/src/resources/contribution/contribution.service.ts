@@ -89,3 +89,29 @@ export const readContribution = async (
     where: { id: id, userId: uid },
   });
 };
+
+export const calculatePercentage = async (campaignId: string): Promise<Number | null> => {
+  const contributions = await prisma.contribution.findMany({
+    select: {
+      amount: true,
+      userId: true,
+    },
+    where: { campaignId: campaignId },
+  });
+  if (contributions.length === 0) return null;
+
+  const totalAmount = contributions.reduce((sum, contribution) => {
+    return sum + parseFloat(contribution.amount.toString());
+  }, 0);
+
+  const campaign = await prisma.campaign.findUnique({
+    select: { goal: true },
+    where: { id: campaignId },
+  });
+
+  if (campaign) {
+    const goal = parseFloat(campaign?.goal.toString());
+    return totalAmount / goal;
+  }
+  return null;
+};
