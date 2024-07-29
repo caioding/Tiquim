@@ -8,13 +8,13 @@ import Typography from "@mui/material/Typography";
 import { CardHearder } from "./CardHeader";
 import { Campaign } from "../types/campaign";
 import { useRouter } from "next/navigation";
-import contributions from "../mocks/contribution";
 import { useUser } from "../hooks/useUser";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import useSnackbar from "../hooks/useSnackbar";
 import { deleteCampaign } from "../services/campaign";
+import { useCampaignPercentage } from "../hooks/useCampaignPercentage";
 
 interface CampaignCardProps {
   campaign: Campaign;
@@ -35,30 +35,32 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
 
   const datetime: string = createdAt.toLocaleString("pt-BR", TIME_FORMAT);
 
-  const { user, isPending, isError } = useUser(campaign.userId);
-
   const { setSnackbar } = useSnackbar();
-  if (isPending) {
+
+  const { user, isPending: userPending, isError: userError } = useUser(campaign.userId);
+  const {
+    percentage,
+    isPending: percentagePending,
+    isError: percentageError,
+  } = useCampaignPercentage(campaign.id);
+
+  if (userPending || percentagePending) {
     return <div>Loading...</div>;
   }
 
-  if (isError) {
-    return <div>Error loading user information</div>;
+  if (userError || percentageError) {
+    return <div>Error loading data</div>;
   }
 
   if (!user) {
     return <div>User not found</div>;
   }
 
-  const listOfContributions =
-    contributions.filter((element) => element.campaignId == campaign.id) ?? 0;
-
-  const totalContributions = listOfContributions.reduce(
-    (sum, contribution) => sum + contribution.amount,
-    0,
-  );
-
-  const completedPercentage = (totalContributions / campaign.goal) * 100;
+  let completedPercentage = 0;
+  if (percentage) {
+    const percentageValue = typeof percentage === "number" ? percentage : Number(percentage);
+    completedPercentage = percentageValue * 100;
+  }
 
   const imageUrl =
     campaign?.imageUrl && campaign.imageUrl.length > 0 ? campaign.imageUrl : "/placeholder.png";
@@ -77,7 +79,7 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
     // TODO: excluir campanha
     e.stopPropagation();
     const confirmDelete = window.confirm("Tem certeza que deseja deletar essa camanha?");
-    if(confirmDelete) {
+    if (confirmDelete) {
       const success = await deleteCampaign(idCampaign);
       if (success) {
         setSnackbar("Campanha deletada com sucesso!");
@@ -86,7 +88,6 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
         setSnackbar("Erro ao deletar campanha", "error");
       }
     }
-
   };
 
   return (

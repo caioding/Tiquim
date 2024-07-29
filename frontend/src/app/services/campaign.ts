@@ -5,6 +5,10 @@ export async function getCampaigns(searchQuery: String): Promise<Campaign[]> {
   return api.get(`/campaign?q=${searchQuery}`).then((response) => response.data);
 }
 
+export async function getCampaignPercentage(campaignId: string): Promise<Number> {
+  return api.get(`/contribution/${campaignId}`).then((response) => response.data);
+}
+
 export async function getCampaignDetails(id: string): Promise<Campaign> {
   return api.get(`/campaign/${id}`).then((response) => response.data);
 }
@@ -22,5 +26,5 @@ export async function createCampaign(campaign: Omit<Campaign, "id">) {
 }
 
 export async function deleteCampaign(id: string) {
-  return api.delete(`/campaign/${id}`)
+  return api.delete(`/campaign/${id}`);
 }
