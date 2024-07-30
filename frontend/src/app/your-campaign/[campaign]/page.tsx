@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import useCampaignOwner from "@/app/hooks/useCampaignOwner";
 import useSnackbar from "@/app/hooks/useSnackbar";
 import { deleteCampaign } from "@/app/services/campaign";
+import EditCampaignModal from "@/app/components/edit-campaign";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -52,6 +53,8 @@ export default function YourCampaign() {
   const idCampaign = params.campaign as string;
 
   const { isPending, isError, isOwner, campaign } = useCampaignOwner(idCampaign);
+
+  const [open, setOpen] = useState(false);
 
   if (isPending) {
     return (
@@ -118,6 +121,9 @@ export default function YourCampaign() {
     }
   };
 
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <Container sx={{ width: "80%", m: "auto" }}>
       <Grid container component="main" sx={{ height: "487px" }}>
@@ -156,11 +162,7 @@ export default function YourCampaign() {
             >
               <Chip label={campaign.category} sx={{ backgroundColor: "#32A852", color: "white" }} />
               <Box>
-                <IconButton
-                  aria-label="edit"
-                  color="success"
-                  onClick={() => handleEdit(campaign.id)}
-                >
+                <IconButton aria-label="edit" color="success" onClick={handleOpen}>
                   <EditIcon />
                 </IconButton>
 
@@ -204,6 +206,8 @@ export default function YourCampaign() {
           Item Four
         </CustomTabPanel>
       </Box>
+
+      <EditCampaignModal campaign={campaign} open={open} handleClose={handleClose} />
     </Container>
   );
 }
