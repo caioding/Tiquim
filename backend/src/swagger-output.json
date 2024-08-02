@@ -7,9 +7,7 @@
   },
   "host": "localhost:9000",
   "basePath": "/",
-  "schemes": [
-    "http"
-  ],
+  "schemes": ["http"],
   "paths": {
     "/v1/language/": {
       "post": {
@@ -37,9 +35,7 @@
     },
     "/v1/user/": {
       "get": {
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "summary": "Lista todos os usuários.",
         "description": "",
         "parameters": [
@@ -64,9 +60,7 @@
         }
       },
       "post": {
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "summary": "Cria um usuário novo.",
         "description": "",
         "parameters": [
@@ -101,9 +95,7 @@
     },
     "/v1/user/{id}": {
       "get": {
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "summary": "Mostra um usuário com base no ID.",
         "description": "",
         "parameters": [
@@ -125,9 +117,7 @@
         }
       },
       "put": {
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "summary": "Modifica os atributos de um usuário.",
         "description": "",
         "parameters": [
@@ -156,9 +146,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "summary": "Apaga um usuário com base no ID.",
         "description": "",
         "parameters": [
@@ -179,9 +167,7 @@
     },
     "/v1/auth/signup": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "Cria um usuário.",
         "description": "",
         "parameters": [
@@ -216,9 +202,7 @@
     },
     "/v1/auth/login": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "Faz a sessão do usuário.",
         "description": "",
         "parameters": [
@@ -242,9 +226,7 @@
     },
     "/v1/auth/logout": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "Desfazer a sessão do usuário.",
         "description": "",
         "responses": {
@@ -256,9 +238,7 @@
     },
     "/v1/auth/logged": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "Retorna o usuário logado.",
         "description": "",
         "responses": {
@@ -270,9 +250,7 @@
     },
     "/v1/campaign/": {
       "get": {
-        "tags": [
-          "Campaign"
-        ],
+        "tags": ["Campaign"],
         "summary": "Cria um usuário novo.",
         "description": "",
         "parameters": [
@@ -315,9 +293,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Campaign"
-        ],
+        "tags": ["Campaign"],
         "summary": "Cria um usuário novo.",
         "description": "",
         "parameters": [
@@ -347,9 +323,7 @@
     },
     "/v1/campaign/user": {
       "get": {
-        "tags": [
-          "Campaign"
-        ],
+        "tags": ["Campaign"],
         "description": "",
         "parameters": [
           {
@@ -377,9 +351,7 @@
     },
     "/v1/campaign/{id}": {
       "get": {
-        "tags": [
-          "Campaign"
-        ],
+        "tags": ["Campaign"],
         "summary": "Cria um usuário novo.",
         "description": "",
         "parameters": [
@@ -413,9 +385,7 @@
         }
       },
       "put": {
-        "tags": [
-          "Campaign"
-        ],
+        "tags": ["Campaign"],
         "summary": "Modifica os atributos de um usuário.",
         "description": "",
         "parameters": [
@@ -444,9 +414,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Campaign"
-        ],
+        "tags": ["Campaign"],
         "summary": "Apaga um usuário com base no ID.",
         "description": "",
         "parameters": [
@@ -467,9 +435,7 @@
     },
     "/v1/paymentMethod/": {
       "get": {
-        "tags": [
-          "PaymentMethod"
-        ],
+        "tags": ["PaymentMethod"],
         "summary": "Cria um usuário novo.",
         "description": "",
         "parameters": [
@@ -507,9 +473,7 @@
         }
       },
       "post": {
-        "tags": [
-          "PaymentMethod"
-        ],
+        "tags": ["PaymentMethod"],
         "summary": "Cria um usuário novo.",
         "description": "",
         "parameters": [
@@ -539,9 +503,7 @@
     },
     "/v1/paymentMethod/{id}": {
       "get": {
-        "tags": [
-          "PaymentMethod"
-        ],
+        "tags": ["PaymentMethod"],
         "summary": "Cria um usuário novo.",
         "description": "",
         "parameters": [
@@ -575,9 +537,7 @@
         }
       },
       "put": {
-        "tags": [
-          "PaymentMethod"
-        ],
+        "tags": ["PaymentMethod"],
         "summary": "Modifica os atributos de um usuário.",
         "description": "",
         "parameters": [
@@ -606,9 +566,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "PaymentMethod"
-        ],
+        "tags": ["PaymentMethod"],
         "summary": "Apaga um usuário com base no ID.",
         "description": "",
         "parameters": [
@@ -629,9 +587,7 @@
     },
     "/v1/contribution/": {
       "get": {
-        "tags": [
-          "Contributions"
-        ],
+        "tags": ["Contributions"],
         "summary": "Lista as contribuições",
         "description": "",
         "parameters": [
@@ -687,9 +643,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Contributions"
-        ],
+        "tags": ["Contributions"],
         "summary": "Cria uma nova contribuição",
         "description": "",
         "parameters": [
@@ -718,9 +672,7 @@
     },
     "/v1/contribution/{id}": {
       "get": {
-        "tags": [
-          "Contributions"
-        ],
+        "tags": ["Contributions"],
         "summary": "Obtém uma contribuição específica",
         "description": "",
         "parameters": [
@@ -750,9 +702,7 @@
     },
     "/v1/reward/": {
       "get": {
-        "tags": [
-          "Reward"
-        ],
+        "tags": ["Reward"],
         "summary": "Lista as recompensas",
         "description": "",
         "parameters": [
@@ -803,9 +753,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Reward"
-        ],
+        "tags": ["Reward"],
         "summary": "Cria uma nova recompensa",
         "description": "",
         "parameters": [
@@ -834,9 +782,7 @@
     },
     "/v1/reward/{id}": {
       "get": {
-        "tags": [
-          "Reward"
-        ],
+        "tags": ["Reward"],
         "summary": "Obtém uma recompensa específica",
         "description": "",
         "parameters": [
@@ -864,9 +810,7 @@
         }
       },
       "put": {
-        "tags": [
-          "Reward"
-        ],
+        "tags": ["Reward"],
         "summary": "Atualiza uma recompensa",
         "description": "",
         "parameters": [
@@ -903,9 +847,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Reward"
-        ],
+        "tags": ["Reward"],
         "summary": "Deleta uma recompensa",
         "description": "",
         "parameters": [

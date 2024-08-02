@@ -60,7 +60,7 @@ export default function YourCampaign() {
 
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
-  const[campaignToDelete, setCampaignToDelete] = useState<string>("null");
+  const [campaignToDelete, setCampaignToDelete] = useState<string>("null");
 
   if (isPending) {
     return (
@@ -109,7 +109,7 @@ export default function YourCampaign() {
     setTabValue(newValue);
   };
 
-  const handleConfirmOpen = (idCampaign : string) => {
+  const handleConfirmOpen = (idCampaign: string) => {
     setCampaignToDelete(idCampaign);
     setConfirmOpen(true);
   };
@@ -117,10 +117,9 @@ export default function YourCampaign() {
   const handleConfirmClose = () => {
     setCampaignToDelete("null");
     setConfirmOpen(false);
-  }
+  };
 
   const handleDelete = async () => {
-
     const success = await deleteCampaign(campaignToDelete);
 
     if (success) {
@@ -182,7 +181,7 @@ export default function YourCampaign() {
                 <IconButton
                   aria-label="delete"
                   color="success"
-                  onClick={(e) =>{
+                  onClick={(e) => {
                     e.stopPropagation();
                     handleConfirmOpen(campaign.id);
                   }}

@@ -44,7 +44,7 @@ export function YourCampaignCard({ campaign, handleOpen }: CampaignCardProps) {
   const { setSnackbar } = useSnackbar();
 
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
-  const[campaignToDelete, setCampaignToDelete] = useState<string>("null");
+  const [campaignToDelete, setCampaignToDelete] = useState<string>("null");
 
   if (isPending) {
     return <div>Loading...</div>;
@@ -80,7 +80,7 @@ export function YourCampaignCard({ campaign, handleOpen }: CampaignCardProps) {
     handleOpen(campaign);
   };
 
-  const handleConfirmOpen = (idCampaign : string) => {
+  const handleConfirmOpen = (idCampaign: string) => {
     setCampaignToDelete(idCampaign);
     setConfirmOpen(true);
   };
@@ -88,10 +88,9 @@ export function YourCampaignCard({ campaign, handleOpen }: CampaignCardProps) {
   const handleConfirmClose = () => {
     setCampaignToDelete("null");
     setConfirmOpen(false);
-  }
+  };
   const handleDelete = async () => {
-
-    if(!campaignToDelete) return;
+    if (!campaignToDelete) return;
 
     const success = await deleteCampaign(campaignToDelete);
     if (success) {
