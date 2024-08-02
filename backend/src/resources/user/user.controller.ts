@@ -5,9 +5,9 @@ import { createUser, deleteUser, listUsers, readUser, updateUser } from "./user.
 
 const index = async (req: Request, res: Response) => {
   /*
-  #swagger.summary = 'Lista todos os usuário.'
+  #swagger.summary = 'Lista todos os usuários.'
   #swagger.responses[200] = {
-  schema: { $ref: '#/definitions/Usuario' }
+  schema: { $ref: '#/definitions/User' }
   }
   */
   const skip = req.query.skip ? parseInt(req.query.skip.toString()) : undefined;
@@ -26,13 +26,13 @@ const create = async (req: Request, res: Response) => {
   try {
     /*
     #swagger.summary = 'Cria um usuário novo.'
-    #swagger.parameters['tipoUsuario'] = { description: 'Tipo do usuário' }
+    #swagger.parameters['userType'] = { description: 'Tipo do usuário' }
     #swagger.parameters['body'] = {
     in: 'body',
-    schema: { $ref: '#/definitions/CreateUsuarioDto' }
+    schema: { $ref: '#/definitions/CreateUserDto' }
     }
     #swagger.responses[200] = {
-    schema: { $ref: '#/definitions/Usuario' }
+    schema: { $ref: '#/definitions/User' }
     }
     */
     const newUser = await createUser(user, userType);
@@ -41,7 +41,7 @@ const create = async (req: Request, res: Response) => {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }
 };
-("");
+
 const read = async (req: Request, res: Response) => {
   /*
   #swagger.summary = 'Mostra um usuário com base no ID.'

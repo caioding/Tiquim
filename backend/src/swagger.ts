@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 const doc = {
   info: {
-    title: "API da Loja virtual",
+    title: "API do Tiquim",
     description: "Documentação da API",
   },
   host: `${process.env.HOST}:${process.env.PORT}`,
