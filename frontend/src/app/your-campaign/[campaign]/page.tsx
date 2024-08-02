@@ -21,6 +21,7 @@ import useSnackbar from "@/app/hooks/useSnackbar";
 import { deleteCampaign } from "@/app/services/campaign";
 import EditCampaignModal from "@/app/components/edit-campaign";
 import { useQueryClient } from "@tanstack/react-query";
+import AlertDialog from "@/app/components/DialogConfirmationDelete";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -58,6 +59,8 @@ export default function YourCampaign() {
   const { isPending, isError, isOwner, campaign } = useCampaignOwner(idCampaign);
 
   const [open, setOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const[campaignToDelete, setCampaignToDelete] = useState<string>("null");
 
   if (isPending) {
     return (
@@ -106,11 +109,19 @@ export default function YourCampaign() {
     setTabValue(newValue);
   };
 
-  const handleDelete = async (e: React.SyntheticEvent, idCampaign: string) => {
-    // TODO: excluir campanha
-    //valeu por sinalizar onde ficava
-    e.stopPropagation();
-    const success = await deleteCampaign(idCampaign);
+  const handleConfirmOpen = (idCampaign : string) => {
+    setCampaignToDelete(idCampaign);
+    setConfirmOpen(true);
+  };
+
+  const handleConfirmClose = () => {
+    setCampaignToDelete("null");
+    setConfirmOpen(false);
+  }
+
+  const handleDelete = async () => {
+
+    const success = await deleteCampaign(campaignToDelete);
 
     if (success) {
       setSnackbar("Campanha deletada com sucesso!");
@@ -171,7 +182,10 @@ export default function YourCampaign() {
                 <IconButton
                   aria-label="delete"
                   color="success"
-                  onClick={(e) => handleDelete(e, campaign.id)}
+                  onClick={(e) =>{
+                    e.stopPropagation();
+                    handleConfirmOpen(campaign.id);
+                  }}
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -210,6 +224,13 @@ export default function YourCampaign() {
       </Box>
 
       <EditCampaignModal campaign={campaign} open={open} handleClose={handleClose} />
+
+      <AlertDialog
+        open={confirmOpen}
+        onConfirm={handleDelete}
+        onCancel={handleConfirmClose}
+        message="Deseja apagar essa campanha de sua lista de campahas?"
+      />
     </Container>
   );
 }
