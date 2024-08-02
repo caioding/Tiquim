@@ -5,7 +5,6 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { CardHearder } from "./CardHeader";
 import { Campaign } from "../types/campaign";
 import { useRouter } from "next/navigation";
 import contributions from "../mocks/contribution";
@@ -15,9 +14,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import useSnackbar from "../hooks/useSnackbar";
 import { deleteCampaign } from "../services/campaign";
+import { CardHeader } from "./CardHeader";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface CampaignCardProps {
   campaign: Campaign;
+  handleOpen: (campaign: Campaign) => void;
 }
 
 const TIME_FORMAT: Intl.DateTimeFormatOptions = {
@@ -28,8 +30,9 @@ const TIME_FORMAT: Intl.DateTimeFormatOptions = {
   hour12: false,
 };
 
-export function YourCampaignCard({ campaign }: CampaignCardProps) {
+export function YourCampaignCard({ campaign, handleOpen }: CampaignCardProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const createdAt = new Date(campaign.createdAt);
 
@@ -38,6 +41,7 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
   const { user, isPending, isError } = useUser(campaign.userId);
 
   const { setSnackbar } = useSnackbar();
+
   if (isPending) {
     return <div>Loading...</div>;
   }
@@ -68,25 +72,23 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
   };
 
   const handleEdit = (e: React.SyntheticEvent) => {
-    // TODO: ir para a página editar campanha
     e.stopPropagation();
-    router.push(`/edit-campaign/${campaign.id}`);
+    handleOpen(campaign);
   };
 
   const handleDelete = async (e: React.SyntheticEvent, idCampaign: string) => {
     // TODO: excluir campanha
     e.stopPropagation();
     const confirmDelete = window.confirm("Tem certeza que deseja deletar essa camanha?");
-    if(confirmDelete) {
+    if (confirmDelete) {
       const success = await deleteCampaign(idCampaign);
       if (success) {
         setSnackbar("Campanha deletada com sucesso!");
-        router.push("/");
+        queryClient.invalidateQueries({ queryKey: ["yourCampaigns"] });
       } else {
         setSnackbar("Erro ao deletar campanha", "error");
       }
     }
-
   };
 
   return (
@@ -103,7 +105,7 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
     >
       <CardMedia component="img" alt={campaign.title} height="140" image={imageUrl} />
       <CardContent sx={{ flexGrow: 1, mx: 1.5, overflow: "hidden" }}>
-        <CardHearder
+        <CardHeader
           title={campaign.title}
           author={user.name}
           createdAt={datetime}
