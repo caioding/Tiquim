@@ -15,6 +15,7 @@ import { IconButton } from "@mui/material";
 import useSnackbar from "../hooks/useSnackbar";
 import { deleteCampaign } from "../services/campaign";
 import { CardHeader } from "./CardHeader";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface CampaignCardProps {
   campaign: Campaign;
@@ -31,6 +32,7 @@ const TIME_FORMAT: Intl.DateTimeFormatOptions = {
 
 export function YourCampaignCard({ campaign, handleOpen }: CampaignCardProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const createdAt = new Date(campaign.createdAt);
 
@@ -82,7 +84,7 @@ export function YourCampaignCard({ campaign, handleOpen }: CampaignCardProps) {
       const success = await deleteCampaign(idCampaign);
       if (success) {
         setSnackbar("Campanha deletada com sucesso!");
-        router.push("/");
+        queryClient.invalidateQueries({ queryKey: ["yourCampaigns"] });
       } else {
         setSnackbar("Erro ao deletar campanha", "error");
       }

@@ -20,6 +20,7 @@ import useCampaignOwner from "@/app/hooks/useCampaignOwner";
 import useSnackbar from "@/app/hooks/useSnackbar";
 import { deleteCampaign } from "@/app/services/campaign";
 import EditCampaignModal from "@/app/components/edit-campaign";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -45,8 +46,10 @@ function CustomTabPanel(props: TabPanelProps) {
 
 export default function YourCampaign() {
   const router = useRouter();
-  const { setSnackbar } = useSnackbar();
+  const queryClient = useQueryClient();
   const params = useParams();
+
+  const { setSnackbar } = useSnackbar();
 
   const [tabValue, setTabValue] = useState(0);
 
@@ -103,10 +106,6 @@ export default function YourCampaign() {
     setTabValue(newValue);
   };
 
-  const handleEdit = (idCampaign: string) => {
-    router.push(`/edit-campaign/${idCampaign}`);
-  };
-
   const handleDelete = async (e: React.SyntheticEvent, idCampaign: string) => {
     // TODO: excluir campanha
     //valeu por sinalizar onde ficava
@@ -115,14 +114,17 @@ export default function YourCampaign() {
 
     if (success) {
       setSnackbar("Campanha deletada com sucesso!");
-      router.push("/");
+      router.push("/your-campaigns");
     } else {
       setSnackbar("Erro ao deletar campanha", "error");
     }
   };
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    router.push("/your-campaigns");
+  };
 
   return (
     <Container sx={{ width: "80%", m: "auto" }}>

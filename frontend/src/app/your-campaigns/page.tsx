@@ -11,11 +11,13 @@ import useAuthContext from "../hooks/useAuthContext";
 import CreateCampaignModal from "../components/create-campaign";
 import EditCampaignModal from "../components/edit-campaign";
 import { Campaign } from "../types/campaign";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function YourCampaigns() {
   const { id } = useAuthContext();
 
   const [searchQuery, setSearchQuery] = React.useState("");
+  const queryClient = useQueryClient();
   const { campaigns, isPending, isError } = useYourCampaigns(searchQuery);
   const [openCreate, setOpenCreate] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -70,13 +72,19 @@ export default function YourCampaigns() {
   };
 
   const handleOpenCreate = () => setOpenCreate(true);
-  const handleCloseCreate = () => setOpenCreate(false);
+  const handleCloseCreate = () => {
+    setOpenCreate(false);
+    queryClient.invalidateQueries({ queryKey: ["yourCampaigns"] });
+  };
 
   const handleOpenEdit = (campaign: Campaign) => {
     setCampaign(campaign);
     setOpenEdit(true);
   };
-  const handleCloseEdit = () => setOpenEdit(false);
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+    queryClient.invalidateQueries({ queryKey: ["yourCampaigns"] });
+  };
 
   return (
     <Container>

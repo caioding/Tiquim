@@ -4,7 +4,6 @@ import {
   Button,
   Card,
   CardContent,
-  Container,
   CssBaseline,
   Grid,
   InputLabel,
@@ -12,12 +11,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Campaign, UpdateCampaignDto } from "@/app/types/campaign";
 import { updateCampaign } from "@/app/services/campaign";
 import useSnackbar from "@/app/hooks/useSnackbar";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface EditCampaignProps {
   open: boolean;
@@ -33,7 +32,7 @@ const initialState = {
 };
 
 export default function EditCampaignModal({ campaign, open, handleClose }: EditCampaignProps) {
-  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const [campaignInfo, setCampaignInfo] = useState<UpdateCampaignDto>(initialState);
 
@@ -68,12 +67,10 @@ export default function EditCampaignModal({ campaign, open, handleClose }: EditC
       if (response) {
         setSnackbar("Campanha editada com sucesso!");
         setCampaignInfo(initialState);
-        router.push("/your-campaigns");
+        handleClose();
       }
     } catch (error) {
       setSnackbar("Erro ao editar a campanha", "error");
-
-      console.log(error);
     }
   };
 

@@ -15,7 +15,6 @@ import Grouped from "../CategoriesInput";
 import FormattedInputs from "../NumberFormat";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { Campaign } from "../../types/campaign";
 import useSnackbar from "../../hooks/useSnackbar";
 import { createCampaign } from "../../services/campaign";
@@ -46,7 +45,6 @@ const initialState = {
 };
 
 export default function CreateCampaignModal({ open, handleClose }: CreateCampaignProps) {
-  const router = useRouter();
   const [campaignInfo, setCampaignInfo] = useState<Omit<Campaign, "id">>(initialState);
 
   const {
@@ -75,7 +73,7 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
 
       setSnackbar("Campanha criada com sucesso!");
       setCampaignInfo(initialState);
-      router.push("/");
+      handleClose();
     } catch (error) {
       setSnackbar("Erro na criação da campanha", "error");
     }
