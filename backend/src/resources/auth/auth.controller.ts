@@ -14,7 +14,7 @@ const signup = async (req: Request, res: Response) => {
   schema: { $ref: '#/definitions/CreateUsuarioDto' }
   }
   #swagger.responses[200] = {
-  schema: { $ref: '#/definitions/Usuario' }
+  schema: { $ref: '#/definitions/Usr' }
   }
   */
   const user = req.body as CreateUserDto;

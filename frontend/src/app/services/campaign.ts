@@ -22,5 +22,5 @@ export async function createCampaign(campaign: Omit<Campaign, "id">) {
 }
 
 export async function deleteCampaign(id: string) {
-  return api.delete(`/campaign/${id}`)
+  return api.delete(`/campaign/${id}`);
 }

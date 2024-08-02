@@ -22,13 +22,13 @@ authRouter);
 router.use("/campaign", // #swagger.tags = ['Campaign']
 campaignRouter);
 
-router.use("/paymentMethod", // #swagger.tags = ['PaymentMethod'])
+router.use("/paymentMethod", // #swagger.tags = ['PaymentMethod']
 paymentMethodRouter);
 
-router.use("/contribution", // #swagger.tags = ['Contributions'])
+router.use("/contribution", // #swagger.tags = ['Contributions']
     contributionRouter);
 
-router.use("/reward", // #swagger.tags = ['Reward'])
+router.use("/reward", // #swagger.tags = ['Reward']
 rewardRouter);
 
 export default router;

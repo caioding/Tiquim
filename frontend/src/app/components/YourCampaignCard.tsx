@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -16,6 +16,7 @@ import useSnackbar from "../hooks/useSnackbar";
 import { deleteCampaign } from "../services/campaign";
 import { CardHeader } from "./CardHeader";
 import { useQueryClient } from "@tanstack/react-query";
+import AlertDialog from "./DialogConfirmationDelete";
 
 interface CampaignCardProps {
   campaign: Campaign;
@@ -41,6 +42,9 @@ export function YourCampaignCard({ campaign, handleOpen }: CampaignCardProps) {
   const { user, isPending, isError } = useUser(campaign.userId);
 
   const { setSnackbar } = useSnackbar();
+
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const [campaignToDelete, setCampaignToDelete] = useState<string>("null");
 
   if (isPending) {
     return <div>Loading...</div>;
@@ -76,18 +80,24 @@ export function YourCampaignCard({ campaign, handleOpen }: CampaignCardProps) {
     handleOpen(campaign);
   };
 
-  const handleDelete = async (e: React.SyntheticEvent, idCampaign: string) => {
-    // TODO: excluir campanha
-    e.stopPropagation();
-    const confirmDelete = window.confirm("Tem certeza que deseja deletar essa camanha?");
-    if (confirmDelete) {
-      const success = await deleteCampaign(idCampaign);
-      if (success) {
-        setSnackbar("Campanha deletada com sucesso!");
-        queryClient.invalidateQueries({ queryKey: ["yourCampaigns"] });
-      } else {
-        setSnackbar("Erro ao deletar campanha", "error");
-      }
+  const handleConfirmOpen = (idCampaign: string) => {
+    setCampaignToDelete(idCampaign);
+    setConfirmOpen(true);
+  };
+
+  const handleConfirmClose = () => {
+    setCampaignToDelete("null");
+    setConfirmOpen(false);
+  };
+  const handleDelete = async () => {
+    if (!campaignToDelete) return;
+
+    const success = await deleteCampaign(campaignToDelete);
+    if (success) {
+      setSnackbar("Campanha deletada com sucesso!");
+      queryClient.invalidateQueries({ queryKey: ["yourCampaigns"] });
+    } else {
+      setSnackbar("Erro ao deletar campanha", "error");
     }
   };
 
@@ -123,11 +133,20 @@ export function YourCampaignCard({ campaign, handleOpen }: CampaignCardProps) {
         <IconButton
           aria-label="delete"
           color="success"
-          onClick={(e) => handleDelete(e, campaign.id)}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleConfirmOpen(campaign.id);
+          }}
         >
           <DeleteIcon />
         </IconButton>
       </CardActions>
+      <AlertDialog
+        open={confirmOpen}
+        onConfirm={handleDelete}
+        onCancel={handleConfirmClose}
+        message={"Tem certeza que deseja deletar essa campanha?"}
+      />
     </Card>
   );
 }
