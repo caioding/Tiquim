@@ -9,6 +9,7 @@ import swaggerFile from "./swagger-output.json";
 import router from "./router";
 import validateEnv from "./utils/validateEnv";
 import setCookieLang from "./middlewares/setLangCookie";
+import path from "path";
 
 declare module "express-session" {
   interface SessionData {
@@ -47,6 +48,8 @@ app.use(
 app.use(setCookieLang);
 app.use(express.json());
 app.use(router);
+
+app.use("/uploads/campaign", express.static(path.join(__dirname, "uploads", "campaigns")));
 
 app.use("/api", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.listen(PORT, () => {

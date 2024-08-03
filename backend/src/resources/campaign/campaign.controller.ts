@@ -48,6 +48,11 @@ const create = async (req: Request, res: Response) => {
       }
       */
     const uid = req.session.uid!;
+
+    if (req.file) {
+      campaign.imageUrl = req.file.filename;
+    }
+
     const newCampaign = await createCampaign(campaign, uid);
     res.status(StatusCodes.OK).json(newCampaign);
   } catch (err) {
@@ -118,7 +123,7 @@ const remove = async (req: Request, res: Response) => {
   const { id } = req.params;
   const uid = req.session.uid!;
   try {
-    const deletedProduct = await deleteCampaign(id, uid);
+    const deletedCampaign = await deleteCampaign(id, uid);
     res.status(StatusCodes.NO_CONTENT).json();
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
