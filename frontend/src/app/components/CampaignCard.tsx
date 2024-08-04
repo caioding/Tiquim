@@ -34,6 +34,18 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
 
   const { user, isPending: userPending, isError: userError } = useUser(campaign.userId);
 
+  const [imageUrl, setImageUrl] = useState<string>("/placeholder.png");
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      if (campaign?.imageUrl && campaign.imageUrl.length > 0) {
+        const image = await getImageCampaign(campaign.imageUrl);
+        setImageUrl(image);
+      }
+    };
+    fetchImage();
+  }, [campaign]);
+
   const {
     percentage,
     isPending: percentagePending,
