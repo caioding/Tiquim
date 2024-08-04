@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -11,6 +11,7 @@ import { Campaign } from "../types/campaign";
 import { useRouter } from "next/navigation";
 import { useUser } from "../hooks/useUser";
 import { useCampaignPercentage } from "../hooks/useCampaignPercentage";
+import { getImageCampaign } from "../services/campaign";
 
 interface CampaignCardProps {
   campaign: Campaign;
@@ -32,6 +33,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
   const datetime: string = createdAt.toLocaleString("pt-BR", TIME_FORMAT);
 
   const { user, isPending: userPending, isError: userError } = useUser(campaign.userId);
+
   const {
     percentage,
     isPending: percentagePending,
@@ -51,13 +53,11 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
   }
 
   let completedPercentage = 0;
+
   if (percentage) {
     const percentageValue = typeof percentage === "number" ? percentage : Number(percentage);
     completedPercentage = Math.min(percentageValue * 100, 100);
   }
-
-  const imageUrl =
-    campaign?.imageUrl && campaign.imageUrl.length > 0 ? campaign.imageUrl : "/placeholder.png";
 
   const openCampaignDetails = (idCampaign: string) => {
     router.push(`/campaign/${idCampaign}`);

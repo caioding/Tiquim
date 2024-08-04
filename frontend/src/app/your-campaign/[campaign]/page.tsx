@@ -12,13 +12,13 @@ import {
   Typography,
 } from "@mui/material";
 import { useParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useRouter } from "next/navigation";
 import useCampaignOwner from "@/app/hooks/useCampaignOwner";
 import useSnackbar from "@/app/hooks/useSnackbar";
-import { deleteCampaign } from "@/app/services/campaign";
+import { deleteCampaign, getImageCampaign } from "@/app/services/campaign";
 import EditCampaignModal from "@/app/components/edit-campaign";
 import { useQueryClient } from "@tanstack/react-query";
 import AlertDialog from "@/app/components/DialogConfirmationDelete";
@@ -62,6 +62,18 @@ export default function YourCampaign() {
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [campaignToDelete, setCampaignToDelete] = useState<string>("null");
 
+  const [imageUrl, setImageUrl] = useState<string>("/placeholder.png");
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      if (campaign?.imageUrl && campaign.imageUrl.length > 0) {
+        const image = await getImageCampaign(campaign.imageUrl);
+        setImageUrl(image);
+      }
+    };
+    fetchImage();
+  }, [campaign]);
+
   if (isPending) {
     return (
       <Container sx={{ width: "80%" }}>
@@ -101,9 +113,6 @@ export default function YourCampaign() {
       </Container>
     );
   }
-
-  const imageUrl =
-    campaign.imageUrl && campaign.imageUrl.length > 0 ? campaign.imageUrl : "/placeholder.png";
 
   const handleTabChange = (e: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);

@@ -6,6 +6,7 @@ import {
   CardContent,
   CssBaseline,
   Grid,
+  IconButton,
   InputLabel,
   Modal,
   TextField,
@@ -14,9 +15,10 @@ import {
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Campaign, UpdateCampaignDto } from "@/app/types/campaign";
-import { updateCampaign } from "@/app/services/campaign";
+import { getImageCampaign, updateCampaign } from "@/app/services/campaign";
 import useSnackbar from "@/app/hooks/useSnackbar";
-import { useQueryClient } from "@tanstack/react-query";
+import InputFileUpload from "../FileUpload";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface EditCampaignProps {
   open: boolean;
@@ -32,9 +34,8 @@ const initialState = {
 };
 
 export default function EditCampaignModal({ campaign, open, handleClose }: EditCampaignProps) {
-  const queryClient = useQueryClient();
-
   const [campaignInfo, setCampaignInfo] = useState<UpdateCampaignDto>(initialState);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const {
     register,
@@ -44,6 +45,18 @@ export default function EditCampaignModal({ campaign, open, handleClose }: EditC
   } = useForm<Campaign>();
 
   const { setSnackbar } = useSnackbar();
+
+  const [imageUrl, setImageUrl] = useState<string>("/placeholder.png");
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      if (campaign?.imageUrl && campaign.imageUrl.length > 0) {
+        const image = await getImageCampaign(campaign.imageUrl);
+        setImageUrl(image);
+      }
+    };
+    fetchImage();
+  }, [campaign]);
 
   useEffect(() => {
     if (campaign) {
@@ -55,15 +68,15 @@ export default function EditCampaignModal({ campaign, open, handleClose }: EditC
       });
       // Update form values
       setValue("title", campaign.title);
-      setValue("imageUrl", campaign.imageUrl);
       setValue("preview", campaign.preview);
       setValue("description", campaign.description);
+      setValue("imageUrl", campaign.description);
     }
   }, [campaign, setValue]);
 
   const handleFormSubmit = async () => {
     try {
-      const response = await updateCampaign(campaign.id, campaignInfo);
+      const response = await updateCampaign(campaign.id, campaignInfo, selectedFile);
       if (response) {
         setSnackbar("Campanha editada com sucesso!");
         setCampaignInfo(initialState);
@@ -71,6 +84,12 @@ export default function EditCampaignModal({ campaign, open, handleClose }: EditC
       }
     } catch (error) {
       setSnackbar("Erro ao editar a campanha", "error");
+    }
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setSelectedFile(event.target.files[0]);
     }
   };
 
@@ -148,28 +167,6 @@ export default function EditCampaignModal({ campaign, open, handleClose }: EditC
                     )}
                   </Grid>
                   <Grid item xs={12}>
-                    <InputLabel htmlFor="imageUrl" sx={{ color: "black" }}>
-                      ImageURL
-                    </InputLabel>
-                    <TextField
-                      required
-                      fullWidth
-                      id="imageUrl"
-                      variant="outlined"
-                      margin="normal"
-                      sx={{ backgroundColor: "white" }}
-                      {...register("imageUrl", { required: true })}
-                      value={campaignInfo.imageUrl}
-                      onChange={(e) => {
-                        setCampaignInfo({ ...campaignInfo, imageUrl: e.target.value });
-                        setValue("imageUrl", e.target.value);
-                      }}
-                    />
-                    {errors.imageUrl?.type === "required" && (
-                      <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
-                    )}
-                  </Grid>
-                  <Grid item xs={12}>
                     <InputLabel htmlFor="preview" sx={{ color: "black" }}>
                       Resumo
                     </InputLabel>
@@ -216,6 +213,39 @@ export default function EditCampaignModal({ campaign, open, handleClose }: EditC
                     {errors.description?.type === "required" && (
                       <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
                     )}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Box
+                        component="img"
+                        sx={{
+                          height: 200,
+                          width: 300,
+                        }}
+                        src={selectedFile ? URL.createObjectURL(selectedFile) : imageUrl}
+                      />
+                      <InputFileUpload onFileChange={handleFileChange} />
+                      <IconButton
+                        aria-label="delete"
+                        color="success"
+                        sx={{
+                          display: selectedFile ? "block" : "none",
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedFile(null);
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Box>
                   </Grid>
                 </Grid>
               </Box>
