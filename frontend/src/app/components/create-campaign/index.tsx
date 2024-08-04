@@ -15,16 +15,11 @@ import Grouped from "../CategoriesInput";
 import FormattedInputs from "../NumberFormat";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { Campaign } from "../../types/campaign";
 import useSnackbar from "../../hooks/useSnackbar";
 import { createCampaign } from "../../services/campaign";
-
-const formatDate = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
 
 interface CreateCampaignProps {
   open: boolean;
@@ -179,24 +174,14 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
                     <InputLabel htmlFor="deadline" sx={{ color: "black" }}>
                       Prazo
                     </InputLabel>
-                    <TextField
-                      required
-                      fullWidth
-                      id="deadline"
-                      type="date"
-                      sx={{ backgroundColor: "white" }}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      autoComplete="deadline"
-                      variant="outlined"
-                      margin="normal"
-                      {...register("deadline", { required: true })}
-                      value={formatDate(campaignInfo.deadline)}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setCampaignInfo({ ...campaignInfo, deadline: new Date(e.target.value) })
-                      }
-                    />
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                        value={campaignInfo.deadline}
+                        onChange={(date) => setCampaignInfo({ ...campaignInfo, deadline: date! })}
+                        slotProps={{ textField: { variant: "outlined" } }}
+                        format="dd-MM-yyyy"
+                      />
+                    </LocalizationProvider>
                     {errors.deadline?.type === "required" && (
                       <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
                     )}
