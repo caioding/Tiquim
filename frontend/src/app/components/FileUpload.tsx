@@ -28,6 +28,9 @@ export default function InputFileUpload({ onFileChange }: InputFileUploadProps) 
       tabIndex={-1}
       startIcon={<CloudUploadIcon />}
       sx={{
+        height: "50px",
+        width: "200px",
+        ml: "10px",
         background: "#32a852",
         textTransform: "none",
         color: "white",

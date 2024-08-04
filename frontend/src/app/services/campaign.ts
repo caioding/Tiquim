@@ -17,9 +17,19 @@ export async function getYourCampaigns(searchQuery: string): Promise<Campaign[]>
   return api.get(`/campaign/user?q=${searchQuery}`).then((response) => response.data);
 }
 
-export async function updateCampaign(id: string, campaign: UpdateCampaignDto) {
+export async function updateCampaign(id: string, campaign: UpdateCampaignDto, file: File | null) {
+  const formData = new FormData();
+  formData.append("title", campaign.title);
+  formData.append("description", campaign.description);
+  formData.append("preview", campaign.preview);
+  formData.append("imageUrl", campaign.imageUrl);
+
+  if (file) {
+    formData.append("campaignImage", file);
+  }
+
   return api
-    .put(`/campaign/${id}`, campaign, {
+    .put(`/campaign/${id}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

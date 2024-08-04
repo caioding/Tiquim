@@ -9,6 +9,8 @@ import {
   updateCampaign,
 } from "./campaign.service";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
+import fs from "fs";
+import path from "path";
 
 const index = async (req: Request, res: Response) => {
   try {
@@ -98,6 +100,19 @@ const update = async (req: Request, res: Response) => {
   const uid = req.session.uid!;
   const updatedCampaign = req.body as UpdateCampaignDto;
 
+  if (req.file) {
+    const oldImageUrl = updatedCampaign.imageUrl;
+
+    if (oldImageUrl) {
+      const filePath = path.join(__dirname, "..", "..", "uploads", "campaigns", oldImageUrl);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+
+    updatedCampaign.imageUrl = req.file.filename;
+  }
+
   try {
     const campaign = await updateCampaign(id, updatedCampaign, uid);
 
@@ -124,6 +139,15 @@ const remove = async (req: Request, res: Response) => {
   const uid = req.session.uid!;
   try {
     const deletedCampaign = await deleteCampaign(id, uid);
+    const oldImageUrl = deletedCampaign.imageUrl;
+
+    if (oldImageUrl) {
+      const filePath = path.join(__dirname, "..", "..", "uploads", "campaigns", oldImageUrl);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+
     res.status(StatusCodes.NO_CONTENT).json();
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
