@@ -27,7 +27,7 @@ export function AboutTabPanel(props: TabPanelProps) {
   let completedPercentage = 0;
   if (percentage) {
     const percentageValue = typeof percentage === "number" ? percentage : Number(percentage);
-    completedPercentage = percentageValue * 100;
+    completedPercentage = Math.min(percentageValue * 100, 100);
   }
 
   return (
@@ -61,18 +61,13 @@ export function AboutTabPanel(props: TabPanelProps) {
             <PieChart
               series={[
                 {
-                  data: [
-                    {
-                      label: "Alcançado",
-                      value: completedPercentage,
-                      color: "green",
-                    },
-                    {
-                      label: "Restante",
-                      value: 100 - completedPercentage,
-                      color: "#D1FFBD",
-                    },
-                  ],
+                  data:
+                    completedPercentage === 100
+                      ? [{ label: "Alcançado", value: 100, color: "green" }]
+                      : [
+                          { label: "Alcançado", value: completedPercentage, color: "green" },
+                          { label: "Restante", value: 100 - completedPercentage, color: "#D1FFBD" },
+                        ],
                   innerRadius: 100,
                   outerRadius: 80,
                 },

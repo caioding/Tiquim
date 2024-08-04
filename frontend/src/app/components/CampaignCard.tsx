@@ -53,7 +53,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
   let completedPercentage = 0;
   if (percentage) {
     const percentageValue = typeof percentage === "number" ? percentage : Number(percentage);
-    completedPercentage = percentageValue * 100;
+    completedPercentage = Math.min(percentageValue * 100, 100);
   }
 
   const imageUrl =
