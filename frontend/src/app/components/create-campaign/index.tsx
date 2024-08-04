@@ -68,19 +68,23 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
       deadline: campaignInfo.deadline,
     };
 
-    try {
-      const response = await createCampaign(formattedData, selectedFile);
+    if (selectedFile) {
+      try {
+        const response = await createCampaign(formattedData, selectedFile);
 
-      if (response.status != 200) {
-        setSnackbar("Erro ao criar a campanha", "error");
-        throw new Error(`Error on handle submit creating campaign: ${response.statusText}`);
+        if (response.status != 200) {
+          setSnackbar("Erro ao criar a campanha", "error");
+          throw new Error(`Error on handle submit creating campaign: ${response.statusText}`);
+        }
+
+        setSnackbar("Campanha criada com sucesso!");
+        setCampaignInfo(initialState);
+        handleClose();
+      } catch (error) {
+        setSnackbar("Erro na criação da campanha", "error");
       }
-
-      setSnackbar("Campanha criada com sucesso!");
-      setCampaignInfo(initialState);
-      handleClose();
-    } catch (error) {
-      setSnackbar("Erro na criação da campanha", "error");
+    } else {
+      setSnackbar("Selecione um arquivo para a campanha", "error");
     }
   };
 
@@ -197,6 +201,7 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
                         onChange={(date) => setCampaignInfo({ ...campaignInfo, deadline: date! })}
                         slotProps={{ textField: { variant: "outlined" } }}
                         format="dd-MM-yyyy"
+                        sx={{ backgroundColor: "white", width: "100%" }}
                       />
                     </LocalizationProvider>
                     {errors.deadline?.type === "required" && (

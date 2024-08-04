@@ -30,7 +30,7 @@ export default function YourCampaigns() {
   if (id === "") {
     return (
       <Container sx={{ width: "80%" }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+        <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center" }}>
           Realize o login para visualizar suas campanhas.
         </Typography>
       </Container>
@@ -39,7 +39,7 @@ export default function YourCampaigns() {
   if (isPending) {
     return (
       <Container sx={{ width: "80%" }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+        <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center" }}>
           Carregando...
         </Typography>
       </Container>
@@ -48,7 +48,7 @@ export default function YourCampaigns() {
   if (isError) {
     return (
       <Container sx={{ width: "80%" }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+        <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center" }}>
           Ocorreu um erro ao carregar as campanhas.
         </Typography>
       </Container>
@@ -59,7 +59,7 @@ export default function YourCampaigns() {
     if (campaigns?.length == 0) {
       return (
         <Container sx={{ width: "80%" }}>
-          <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+          <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center" }}>
             Nenhuma campanha encontrada!
           </Typography>
         </Container>
