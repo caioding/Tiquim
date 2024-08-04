@@ -3,16 +3,52 @@ import React from "react";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import { CampaignsHeader } from "./components/CampaignsHeader";
-import { Box, Container, Typography } from "@mui/material";
+import SortIcon from "@mui/icons-material/Sort";
+import { Box, Container, IconButton, Menu, MenuItem, Typography } from "@mui/material";
 import { CampaignCard } from "./components/CampaignCard";
 import { useCampaigns } from "./hooks/useCampaigns";
 
 export default function Campaigns() {
   const [searchQuery, setSearchQuery] = React.useState("");
   const { campaigns, isPending, isError } = useCampaigns(searchQuery);
+  const [filteredCampaigns, setFilteredCampaign] = React.useState(campaigns);
+  const [sortBy, setSortBy] = React.useState<"title" | "date">("title");
+  const [sortDirection, setSortDirection] = React.useState<"asc" | "desc">("asc");
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const open = Boolean(anchorEl);
+
+  React.useEffect(() => {
+    filterAndSortData(sortBy, sortDirection);
+  }, [searchQuery, sortBy, sortDirection, campaigns]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
+  };
+
+  const handleSortChange = (value: string) => {
+    const [newSortBy, newSortDirection] = value.split(":");
+    setSortBy(newSortBy as "title" | "date");
+    setSortDirection(newSortDirection as "asc" | "desc");
+    filterAndSortData(newSortBy as "title" | "date", newSortDirection as "asc" | "desc");
+    setAnchorEl(null);
+  };
+
+  const filterAndSortData = (sortBy: "title" | "date", direction: "asc" | "desc") => {
+    if (campaigns) {
+      const filtered = campaigns.sort((a, b) => {
+        let comparison = 0;
+        if (sortBy === "title") {
+          comparison = a.title.localeCompare(b.title);
+        } else if (sortBy === "date") {
+          const dateA = new Date(a.createdAt);
+          const dateB = new Date(b.createdAt);
+          comparison = dateA.getTime() - dateB.getTime();
+        }
+        return direction === "asc" ? comparison : -comparison;
+      });
+      setFilteredCampaign(filtered);
+    }
   };
 
   const showCampaigns = () => {
@@ -28,14 +64,16 @@ export default function Campaigns() {
           Ocorreu um erro ao carregar as campanhas.
         </Typography>
       );
-    } else if (campaigns?.length == 0) {
+    } else if (campaigns?.length === 0) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
           Não há campanhas disponíveis no momento.
         </Typography>
       );
     } else {
-      return campaigns?.map((campaign) => <CampaignCard key={campaign.id} campaign={campaign} />);
+      return filteredCampaigns?.map((campaign) => (
+        <CampaignCard key={campaign.id} campaign={campaign} />
+      ));
     }
   };
 
@@ -52,32 +90,48 @@ export default function Campaigns() {
       >
         <CampaignsHeader />
         <Box
-          component="form"
           sx={{
             display: "flex",
             alignItems: "center",
-            backgroundColor: "rgba(0, 0, 0, 0)",
-            border: 1,
-            borderColor: "rgba(150, 150, 150, 1)",
-            borderRadius: 3,
-            mt: { xs: 4 },
           }}
         >
-          <SearchIcon sx={{ padding: 0.5, color: "rgba(150, 150, 150, 1)" }} />
-          <InputBase
-            placeholder="Pesquisar…"
-            inputProps={{ "aria-label": "search" }}
-            value={searchQuery}
-            onChange={handleSearchChange}
+          <Box
+            component="form"
             sx={{
-              color: "inherit",
-              paddingLeft: 1,
-              "& .MuiInputBase-input": {
-                padding: 1,
-                width: "100%",
-              },
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: "rgba(0, 0, 0, 0)",
+              border: 1,
+              borderColor: "rgba(150, 150, 150, 1)",
+              borderRadius: 3,
+              marginRight: 2,
             }}
-          />
+          >
+            <SearchIcon sx={{ padding: 0.5, color: "rgba(150, 150, 150, 1)" }} />
+            <InputBase
+              placeholder="Pesquisar…"
+              inputProps={{ "aria-label": "search" }}
+              value={searchQuery}
+              onChange={handleSearchChange}
+              sx={{
+                color: "inherit",
+                paddingLeft: 1,
+                "& .MuiInputBase-input": {
+                  padding: 1,
+                },
+              }}
+            />
+          </Box>
+
+          <IconButton onClick={(event) => setAnchorEl(event.currentTarget)} sx={{ height: "100%" }}>
+            <SortIcon />
+          </IconButton>
+          <Menu anchorEl={anchorEl} open={open} onClose={() => setAnchorEl(null)}>
+            <MenuItem onClick={() => handleSortChange("title:asc")}>Nome (A-Z)</MenuItem>
+            <MenuItem onClick={() => handleSortChange("title:desc")}>Nome (Z-A)</MenuItem>
+            <MenuItem onClick={() => handleSortChange("date:asc")}>Data (Mais antigo)</MenuItem>
+            <MenuItem onClick={() => handleSortChange("date:desc")}>Data (Mais recente)</MenuItem>
+          </Menu>
         </Box>
       </Box>
 
