@@ -7,16 +7,17 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Campaign } from "../types/campaign";
 import { useRouter } from "next/navigation";
-import contributions from "../mocks/contribution";
 import { useUser } from "../hooks/useUser";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import useSnackbar from "../hooks/useSnackbar";
 import { deleteCampaign } from "../services/campaign";
+import { useCampaignPercentage } from "../hooks/useCampaignPercentage";
 import { CardHeader } from "./CardHeader";
 import { useQueryClient } from "@tanstack/react-query";
 import AlertDialog from "./DialogConfirmationDelete";
+
 
 interface CampaignCardProps {
   campaign: Campaign;
@@ -39,34 +40,35 @@ export function YourCampaignCard({ campaign, handleOpen }: CampaignCardProps) {
 
   const datetime: string = createdAt.toLocaleString("pt-BR", TIME_FORMAT);
 
-  const { user, isPending, isError } = useUser(campaign.userId);
-
   const { setSnackbar } = useSnackbar();
 
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [campaignToDelete, setCampaignToDelete] = useState<string>("null");
+  
+  const { user, isPending: userPending, isError: userError } = useUser(campaign.userId);
+  const {
+    percentage,
+    isPending: percentagePending,
+    isError: percentageError,
+  } = useCampaignPercentage(campaign.id);
 
-  if (isPending) {
+  if (userPending || percentagePending) {
     return <div>Loading...</div>;
   }
 
-  if (isError) {
-    return <div>Error loading user information</div>;
+  if (userError || percentageError) {
+    return <div>Error loading data</div>;
   }
 
   if (!user) {
     return <div>User not found</div>;
   }
 
-  const listOfContributions =
-    contributions.filter((element) => element.campaignId == campaign.id) ?? 0;
-
-  const totalContributions = listOfContributions.reduce(
-    (sum, contribution) => sum + contribution.amount,
-    0,
-  );
-
-  const completedPercentage = (totalContributions / campaign.goal) * 100;
+  let completedPercentage = 0;
+  if (percentage) {
+    const percentageValue = typeof percentage === "number" ? percentage : Number(percentage);
+    completedPercentage = percentageValue * 100;
+  }
 
   const imageUrl =
     campaign?.imageUrl && campaign.imageUrl.length > 0 ? campaign.imageUrl : "/placeholder.png";
@@ -80,24 +82,28 @@ export function YourCampaignCard({ campaign, handleOpen }: CampaignCardProps) {
     handleOpen(campaign);
   };
 
-  const handleConfirmOpen = (idCampaign: string) => {
-    setCampaignToDelete(idCampaign);
-    setConfirmOpen(true);
-  };
+const handleConfirmOpen = (idCampaign: string) => {
+  setCampaignToDelete(idCampaign);
+  setConfirmOpen(true);
+};
 
-  const handleConfirmClose = () => {
-    setCampaignToDelete("null");
-    setConfirmOpen(false);
-  };
-  const handleDelete = async () => {
-    if (!campaignToDelete) return;
+const handleConfirmClose = () => {
+  setCampaignToDelete("null");
+  setConfirmOpen(false);
+};
 
-    const success = await deleteCampaign(campaignToDelete);
-    if (success) {
-      setSnackbar("Campanha deletada com sucesso!");
-      queryClient.invalidateQueries({ queryKey: ["yourCampaigns"] });
-    } else {
-      setSnackbar("Erro ao deletar campanha", "error");
+const handleDelete = async () => {
+  if (!campaignToDelete) return;
+
+  const success = await deleteCampaign(campaignToDelete);
+  if (success) {
+    setSnackbar("Campanha deletada com sucesso!");
+    queryClient.invalidateQueries({ queryKey: ["yourCampaigns"] });
+  } else {
+    setSnackbar("Erro ao deletar campanha", "error");
+  }
+};
+
     }
   };
 

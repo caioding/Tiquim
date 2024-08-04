@@ -48,10 +48,13 @@ export function CardHeader({ title, author, createdAt, completedPercentage }: Ca
         <PieChart
           series={[
             {
-              data: [
-                { value: completedPercentage, color: "green" },
-                { value: 100 - completedPercentage, color: "#D1FFBD" },
-              ],
+              data:
+                completedPercentage === 100
+                  ? [{ value: 100, color: "green" }]
+                  : [
+                      { value: completedPercentage, color: "green" },
+                      { value: 100 - completedPercentage, color: "#D1FFBD" },
+                    ],
               innerRadius: 18,
               outerRadius: 25,
               cx: 20,
