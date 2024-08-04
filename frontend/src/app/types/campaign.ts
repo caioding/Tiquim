@@ -11,4 +11,7 @@ export interface Campaign {
   goal: number;
   userId: string;
 }
+
+export type CreateCampaignDto = Omit<Campaign, "id" | "imageUrl">;
+
 export type UpdateCampaignDto = Pick<Campaign, "title" | "description" | "preview" | "imageUrl">;

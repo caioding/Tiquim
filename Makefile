@@ -26,3 +26,6 @@ seed:
 
 swagger:
 	docker exec -it backend_tiquim npx ts-node src/swagger.ts
+
+client: 
+	npx prisma generate

@@ -1,6 +1,7 @@
 "use client";
 import { AboutTabPanel } from "@/app/components/AboutTabPanel";
 import { useCampaignDetails } from "@/app/hooks/useCampaignDetails";
+import { getImageCampaign } from "@/app/services/campaign";
 import {
   Box,
   Button,
@@ -13,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -46,8 +47,17 @@ export default function Campanha() {
 
   const { campaign, isPending, isError } = useCampaignDetails(idCampaign);
 
-  const imageUrl =
-    campaign?.imageUrl && campaign.imageUrl.length > 0 ? campaign.imageUrl : "/placeholder.png";
+  const [imageUrl, setImageUrl] = useState<string>("/placeholder.png");
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      if (campaign?.imageUrl && campaign.imageUrl.length > 0) {
+        const image = await getImageCampaign(campaign.imageUrl);
+        setImageUrl(image);
+      }
+    };
+    fetchImage();
+  }, [campaign]);
 
   if (isPending) {
     return (

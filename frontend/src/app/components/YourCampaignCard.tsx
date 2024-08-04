@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -12,7 +12,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import useSnackbar from "../hooks/useSnackbar";
-import { deleteCampaign } from "../services/campaign";
+import { deleteCampaign, getImageCampaign } from "../services/campaign";
 import { useCampaignPercentage } from "../hooks/useCampaignPercentage";
 import { CardHeader } from "./CardHeader";
 import { useQueryClient } from "@tanstack/react-query";
@@ -43,6 +43,18 @@ export function YourCampaignCard({ campaign, handleOpen }: CampaignCardProps) {
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [campaignToDelete, setCampaignToDelete] = useState<string>("null");
 
+  const [imageUrl, setImageUrl] = useState<string>("/placeholder.png");
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      if (campaign?.imageUrl && campaign.imageUrl.length > 0) {
+        const image = await getImageCampaign(campaign.imageUrl);
+        setImageUrl(image);
+      }
+    };
+    fetchImage();
+  }, [campaign]);
+
   const { user, isPending: userPending, isError: userError } = useUser(campaign.userId);
   const {
     percentage,
@@ -67,9 +79,6 @@ export function YourCampaignCard({ campaign, handleOpen }: CampaignCardProps) {
     const percentageValue = typeof percentage === "number" ? percentage : Number(percentage);
     completedPercentage = Math.min(percentageValue * 100, 100);
   }
-
-  const imageUrl =
-    campaign?.imageUrl && campaign.imageUrl.length > 0 ? campaign.imageUrl : "/placeholder.png";
 
   const openCampaignDetails = (idCampaign: string) => {
     router.push(`/your-campaign/${idCampaign}`);

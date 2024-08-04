@@ -6,6 +6,7 @@ import {
   CardContent,
   CssBaseline,
   Grid,
+  IconButton,
   InputLabel,
   Modal,
   TextField,
@@ -17,30 +18,39 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
-import { Campaign } from "../../types/campaign";
+import { Campaign, CreateCampaignDto } from "../../types/campaign";
 import useSnackbar from "../../hooks/useSnackbar";
 import { createCampaign } from "../../services/campaign";
+import InputFileUpload from "../FileUpload";
+import DeleteIcon from "@mui/icons-material/Delete";
+
+const formatDate = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 interface CreateCampaignProps {
   open: boolean;
   handleClose: () => void;
 }
 
-const initialState = {
+const initialState: CreateCampaignDto = {
   goal: 0,
   deadline: new Date(),
   title: "",
   description: "",
   preview: "",
   category: "",
-  imageUrl: "",
   userId: "",
   createdAt: new Date(),
   updatedAt: new Date(),
 };
 
 export default function CreateCampaignModal({ open, handleClose }: CreateCampaignProps) {
-  const [campaignInfo, setCampaignInfo] = useState<Omit<Campaign, "id">>(initialState);
+  const [campaignInfo, setCampaignInfo] = useState<CreateCampaignDto>(initialState);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const {
     register,
@@ -58,19 +68,29 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
       deadline: campaignInfo.deadline,
     };
 
-    try {
-      const response = await createCampaign(formattedData);
+    if (selectedFile) {
+      try {
+        const response = await createCampaign(formattedData, selectedFile);
 
-      if (response.status != 200) {
-        setSnackbar("Erro ao criar a campanha", "error");
-        throw new Error(`Error on handle submit creating campaign: ${response.statusText}`);
+        if (response.status != 200) {
+          setSnackbar("Erro ao criar a campanha", "error");
+          throw new Error(`Error on handle submit creating campaign: ${response.statusText}`);
+        }
+
+        setSnackbar("Campanha criada com sucesso!");
+        setCampaignInfo(initialState);
+        handleClose();
+      } catch (error) {
+        setSnackbar("Erro na criação da campanha", "error");
       }
+    } else {
+      setSnackbar("Selecione um arquivo para a campanha", "error");
+    }
+  };
 
-      setSnackbar("Campanha criada com sucesso!");
-      setCampaignInfo(initialState);
-      handleClose();
-    } catch (error) {
-      setSnackbar("Erro na criação da campanha", "error");
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setSelectedFile(event.target.files[0]);
     }
   };
 
@@ -121,6 +141,7 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
               <Box
                 component="form"
                 onSubmit={handleSubmit(handleFormSubmit)}
+                encType="multipart/form-data"
                 sx={{ mt: 3, width: "100%" }}
               >
                 <Grid container spacing={2}>
@@ -170,7 +191,7 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
                       errors={errors}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12}>
                     <InputLabel htmlFor="deadline" sx={{ color: "black" }}>
                       Prazo
                     </InputLabel>
@@ -180,31 +201,10 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
                         onChange={(date) => setCampaignInfo({ ...campaignInfo, deadline: date! })}
                         slotProps={{ textField: { variant: "outlined" } }}
                         format="dd-MM-yyyy"
+                        sx={{ backgroundColor: "white", width: "100%" }}
                       />
                     </LocalizationProvider>
                     {errors.deadline?.type === "required" && (
-                      <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
-                    )}
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel htmlFor="imageUrl" sx={{ color: "black" }}>
-                      ImageURL
-                    </InputLabel>
-                    <TextField
-                      required
-                      fullWidth
-                      id="imageUrl"
-                      autoComplete="imageUrl"
-                      variant="outlined"
-                      margin="normal"
-                      sx={{ backgroundColor: "white" }}
-                      {...register("imageUrl", { required: true })}
-                      value={campaignInfo.imageUrl}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setCampaignInfo({ ...campaignInfo, imageUrl: e.target.value })
-                      }
-                    />
-                    {errors.imageUrl?.type === "required" && (
                       <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
                     )}
                   </Grid>
@@ -257,9 +257,52 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
                       <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
                     )}
                   </Grid>
-                  {/* <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
-              <InputFileUpload />
-            </Grid> */}
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Box
+                        component="img"
+                        sx={{
+                          height: 200,
+                          width: 300,
+                          display: selectedFile ? "block" : "none",
+                        }}
+                        src={selectedFile ? URL.createObjectURL(selectedFile) : ""}
+                      />
+                      <InputFileUpload onFileChange={handleFileChange} />
+                      <IconButton
+                        aria-label="delete"
+                        color="success"
+                        sx={{
+                          display: selectedFile ? "block" : "none",
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedFile(null);
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Box>
+                    {selectedFile === null && (
+                      <Box sx={{ color: "error.main", mt: "8px" }}>Esse campo é obrigatório</Box>
+                    )}
+                  </Grid>
                 </Grid>
               </Box>
             </CardContent>

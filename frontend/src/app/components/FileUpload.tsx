@@ -3,6 +3,10 @@ import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
+interface InputFileUploadProps {
+  onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -15,7 +19,7 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export default function InputFileUpload() {
+export default function InputFileUpload({ onFileChange }: InputFileUploadProps) {
   return (
     <Button
       component="label"
@@ -24,6 +28,9 @@ export default function InputFileUpload() {
       tabIndex={-1}
       startIcon={<CloudUploadIcon />}
       sx={{
+        height: "50px",
+        width: "200px",
+        ml: "10px",
         background: "#32a852",
         textTransform: "none",
         color: "white",
@@ -31,7 +38,7 @@ export default function InputFileUpload() {
       }}
     >
       Upload de Imagem
-      <VisuallyHiddenInput type="file" />
+      <VisuallyHiddenInput type="file" name="campaignImage" onChange={onFileChange} />
     </Button>
   );
 }
