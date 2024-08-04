@@ -1,11 +1,10 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { CardHearder } from "./CardHeader";
 import { Campaign } from "../types/campaign";
 import { useRouter } from "next/navigation";
 import { useUser } from "../hooks/useUser";
@@ -15,9 +14,14 @@ import { IconButton } from "@mui/material";
 import useSnackbar from "../hooks/useSnackbar";
 import { deleteCampaign } from "../services/campaign";
 import { useCampaignPercentage } from "../hooks/useCampaignPercentage";
+import { CardHeader } from "./CardHeader";
+import { useQueryClient } from "@tanstack/react-query";
+import AlertDialog from "./DialogConfirmationDelete";
+
 
 interface CampaignCardProps {
   campaign: Campaign;
+  handleOpen: (campaign: Campaign) => void;
 }
 
 const TIME_FORMAT: Intl.DateTimeFormatOptions = {
@@ -28,8 +32,9 @@ const TIME_FORMAT: Intl.DateTimeFormatOptions = {
   hour12: false,
 };
 
-export function YourCampaignCard({ campaign }: CampaignCardProps) {
+export function YourCampaignCard({ campaign, handleOpen }: CampaignCardProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const createdAt = new Date(campaign.createdAt);
 
@@ -37,6 +42,9 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
 
   const { setSnackbar } = useSnackbar();
 
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const [campaignToDelete, setCampaignToDelete] = useState<string>("null");
+  
   const { user, isPending: userPending, isError: userError } = useUser(campaign.userId);
   const {
     percentage,
@@ -70,23 +78,32 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
   };
 
   const handleEdit = (e: React.SyntheticEvent) => {
-    // TODO: ir para a página editar campanha
     e.stopPropagation();
-    router.push(`/edit-campaign/${campaign.id}`);
+    handleOpen(campaign);
   };
 
-  const handleDelete = async (e: React.SyntheticEvent, idCampaign: string) => {
-    // TODO: excluir campanha
-    e.stopPropagation();
-    const confirmDelete = window.confirm("Tem certeza que deseja deletar essa camanha?");
-    if (confirmDelete) {
-      const success = await deleteCampaign(idCampaign);
-      if (success) {
-        setSnackbar("Campanha deletada com sucesso!");
-        router.push("/");
-      } else {
-        setSnackbar("Erro ao deletar campanha", "error");
-      }
+const handleConfirmOpen = (idCampaign: string) => {
+  setCampaignToDelete(idCampaign);
+  setConfirmOpen(true);
+};
+
+const handleConfirmClose = () => {
+  setCampaignToDelete("null");
+  setConfirmOpen(false);
+};
+
+const handleDelete = async () => {
+  if (!campaignToDelete) return;
+
+  const success = await deleteCampaign(campaignToDelete);
+  if (success) {
+    setSnackbar("Campanha deletada com sucesso!");
+    queryClient.invalidateQueries({ queryKey: ["yourCampaigns"] });
+  } else {
+    setSnackbar("Erro ao deletar campanha", "error");
+  }
+};
+
     }
   };
 
@@ -104,7 +121,7 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
     >
       <CardMedia component="img" alt={campaign.title} height="140" image={imageUrl} />
       <CardContent sx={{ flexGrow: 1, mx: 1.5, overflow: "hidden" }}>
-        <CardHearder
+        <CardHeader
           title={campaign.title}
           author={user.name}
           createdAt={datetime}
@@ -122,11 +139,20 @@ export function YourCampaignCard({ campaign }: CampaignCardProps) {
         <IconButton
           aria-label="delete"
           color="success"
-          onClick={(e) => handleDelete(e, campaign.id)}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleConfirmOpen(campaign.id);
+          }}
         >
           <DeleteIcon />
         </IconButton>
       </CardActions>
+      <AlertDialog
+        open={confirmOpen}
+        onConfirm={handleDelete}
+        onCancel={handleConfirmClose}
+        message={"Tem certeza que deseja deletar essa campanha?"}
+      />
     </Card>
   );
 }

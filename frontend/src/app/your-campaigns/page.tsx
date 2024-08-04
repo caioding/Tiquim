@@ -1,21 +1,27 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Box, Container, Fab, Typography } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import { YourCampaignsHeader } from "../components/YourCampaignsHeader";
 import { useYourCampaigns } from "../hooks/useYourCampaigns";
 import AddIcon from "@mui/icons-material/Add";
-import { useRouter } from "next/navigation";
 import { YourCampaignCard } from "../components/YourCampaignCard";
 import useAuthContext from "../hooks/useAuthContext";
+import CreateCampaignModal from "../components/create-campaign";
+import EditCampaignModal from "../components/edit-campaign";
+import { Campaign } from "../types/campaign";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function YourCampaigns() {
-  const router = useRouter();
   const { id } = useAuthContext();
 
   const [searchQuery, setSearchQuery] = React.useState("");
+  const queryClient = useQueryClient();
   const { campaigns, isPending, isError } = useYourCampaigns(searchQuery);
+  const [openCreate, setOpenCreate] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [campaign, setCampaign] = useState({} as Campaign);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -60,14 +66,24 @@ export default function YourCampaigns() {
       );
     } else {
       return campaigns?.map((campaign) => (
-        <YourCampaignCard key={campaign.id} campaign={campaign} />
+        <YourCampaignCard key={campaign.id} campaign={campaign} handleOpen={handleOpenEdit} />
       ));
     }
   };
 
-  const handleAddCampaign = (e: React.SyntheticEvent) => {
-    e.stopPropagation();
-    router.push("/create-campaign"); // Navega para a página de criação de campanhas
+  const handleOpenCreate = () => setOpenCreate(true);
+  const handleCloseCreate = () => {
+    setOpenCreate(false);
+    queryClient.invalidateQueries({ queryKey: ["yourCampaigns"] });
+  };
+
+  const handleOpenEdit = (campaign: Campaign) => {
+    setCampaign(campaign);
+    setOpenEdit(true);
+  };
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+    queryClient.invalidateQueries({ queryKey: ["yourCampaigns"] });
   };
 
   return (
@@ -129,7 +145,7 @@ export default function YourCampaigns() {
       <Fab
         color="success"
         aria-label="add"
-        onClick={handleAddCampaign}
+        onClick={handleOpenCreate}
         sx={{
           position: "fixed",
           bottom: 50,
@@ -138,6 +154,8 @@ export default function YourCampaigns() {
       >
         <AddIcon />
       </Fab>
+      <CreateCampaignModal open={openCreate} handleClose={handleCloseCreate} />
+      <EditCampaignModal campaign={campaign} open={openEdit} handleClose={handleCloseEdit} />
     </Container>
   );
 }

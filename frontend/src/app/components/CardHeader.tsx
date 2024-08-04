@@ -9,7 +9,7 @@ interface CardHearderProps {
   completedPercentage: number;
 }
 
-export function CardHearder({ title, author, createdAt, completedPercentage }: CardHearderProps) {
+export function CardHeader({ title, author, createdAt, completedPercentage }: CardHearderProps) {
   return (
     <Stack direction="row" justifyContent="space-between" alignItems="center">
       <Box sx={{ width: "calc(100% - 60px)" }}>

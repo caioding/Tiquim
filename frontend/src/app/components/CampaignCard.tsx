@@ -6,7 +6,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { CardHearder } from "./CardHeader";
+import { CardHeader } from "./CardHeader";
 import { Campaign } from "../types/campaign";
 import { useRouter } from "next/navigation";
 import { useUser } from "../hooks/useUser";
@@ -82,7 +82,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
     >
       <CardMedia component="img" alt={campaign.title} height="140" image={imageUrl} />
       <CardContent sx={{ flexGrow: 1, mx: 1.5, overflow: "hidden" }}>
-        <CardHearder
+        <CardHeader
           title={campaign.title}
           author={user.name}
           createdAt={datetime}
