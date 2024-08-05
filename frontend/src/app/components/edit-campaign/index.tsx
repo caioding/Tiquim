@@ -19,6 +19,7 @@ import { getImageCampaign, updateCampaign } from "@/app/services/campaign";
 import useSnackbar from "@/app/hooks/useSnackbar";
 import InputFileUpload from "../FileUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useRouter } from "next/navigation";
 
 interface EditCampaignProps {
   open: boolean;
@@ -34,6 +35,7 @@ const initialState = {
 };
 
 export default function EditCampaignModal({ campaign, open, handleClose }: EditCampaignProps) {
+  const router = useRouter();
   const [campaignInfo, setCampaignInfo] = useState<UpdateCampaignDto>(initialState);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -81,6 +83,7 @@ export default function EditCampaignModal({ campaign, open, handleClose }: EditC
         setSnackbar("Campanha editada com sucesso!");
         setCampaignInfo(initialState);
         handleClose();
+        router.push("/your-campaigns");
       }
     } catch (error) {
       setSnackbar("Erro ao editar a campanha", "error");

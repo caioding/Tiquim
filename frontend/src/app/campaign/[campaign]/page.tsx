@@ -61,31 +61,25 @@ export default function Campanha() {
 
   if (isPending) {
     return (
-      <Container sx={{ width: "80%" }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
-          Carregando...
-        </Typography>
-      </Container>
+      <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center", mb: 5 }}>
+        Carregando...
+      </Typography>
     );
   }
 
   if (isError) {
     return (
-      <Container sx={{ width: "80%" }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
-          Ocorreu um erro ao carregar as informações da campanha.
-        </Typography>
-      </Container>
+      <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center", mb: 5 }}>
+        Ocorreu um erro ao carregar as informações da campanha.
+      </Typography>
     );
   }
 
   if (!campaign) {
     return (
-      <Container sx={{ width: "80%" }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
-          Não há detalhes disponíveis para esta campanha no momento.
-        </Typography>
-      </Container>
+      <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center", mb: 5 }}>
+        Não há detalhes disponíveis para esta campanha no momento.
+      </Typography>
     );
   }
 

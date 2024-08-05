@@ -47,7 +47,6 @@ function CustomTabPanel(props: TabPanelProps) {
 
 export default function YourCampaign() {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const params = useParams();
 
   const { setSnackbar } = useSnackbar();
@@ -76,28 +75,24 @@ export default function YourCampaign() {
 
   if (isPending) {
     return (
-      <Container sx={{ width: "80%" }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
-          Carregando...
-        </Typography>
-      </Container>
+      <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center", mb: 5 }}>
+        Carregando...
+      </Typography>
     );
   }
 
   if (isError) {
     return (
-      <Container sx={{ width: "80%" }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
-          Ocorreu um erro ao carregar as informações da campanha ou a campanha não existe.
-        </Typography>
-      </Container>
+      <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center", mb: 5 }}>
+        Ocorreu um erro ao carregar as informações da campanha ou a campanha não existe.
+      </Typography>
     );
   }
 
   if (!campaign) {
     return (
-      <Container sx={{ width: "80%" }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
+      <Container>
+        <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center", mb: 5 }}>
           Não há detalhes disponíveis para esta campanha no momento.
         </Typography>
       </Container>
@@ -106,11 +101,9 @@ export default function YourCampaign() {
 
   if (!isOwner) {
     return (
-      <Container sx={{ width: "80%" }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
-          Você não tem permissão para acessar essa página.
-        </Typography>
-      </Container>
+      <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center", mb: 5 }}>
+        Você não tem permissão para acessar essa página.
+      </Typography>
     );
   }
 
@@ -142,7 +135,6 @@ export default function YourCampaign() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
-    router.push("/your-campaigns");
   };
 
   return (

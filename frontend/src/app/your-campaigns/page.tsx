@@ -72,11 +72,9 @@ export default function YourCampaigns() {
       );
     } else if (id === "") {
       return (
-        <Container sx={{ width: "80%" }}>
-          <Typography variant="h4" sx={{ fontWeight: "bold", m: 5 }}>
-            Realize o login para visualizar suas campanhas.
-          </Typography>
-        </Container>
+        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
+          Realize o login para visualizar suas campanhas.
+        </Typography>
       );
     } else if (isError) {
       return (
