@@ -6,10 +6,16 @@ import SortIcon from "@mui/icons-material/Sort";
 import { CampaignsHeader } from "../components/CampaignsHeader";
 import { CampaignCard } from "../components/CampaignCard";
 import { useCampaigns } from "../hooks/useCampaigns";
+import { useCampaignsSupporters } from "../hooks/useCampaignsSupporters";
 
 export default function AllCampaigns() {
   const [searchQuery, setSearchQuery] = React.useState("");
   const { campaigns, isPending, isError } = useCampaigns(searchQuery);
+  const {
+    supporters,
+    isPending: supportersPending,
+    isError: supportersError,
+  } = useCampaignsSupporters();
   const [filteredCampaigns, setFilteredCampaign] = React.useState(campaigns);
   const [sortBy, setSortBy] = React.useState<"title" | "date">("title");
   const [sortDirection, setSortDirection] = React.useState<"asc" | "desc">("asc");
@@ -43,6 +49,11 @@ export default function AllCampaigns() {
           const dateA = new Date(a.createdAt);
           const dateB = new Date(b.createdAt);
           comparison = dateA.getTime() - dateB.getTime();
+        } else if (sortBy === "popular") {
+          const supportersMap = new Map(supporters?.map((item) => [item.campaignId, item.count]));
+          const countA = supportersMap?.get(a.id) || 0;
+          const countB = supportersMap?.get(b.id) || 0;
+          return countB - countA;
         }
         return direction === "asc" ? comparison : -comparison;
       });
@@ -128,6 +139,7 @@ export default function AllCampaigns() {
           <Menu anchorEl={anchorEl} open={open} onClose={() => setAnchorEl(null)}>
             <MenuItem onClick={() => handleSortChange("title:asc")}>Nome (A-Z)</MenuItem>
             <MenuItem onClick={() => handleSortChange("title:desc")}>Nome (Z-A)</MenuItem>
+            <MenuItem onClick={() => handleSortChange("popular:asc")}>Mais populares</MenuItem>
             <MenuItem onClick={() => handleSortChange("date:asc")}>Data (Mais antigo)</MenuItem>
             <MenuItem onClick={() => handleSortChange("date:desc")}>Data (Mais recente)</MenuItem>
           </Menu>

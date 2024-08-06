@@ -83,19 +83,25 @@ export default function Campaigns() {
         </Typography>
       );
     } else if (supporters && campaigns) {
-      const supportersCountMap = new Map(supporters.map((item) => [item.campaignId, item.count]));
-
-      const groupedNewCampaigns: Array<Campaign[]> = [];
-      const newCampaigns = campaigns.sort((a, b) => {
-        const countA = supportersCountMap.get(a.id) || 0;
-        const countB = supportersCountMap.get(b.id) || 0;
-        return countB - countA;
+      const supportersMap = new Map(supporters.map((item) => [item.campaignId, item.count]));
+      const groupedPopularCampaigns: Array<Campaign[]> = [];
+      const popularCampaigns = campaigns.sort((a, b) => {
+        const countA = supportersMap.get(a.id) || 0;
+        const countB = supportersMap.get(b.id) || 0;
+        let comparison = countB - countA;
+        if (comparison === 0) {
+          comparison = a.title.localeCompare(b.title);
+        }
+        return comparison;
       });
-      for (let i = 0; i < Math.min(newCampaigns.length, 12); i += cardsPerSlide) {
-        groupedNewCampaigns.push(newCampaigns.slice(i, i + cardsPerSlide));
+      for (let i = 0; i < Math.min(popularCampaigns.length, 12); i += cardsPerSlide) {
+        groupedPopularCampaigns.push(popularCampaigns.slice(i, i + cardsPerSlide));
       }
       return (
-        <CampaignCarousel groupedCampaigns={groupedNewCampaigns} cardsPerSlide={cardsPerSlide} />
+        <CampaignCarousel
+          groupedCampaigns={groupedPopularCampaigns}
+          cardsPerSlide={cardsPerSlide}
+        />
       );
     }
   };
