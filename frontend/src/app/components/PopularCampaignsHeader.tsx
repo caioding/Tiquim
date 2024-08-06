@@ -1,16 +1,16 @@
 import React from "react";
 import { Stack, Typography } from "@mui/material";
 
-export function CampaignsHeader() {
+export function PopularCampaignsHeader() {
   return (
     <Stack direction="row" justifyContent="space-between" alignItems="center">
       <span>
         <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-          Todas as campanhas
+          Campanhas Populares
         </Typography>
 
         <Typography variant="body2" color="text.secondary" component="h2" sx={{ mb: 1.5 }}>
-          Descubra companhas e ajude projetos e causas ao redor do mundo!
+          Veja as campanhas que estão em alta e recebendo mais apoio!
         </Typography>
       </span>
     </Stack>

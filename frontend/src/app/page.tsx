@@ -1,57 +1,28 @@
 "use client";
 import React from "react";
-import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/icons-material/Search";
-import { CampaignsHeader } from "./components/CampaignsHeader";
-import SortIcon from "@mui/icons-material/Sort";
-import { Box, Container, IconButton, Menu, MenuItem, Typography } from "@mui/material";
-import { CampaignCard } from "./components/CampaignCard";
+import { Box, Container, Typography, useMediaQuery } from "@mui/material";
 import { useCampaigns } from "./hooks/useCampaigns";
+import { RecentCampaignsHeader } from "./components/RecentCampaignsHeader";
+import { PopularCampaignsHeader } from "./components/PopularCampaignsHeader";
+import { CampaignCarousel } from "./components/CampaignCarousel";
+import { Campaign } from "./types/campaign";
 
 export default function Campaigns() {
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const { campaigns, isPending, isError } = useCampaigns(searchQuery);
-  const [filteredCampaigns, setFilteredCampaign] = React.useState(campaigns);
-  const [sortBy, setSortBy] = React.useState<"title" | "date">("title");
-  const [sortDirection, setSortDirection] = React.useState<"asc" | "desc">("asc");
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const { campaigns, isPending, isError } = useCampaigns("");
 
-  const open = Boolean(anchorEl);
+  const isSmallScreen = useMediaQuery("(max-width:790px)");
+  const isMediumScreen = useMediaQuery("(max-width:1155px)");
 
-  React.useEffect(() => {
-    filterAndSortData(sortBy, sortDirection);
-  }, [searchQuery, sortBy, sortDirection, campaigns]);
+  let cardsPerSlide = 1;
+  if (isSmallScreen) {
+    cardsPerSlide = 1;
+  } else if (isMediumScreen) {
+    cardsPerSlide = 2;
+  } else {
+    cardsPerSlide = 3;
+  }
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
-  };
-
-  const handleSortChange = (value: string) => {
-    const [newSortBy, newSortDirection] = value.split(":");
-    setSortBy(newSortBy as "title" | "date");
-    setSortDirection(newSortDirection as "asc" | "desc");
-    filterAndSortData(newSortBy as "title" | "date", newSortDirection as "asc" | "desc");
-    setAnchorEl(null);
-  };
-
-  const filterAndSortData = (sortBy: "title" | "date", direction: "asc" | "desc") => {
-    if (campaigns) {
-      const filtered = campaigns.sort((a, b) => {
-        let comparison = 0;
-        if (sortBy === "title") {
-          comparison = a.title.localeCompare(b.title);
-        } else if (sortBy === "date") {
-          const dateA = new Date(a.createdAt);
-          const dateB = new Date(b.createdAt);
-          comparison = dateA.getTime() - dateB.getTime();
-        }
-        return direction === "asc" ? comparison : -comparison;
-      });
-      setFilteredCampaign(filtered);
-    }
-  };
-
-  const showCampaigns = () => {
+  const showRecentCampaigns = () => {
     if (isPending) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
@@ -70,84 +41,30 @@ export default function Campaigns() {
           Não há campanhas disponíveis no momento.
         </Typography>
       );
-    } else {
-      return filteredCampaigns?.map((campaign) => (
-        <CampaignCard key={campaign.id} campaign={campaign} />
-      ));
+    } else if (campaigns) {
+      const groupedNewCampaigns: Array<Campaign[]> = [];
+      const newCampaigns = campaigns.sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return dateB.getTime() - dateA.getTime();
+      });
+      for (let i = 0; i < Math.min(newCampaigns.length, 12); i += cardsPerSlide) {
+        groupedNewCampaigns.push(newCampaigns.slice(i, i + cardsPerSlide));
+      }
+      return (
+        <CampaignCarousel groupedCampaigns={groupedNewCampaigns} cardsPerSlide={cardsPerSlide} />
+      );
     }
   };
 
   return (
     <Container>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: 1,
-        }}
-      >
-        <CampaignsHeader />
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Box
-            component="form"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              backgroundColor: "rgba(0, 0, 0, 0)",
-              border: 1,
-              borderColor: "rgba(150, 150, 150, 1)",
-              borderRadius: 3,
-              marginRight: 2,
-            }}
-          >
-            <SearchIcon sx={{ padding: 0.5, color: "rgba(150, 150, 150, 1)" }} />
-            <InputBase
-              placeholder="Pesquisar…"
-              inputProps={{ "aria-label": "search" }}
-              value={searchQuery}
-              onChange={handleSearchChange}
-              sx={{
-                color: "inherit",
-                paddingLeft: 1,
-                "& .MuiInputBase-input": {
-                  padding: 1,
-                },
-              }}
-            />
-          </Box>
-
-          <IconButton onClick={(event) => setAnchorEl(event.currentTarget)} sx={{ height: "100%" }}>
-            <SortIcon />
-          </IconButton>
-          <Menu anchorEl={anchorEl} open={open} onClose={() => setAnchorEl(null)}>
-            <MenuItem onClick={() => handleSortChange("title:asc")}>Nome (A-Z)</MenuItem>
-            <MenuItem onClick={() => handleSortChange("title:desc")}>Nome (Z-A)</MenuItem>
-            <MenuItem onClick={() => handleSortChange("date:asc")}>Data (Mais antigo)</MenuItem>
-            <MenuItem onClick={() => handleSortChange("date:desc")}>Data (Mais recente)</MenuItem>
-          </Menu>
-        </Box>
-      </Box>
-
-      <Box
-        height="auto"
-        width="100%"
-        display="flex"
-        flexDirection="row"
-        flexWrap="wrap"
-        alignItems="center"
-        my={4}
-        gap={4}
-        sx={{ p: { xs: 0, sm: 2 } }}
-      >
-        {showCampaigns()}
-      </Box>
+      <RecentCampaignsHeader />
+      {showRecentCampaigns()}
+      <Box sx={{ mt: 10 }} />
+      <PopularCampaignsHeader />
+      {showRecentCampaigns()}
+      <Box sx={{ mb: 10 }} />
     </Container>
   );
 }
