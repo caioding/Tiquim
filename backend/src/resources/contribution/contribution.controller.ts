@@ -72,7 +72,6 @@ const create = async (req: Request, res: Response) => {
     const newContribution = await createContribution(contribution, uid);
     res.status(StatusCodes.OK).json(newContribution);
   } catch (err) {
-    console.log(err);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }
 };

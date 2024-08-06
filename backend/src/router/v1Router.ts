@@ -7,6 +7,7 @@ import campaignRouter from "../resources/campaign/campaign.router"
 import paymentMethodRouter from "../resources/paymentMethod/paymentMethod.router"
 import contributionRouter from "../resources/contribution/contribution.router"
 import rewardRouter from "../resources/reward/reward.router"
+import commentRouter from "../resources/comment/comment.router"
 
 const router = Router();
 
@@ -26,9 +27,12 @@ router.use("/paymentMethod", // #swagger.tags = ['PaymentMethod']
 paymentMethodRouter);
 
 router.use("/contribution", // #swagger.tags = ['Contributions']
-    contributionRouter);
+contributionRouter);
 
 router.use("/reward", // #swagger.tags = ['Reward']
 rewardRouter);
 
+router.use("/comment", // #swagger.tags = ['Comment']
+commentRouter);
+    
 export default router;
