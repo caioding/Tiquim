@@ -59,10 +59,10 @@ export default function Campaigns() {
 
   return (
     <Container>
-      <RecentCampaignsHeader />
+      <PopularCampaignsHeader />
       {showRecentCampaigns()}
       <Box sx={{ mt: 10 }} />
-      <PopularCampaignsHeader />
+      <RecentCampaignsHeader />
       {showRecentCampaigns()}
       <Box sx={{ mb: 10 }} />
     </Container>
