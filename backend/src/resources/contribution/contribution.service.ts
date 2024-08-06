@@ -110,8 +110,19 @@ export const calculatePercentage = async (campaignId: string): Promise<Number | 
   });
 
   if (campaign) {
-    const goal = parseFloat(campaign?.goal.toString());
+    const goal = parseFloat(campaign.goal.toString());
     return totalAmount / goal;
   }
   return null;
+};
+
+export const totalSupporters = async (campaignId: string): Promise<number> => {
+  const count = await prisma.contribution.groupBy({
+    by: ["userId"],
+    where: {
+      campaignId: campaignId,
+    },
+  });
+
+  return count.length;
 };
