@@ -6,7 +6,7 @@ export async function getCampaigns(searchQuery: String): Promise<Campaign[]> {
 }
 
 export async function getCampaignPercentage(campaignId: string): Promise<Number> {
-  return api.get(`/contribution/${campaignId}`).then((response) => response.data);
+  return api.get(`/contribution/percentage/${campaignId}`).then((response) => response.data);
 }
 
 export async function getCampaignDetails(id: string): Promise<Campaign> {
