@@ -5,6 +5,7 @@ import {
   createContribution,
   listContributions,
   readContribution,
+  totalSupporters,
 } from "./contribution.service";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 
@@ -118,4 +119,14 @@ const readPercentage = async (req: Request, res: Response) => {
   }
 };
 
-export default { index, create, read, readPercentage };
+const readTotalSupporters = async (req: Request, res: Response) => {
+  const { campaignId } = req.params;
+  try {
+    const sum = await totalSupporters(campaignId);
+    res.status(StatusCodes.OK).json(sum);
+  } catch (err) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
+  }
+};
+
+export default { index, create, read, readPercentage, readTotalSupporters };
