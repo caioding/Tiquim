@@ -5,8 +5,14 @@ export async function getCampaigns(searchQuery: String): Promise<Campaign[]> {
   return api.get(`/campaign?q=${searchQuery}`).then((response) => response.data);
 }
 
+export async function getCampaignsSupporters(): Promise<
+  Array<{ campaignId: string; count: number }>
+> {
+  return api.get(`/contribution/allSupporters/`).then((response) => response.data);
+}
+
 export async function getCampaignPercentage(campaignId: string): Promise<Number> {
-  return api.get(`/contribution/${campaignId}`).then((response) => response.data);
+  return api.get(`/contribution/percentage/${campaignId}`).then((response) => response.data);
 }
 
 export async function getCampaignDetails(id: string): Promise<Campaign> {

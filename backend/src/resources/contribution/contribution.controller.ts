@@ -4,6 +4,7 @@ import {
   calculatePercentage,
   createContribution,
   listContributions,
+  listTotalSupporters,
   readContribution,
   totalSupporters,
 } from "./contribution.service";
@@ -129,4 +130,13 @@ const readTotalSupporters = async (req: Request, res: Response) => {
   }
 };
 
-export default { index, create, read, readPercentage, readTotalSupporters };
+const indexTotalSupporters = async (req: Request, res: Response) => {
+  try {
+    const listSum = await listTotalSupporters();
+    res.status(StatusCodes.OK).json(listSum);
+  } catch (err) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
+  }
+};
+
+export default { index, create, read, readPercentage, readTotalSupporters, indexTotalSupporters };

@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -15,11 +17,9 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { usePathname } from "next/navigation";
-import useAuthContext from "../hooks/useAuthContext";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { logout } from "../services/auth";
 import LogoTiquim from "./LogoTiquim";
+import useAuthContext from "../hooks/useAuthContext";
+import { logout } from "../services/auth";
 import useSnackbar from "../hooks/useSnackbar";
 
 interface Props {
@@ -28,7 +28,7 @@ interface Props {
 
 const drawerWidth = 240;
 const navItems = [
-  { name: "Todas as Campanhas", path: "/" },
+  { name: "Todas as Campanhas", path: "/all-campaigns" },
   { name: "Suas Campanhas", path: "/your-campaigns" },
   { name: "Mensagem", path: "#" },
   { name: "Perfil", path: "#" },
@@ -107,6 +107,10 @@ export default function Navbar(props: Props) {
     </Box>
   );
 
+  const handleClick = () => {
+    router.push("/");
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar component="nav" sx={{ backgroundColor: "white", boxShadow: "none" }}>
@@ -121,19 +125,27 @@ export default function Navbar(props: Props) {
             <MenuIcon />
           </IconButton>
           <LogoTiquim sx={{ ml: { xs: "auto", sm: 2 } }} />
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{
-              ml: 1,
-              flexGrow: 1,
-              display: { xs: "none", sm: "block" },
-              color: "text.primary",
-              fontWeight: "bold",
-            }}
-          >
-            Tiquim
-          </Typography>
+          <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
+            <Box
+              onClick={handleClick}
+              sx={{
+                cursor: "pointer",
+                display: { xs: "none", sm: "block" },
+              }}
+            >
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{
+                  ml: 1,
+                  color: "text.primary",
+                  fontWeight: "bold",
+                }}
+              >
+                Tiquim
+              </Typography>
+            </Box>
+          </Box>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (
               <Button

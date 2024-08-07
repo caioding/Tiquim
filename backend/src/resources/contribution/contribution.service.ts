@@ -126,3 +126,21 @@ export const totalSupporters = async (campaignId: string): Promise<number> => {
 
   return count.length;
 };
+
+export const listTotalSupporters = async (): Promise<
+  Array<{ campaignId: string; count: number }>
+> => {
+  const results = await prisma.contribution.groupBy({
+    by: ["campaignId", "userId"],
+    _count: {
+      _all: true,
+    },
+  });
+
+  const list: { campaignId: string; count: number }[] = results.map((result) => ({
+    campaignId: result.campaignId,
+    count: result._count._all,
+  }));
+
+  return list;
+};
