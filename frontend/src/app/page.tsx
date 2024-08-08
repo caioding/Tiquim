@@ -76,7 +76,7 @@ export default function Campaigns() {
           Ocorreu um erro ao carregar as campanhas.
         </Typography>
       );
-    } else if (supporters?.length === 0) {
+    } else if (campaigns?.length === 0) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
           Não há campanhas disponíveis no momento.
