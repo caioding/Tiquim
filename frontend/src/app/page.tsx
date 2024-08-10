@@ -110,10 +110,10 @@ export default function Campaigns() {
     <Container>
       <PopularCampaignsHeader />
       {showPopularCampaigns()}
-      <Box sx={{ mt: 10 }} />
+      <Box sx={{ mt: 5 }} />
       <RecentCampaignsHeader />
       {showRecentCampaigns()}
-      <Box sx={{ mb: 10 }} />
+      <Box sx={{ mb: 5 }} />
     </Container>
   );
 }

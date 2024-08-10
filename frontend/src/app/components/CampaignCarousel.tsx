@@ -28,7 +28,7 @@ export function CampaignCarousel({ groupedCampaigns, cardsPerSlide }: CampaignCa
           sx={{
             display: "flex",
             gap: 2,
-            height: "60vh",
+            height: "30em",
             overflow: "hidden",
             alignItems: "center",
           }}
