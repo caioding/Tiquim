@@ -17,26 +17,18 @@ import { useCampaignPercentage } from "../hooks/useCampaignPercentage";
 import { CardHeader } from "./CardHeader";
 import { useQueryClient } from "@tanstack/react-query";
 import AlertDialog from "./DialogConfirmationDelete";
+import { formatDate } from "../utils/datetime";
 
 interface CampaignCardProps {
   campaign: Campaign;
   handleOpen: (campaign: Campaign) => void;
 }
 
-const TIME_FORMAT: Intl.DateTimeFormatOptions = {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-  timeZone: "America/Manaus",
-  hour12: false,
-};
-
 export function YourCampaignCard({ campaign, handleOpen }: CampaignCardProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const createdAt = new Date(campaign.createdAt);
-  const datetime: string = createdAt.toLocaleString("pt-BR", TIME_FORMAT);
+  const datetime: string = formatDate(campaign.createdAt);
 
   const { setSnackbar } = useSnackbar();
 
