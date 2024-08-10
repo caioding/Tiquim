@@ -12,25 +12,16 @@ import { useRouter } from "next/navigation";
 import { useUser } from "../hooks/useUser";
 import { useCampaignPercentage } from "../hooks/useCampaignPercentage";
 import { getImageCampaign } from "../services/campaign";
+import { formatDate } from "../utils/datetime";
 
 interface CampaignCardProps {
   campaign: Campaign;
 }
 
-const TIME_FORMAT: Intl.DateTimeFormatOptions = {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-  timeZone: "America/Manaus",
-  hour12: false,
-};
-
 export function CampaignCard({ campaign }: CampaignCardProps) {
   const router = useRouter();
 
-  const createdAt = new Date(campaign.createdAt);
-
-  const datetime: string = createdAt.toLocaleString("pt-BR", TIME_FORMAT);
+  const datetime = formatDate(campaign.createdAt);
 
   const { user, isPending: userPending, isError: userError } = useUser(campaign.userId);
 
