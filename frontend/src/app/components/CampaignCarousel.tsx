@@ -13,6 +13,9 @@ export function CampaignCarousel({ groupedCampaigns, cardsPerSlide }: CampaignCa
   return (
     <Carousel
       autoPlay={false}
+      navButtonsAlwaysVisible
+      cycleNavigation={false}
+      indicators={false}
       navButtonsWrapperProps={{
         style: {
           transform: "translateX(-10px)",
@@ -25,7 +28,7 @@ export function CampaignCarousel({ groupedCampaigns, cardsPerSlide }: CampaignCa
           sx={{
             display: "flex",
             gap: 2,
-            height: "50vh",
+            height: "30em",
             overflow: "hidden",
             alignItems: "center",
           }}

@@ -76,7 +76,7 @@ export default function Campaigns() {
           Ocorreu um erro ao carregar as campanhas.
         </Typography>
       );
-    } else if (supporters?.length === 0) {
+    } else if (campaigns?.length === 0) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
           Não há campanhas disponíveis no momento.
@@ -110,10 +110,10 @@ export default function Campaigns() {
     <Container>
       <PopularCampaignsHeader />
       {showPopularCampaigns()}
-      <Box sx={{ mt: 10 }} />
+      <Box sx={{ mt: 5 }} />
       <RecentCampaignsHeader />
       {showRecentCampaigns()}
-      <Box sx={{ mb: 10 }} />
+      <Box sx={{ mb: 5 }} />
     </Container>
   );
 }
