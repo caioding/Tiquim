@@ -1,6 +1,7 @@
 "use client";
 import { AboutTabPanel } from "@/app/components/AboutTabPanel";
 import { useCampaignDetails } from "@/app/hooks/useCampaignDetails";
+import { useCampaignPercentage } from "@/app/hooks/useCampaignPercentage";
 import { getImageCampaign } from "@/app/services/campaign";
 import {
   Box,
@@ -46,6 +47,8 @@ export default function Campanha() {
   const idCampaign = params.campaign as string;
 
   const { campaign, isPending, isError } = useCampaignDetails(idCampaign);
+
+  const { percentage } = useCampaignPercentage(idCampaign);
 
   const [imageUrl, setImageUrl] = useState<string>("/placeholder.png");
 
@@ -125,7 +128,25 @@ export default function Campanha() {
             <Typography variant="body1" sx={{ color: "#828282", mt: 6 }}>
               {campaign.preview}
             </Typography>
+
+            <Typography sx={{mt: 6}}>
+              R${  (typeof percentage === "number" || percentage instanceof Number) 
+              ? Number(percentage) * campaign.goal 
+              : 0 } 
+              / R${campaign.goal} alcançado!
+            </Typography>
+
+              <Typography>
+                Faltam somente: R${(typeof percentage === "number" || percentage instanceof Number) 
+              ? (campaign.goal - (Number(percentage) * campaign.goal)) 
+              : 0 }
+              </Typography>
+
+              <Typography>
+                  Temos {}pessoas nos apoiando!
+              </Typography>
           </Box>
+          
           <Button
             type="submit"
             variant="contained"
