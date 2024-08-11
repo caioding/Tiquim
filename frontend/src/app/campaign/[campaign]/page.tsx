@@ -2,6 +2,7 @@
 import { AboutTabPanel } from "@/app/components/AboutTabPanel";
 import { useCampaignDetails } from "@/app/hooks/useCampaignDetails";
 import { useCampaignPercentage } from "@/app/hooks/useCampaignPercentage";
+import { useCampaignsSupporters } from "@/app/hooks/useCampaignsSupporters";
 import { getImageCampaign } from "@/app/services/campaign";
 import {
   Box,
@@ -49,6 +50,8 @@ export default function Campanha() {
   const { campaign, isPending, isError } = useCampaignDetails(idCampaign);
 
   const { percentage } = useCampaignPercentage(idCampaign);
+
+  const {supporters} = useCampaignsSupporters()
 
   const [imageUrl, setImageUrl] = useState<string>("/placeholder.png");
 
@@ -131,19 +134,19 @@ export default function Campanha() {
 
             <Typography sx={{mt: 6}}>
               R${  (typeof percentage === "number" || percentage instanceof Number) 
-              ? Number(percentage) * campaign.goal 
+              ? Math.min(Number(percentage),1) * campaign.goal 
               : 0 } 
               / R${campaign.goal} alcançado!
             </Typography>
 
-              <Typography>
-                Faltam somente: R${(typeof percentage === "number" || percentage instanceof Number) 
-              ? (campaign.goal - (Number(percentage) * campaign.goal)) 
-              : 0 }
+              <Typography sx={{mt:3}}>
+                Faltam somente: R${(typeof percentage === "number" || percentage instanceof Number)
+              ? (campaign.goal - (Math.min(Number(percentage),1) * campaign.goal)) 
+              : 0 } para a meta!
               </Typography>
-
-              <Typography>
-                  Temos {}pessoas nos apoiando!
+            
+              <Typography sx={{mt:3}}>
+                  Temos {supporters?.find(supporter => supporter.campaignId === idCampaign)?.count || 0 } contribuições!
               </Typography>
           </Box>
           
