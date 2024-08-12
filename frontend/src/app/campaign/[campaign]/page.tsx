@@ -4,7 +4,7 @@ import { CommentsTabPanel } from "@/app/components/comments/CommentsTabPanel";
 import { useCampaignDetails } from "@/app/hooks/useCampaignDetails";
 import { useCampaignPercentage } from "@/app/hooks/useCampaignPercentage";
 import { useCampaignsSupporters } from "@/app/hooks/useCampaignsSupporters";
-import { getImageCampaign } from "@/app/services/campaign";
+import { getImageCampaign, getSupporters } from "@/app/services/campaign";
 import {
   Box,
   Button,
@@ -52,7 +52,7 @@ export default function Campanha() {
 
   const { percentage } = useCampaignPercentage(idCampaign);
 
-  const { supporters } = useCampaignsSupporters();
+  const [supporters,setSupporters]  = useState(0);
 
   const [imageUrl, setImageUrl] = useState<string>("/placeholder.png");
 
@@ -62,9 +62,24 @@ export default function Campanha() {
         const image = await getImageCampaign(campaign.imageUrl);
         setImageUrl(image);
       }
+
+
     };
     fetchImage();
   }, [campaign]);
+
+  useEffect(() => {
+    const fetchSupporters = async () => {
+      try {
+        const result = await getSupporters(idCampaign);
+        setSupporters(result);
+      } catch (error) {
+        console.error("Erro ao buscar o número de apoiadores:", error);
+      }
+    };
+
+    fetchSupporters();
+  }, [idCampaign]);
 
   if (isPending) {
     return (
@@ -119,29 +134,27 @@ export default function Campanha() {
               mx: 4,
               mt: { xs: 0 },
               ml: { xs: 0, sm: 6, md: 10 },
+              mb: { xs: 2},
               flexDirection: "column",
             }}
           >
             <Chip
               label={campaign.category}
-              sx={{ backgroundColor: "#32A852", color: "white", mb: 3 }}
+              sx={{ backgroundColor: "#32A852", color: "white", mt:2, mb: 3 }}
             />
-            <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+            <Typography  variant="h4" sx={{ fontWeight: "bold" }}>
               {campaign.title}
             </Typography>
 
-            <Typography variant="body1" sx={{ color: "#828282", mt: 3 }}>
-              {campaign.preview}
-            </Typography>
 
-            <Box sx={{ mt: 2 }}>
-              <Typography variant="h4" sx={{ color: "grey" }}>
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="h4"  sx={{fontSize:26, fontWeight: "bold", color: "#828282" }}>
                 Arrecadado:
               </Typography>
-              <Typography variant="h4" sx={{ color: "green" }}>
+              <Typography variant="h4"   sx={{fontSize:24, color: "#32A852" }}>
                 R$
                 {typeof percentage === "number" || percentage instanceof Number
-                  ? Math.min(Number(percentage), 1) * campaign.goal
+                  ? (Math.min(Number(percentage), 1) * campaign.goal).toFixed(2).replace('.',',')
                   : 0}
               </Typography>
             </Box>
@@ -155,29 +168,32 @@ export default function Campanha() {
               }}
             >
               <Box>
-                <Typography variant="h6" sx={{ color: "grey" }}>
+                <Typography variant="h5"  sx={{fontSize:23, fontWeight:"bold", color: "#828282" }}>
                   Meta:
                 </Typography>
-                <Typography variant="h6" sx={{ color: "black" }}>
-                  R${campaign.goal}
+                <Typography variant="h6"  sx={{fontSize:21, color: "#828282" }}>
+                  R${Number(campaign.goal).toFixed(2).replace('.',',')}
                 </Typography>
               </Box>
-              <Box sx={{ mr: 5 , ml: {md:2 , lg: 1}}}>
-                <Typography variant="h6" sx={{ color: "grey" }}>
-                  Contribuições:
+              <Box sx={{ mr:{sm:0 ,md:0 ,lg:5} ,  mt:{xs: 2,sm:0, md: 0, lg:0} , ml:{sm:2, md:2}, mb:{xs: 1}}}>
+                <Typography variant="h5"  sx={{fontSize:23, fontWeight:"bold", color: "#828282" }}>
+                  Apoiadores:
                 </Typography>
-                <Typography variant="h6" sx={{ color: "black" }}>
-                  {supporters?.find((supporter) => supporter.campaignId === idCampaign)?.count || 0}
+                <Typography variant="h6"   sx={{fontSize:21, color: "#828282" }}>
+                  {supporters}
                 </Typography>
               </Box>
             </Box>
+
+          </Box>
             <Button
               type="submit"
               variant="contained"
               sx={{
-                width: { xs: "70%", md: "80%" },
-                mt: { xs: 0, sm: 2, md: 3 },
+                width: { xs: "100%", sm: "100%", md: "80%" },
+                mt: { xs: 0, sm: 2, md: 1 },
                 ml: { xs: 0, sm: 6, md: 10 },
+                mb: { xs: 4},
                 backgroundColor: "#32a852",
                 "&:hover": { backgroundColor: "#008000" },
                 textTransform: "none",
@@ -185,13 +201,11 @@ export default function Campanha() {
             >
               Doar
             </Button>
-
-          </Box>
         </Grid>
       </Grid>
 
-      <Box sx={{ width: "100%", mt: { xs: 5, md: 7, sm: 10 } }}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Box sx={{ width: "100%", mt: { xs: 5, md: 7, sm: 10 }, mb: {xs: 2} }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider", mt:{xs: 2} }}>
           <Tabs
             value={tabValue}
             variant="scrollable"
