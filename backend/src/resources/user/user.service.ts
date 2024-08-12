@@ -64,7 +64,17 @@ export const readUser = async (id: string): Promise<UserDto | null> => {
 };
 
 export const updateUser = async (id: string, user: UpdateUserDto): Promise<UserDto | null> => {
-  return await prisma.user.update({ where: { id }, data: user });
+  const rounds = parseInt(process.env.BCRYPT_ROUNDS!);
+  const salt = await genSalt(rounds);
+  const password = await hash(user.password, salt);
+
+  return await prisma.user.update({
+    where: { id },
+    data: {
+      ...user,
+      password: password,
+    },
+  });
 };
 
 export const deleteUser = async (id: string): Promise<UserDto> => {
