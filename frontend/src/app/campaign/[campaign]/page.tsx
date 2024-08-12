@@ -153,18 +153,18 @@ export default function Campanha() {
               }}
             >
               <Box>
-                <Typography variant="h5"  sx={{fontSize:26, fontWeight:"bold", color: "#828282" }}>
+                <Typography variant="h5"  sx={{fontSize:23, fontWeight:"bold", color: "#828282" }}>
                   Meta:
                 </Typography>
-                <Typography variant="h6"  sx={{fontSize:24, color: "#828282" }}>
+                <Typography variant="h6"  sx={{fontSize:21, color: "#828282" }}>
                   R${Number(campaign.goal).toFixed(2).replace('.',',')}
                 </Typography>
               </Box>
               <Box sx={{ mr:{sm:0 ,md:0 ,lg:5} ,  mt:{xs: 2,sm:0, md: 0, lg:0} , ml:{sm:2, md:2}, mb:{xs: 1}}}>
-                <Typography variant="h5"  sx={{fontSize:26, fontWeight:"bold", color: "#828282" }}>
+                <Typography variant="h5"  sx={{fontSize:23, fontWeight:"bold", color: "#828282" }}>
                   Contribuições:
                 </Typography>
-                <Typography variant="h6"   sx={{fontSize:24, color: "#828282" }}>
+                <Typography variant="h6"   sx={{fontSize:21, color: "#828282" }}>
                   {supporters?.find((supporter) => supporter.campaignId === idCampaign)?.count || 0}
                 </Typography>
               </Box>
