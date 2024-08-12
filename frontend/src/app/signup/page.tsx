@@ -27,7 +27,7 @@ export default function SignUp() {
     const data = new FormData(event.currentTarget);
 
     const user = {
-      name: `${data.get("firstName")} ${data.get("lastName")}`,
+      name: data.get("name")?.toString() ?? "",
       email: data.get("email")?.toString() ?? "",
       password: data.get("password")?.toString() ?? "",
     };
@@ -68,25 +68,15 @@ export default function SignUp() {
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
-                autoComplete="given-name"
-                name="firstName"
+                autoComplete="name"
+                name="name"
                 required
                 fullWidth
-                id="firstName"
-                label="Primeiro Nome"
+                id="name"
+                label="Nome Completo"
                 autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                id="lastName"
-                label="Último Nome"
-                name="lastName"
-                autoComplete="family-name"
               />
             </Grid>
             <Grid item xs={12}>

@@ -10,6 +10,17 @@ interface CardHearderProps {
 }
 
 export function CardHeader({ title, author, createdAt, completedPercentage }: CardHearderProps) {
+  const getAuthorName = () => {
+    const nameParts = author.trim().split(" ");
+
+    const firstName = nameParts[0];
+    const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
+
+    const name = lastName ? `${firstName} ${lastName}` : firstName;
+
+    return name;
+  };
+
   return (
     <Stack direction="row" justifyContent="space-between" alignItems="center">
       <Box sx={{ width: "calc(100% - 60px)" }}>
@@ -32,7 +43,7 @@ export function CardHeader({ title, author, createdAt, completedPercentage }: Ca
         </Tooltip>
 
         <Typography variant="caption" color="text.secondary" component="h2" sx={{ mb: 1.5 }}>
-          {author} • Criado em {createdAt.toString()}
+          {getAuthorName()} • Criado em {createdAt.toString()}
         </Typography>
       </Box>
 

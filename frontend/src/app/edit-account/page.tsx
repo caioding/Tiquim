@@ -16,12 +16,11 @@ import useSnackbar from "../hooks/useSnackbar";
 import { updateUser } from "../services/user";
 import useAuthContext from "../hooks/useAuthContext";
 import { useEffect, useState } from "react";
-import { UserWithFullName } from "../types/user";
+import { UserDto } from "../types/user";
 import { useUser } from "../hooks/useUser";
 
 const initialState = {
-  firstName: "",
-  lastName: "",
+  name: "",
   email: "",
   password: "",
 };
@@ -29,15 +28,12 @@ const initialState = {
 export default function EditAccount() {
   const { setSnackbar } = useSnackbar();
   const { id } = useAuthContext();
-  const [userInfo, setUserInfo] = useState<UserWithFullName>(initialState);
+  const [userInfo, setUserInfo] = useState<UserDto>(initialState);
   const { user } = useUser(id);
 
   useEffect(() => {
     if (user) {
-      const firstName = user?.name?.split(" ")[0] ?? "";
-      const lastName = user?.name?.split(" ")[1] ?? "";
-
-      setUserInfo({ firstName, lastName, email: user?.email, password: "" });
+      setUserInfo({ name: user?.name, email: user?.email, password: "" });
     }
   }, [user]);
 
@@ -53,7 +49,7 @@ export default function EditAccount() {
     event.preventDefault();
 
     const formattedUserInfo = {
-      name: `${userInfo.firstName} ${userInfo.lastName}`,
+      name: userInfo.name.toString(),
       email: userInfo.email.toString(),
       password: userInfo.password.toString(),
     };
@@ -86,32 +82,18 @@ export default function EditAccount() {
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
-                autoComplete="given-name"
-                name="firstName"
+                autoComplete="name"
+                name="name"
                 required
                 fullWidth
-                id="firstName"
-                label="Primeiro Nome"
+                id="name"
+                label="Nome Completo"
                 autoFocus
-                value={userInfo.firstName}
+                value={userInfo.name}
                 onChange={(event) => {
-                  setUserInfo({ ...userInfo, firstName: event.target.value });
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                id="lastName"
-                label="Último Nome"
-                name="lastName"
-                autoComplete="family-name"
-                value={userInfo.lastName}
-                onChange={(event) => {
-                  setUserInfo({ ...userInfo, lastName: event.target.value });
+                  setUserInfo({ ...userInfo, name: event.target.value });
                 }}
               />
             </Grid>
