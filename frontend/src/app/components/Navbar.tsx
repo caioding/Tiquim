@@ -31,7 +31,7 @@ const navItems = [
   { name: "Todas as Campanhas", path: "/all-campaigns" },
   { name: "Suas Campanhas", path: "/your-campaigns" },
   { name: "Mensagem", path: "#" },
-  { name: "Perfil", path: "#" },
+  { name: "Perfil", path: "/edit-account" },
 ];
 
 export default function Navbar(props: Props) {
