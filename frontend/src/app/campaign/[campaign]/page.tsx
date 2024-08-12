@@ -124,21 +124,18 @@ export default function Campanha() {
           >
             <Chip
               label={campaign.category}
-              sx={{ backgroundColor: "#32A852", color: "white", mb: 3 }}
+              sx={{ backgroundColor: "#32A852", color: "white", mt:2, mb: 3 }}
             />
             <Typography variant="h4" sx={{ fontWeight: "bold" }}>
               {campaign.title}
             </Typography>
 
-            <Typography variant="body1" sx={{ color: "#828282", mt: 3 }}>
-              {campaign.preview}
-            </Typography>
 
-            <Box sx={{ mt: 2 }}>
-              <Typography variant="h4" sx={{ color: "grey" }}>
+            <Box sx={{ mt: 6 }}>
+              <Typography variant="h4" sx={{ fontWeight: "bold", color: "#828282" }}>
                 Arrecadado:
               </Typography>
-              <Typography variant="h4" sx={{ color: "green" }}>
+              <Typography variant="h4" sx={{ color: "#32A852" }}>
                 R$
                 {typeof percentage === "number" || percentage instanceof Number
                   ? Math.min(Number(percentage), 1) * campaign.goal
@@ -155,22 +152,24 @@ export default function Campanha() {
               }}
             >
               <Box>
-                <Typography variant="h6" sx={{ color: "grey" }}>
+                <Typography variant="h5" sx={{fontWeight:"bold", color: "#828282" }}>
                   Meta:
                 </Typography>
-                <Typography variant="h6" sx={{ color: "black" }}>
+                <Typography variant="h6" sx={{ color: "#828282" }}>
                   R${campaign.goal}
                 </Typography>
               </Box>
               <Box sx={{ mr: 5 , ml: {md:2 , lg: 1}}}>
-                <Typography variant="h6" sx={{ color: "grey" }}>
+                <Typography variant="h5" sx={{fontWeight:"bold", color: "#828282" }}>
                   Contribuições:
                 </Typography>
-                <Typography variant="h6" sx={{ color: "black" }}>
+                <Typography variant="h6" sx={{ color: "#828282" }}>
                   {supporters?.find((supporter) => supporter.campaignId === idCampaign)?.count || 0}
                 </Typography>
               </Box>
             </Box>
+
+          </Box>
             <Button
               type="submit"
               variant="contained"
@@ -181,12 +180,11 @@ export default function Campanha() {
                 backgroundColor: "#32a852",
                 "&:hover": { backgroundColor: "#008000" },
                 textTransform: "none",
+                alignItems:"left"
               }}
             >
               Doar
             </Button>
-
-          </Box>
         </Grid>
       </Grid>
 
