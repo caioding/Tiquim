@@ -4,7 +4,7 @@ import { CommentsTabPanel } from "@/app/components/comments/CommentsTabPanel";
 import { useCampaignDetails } from "@/app/hooks/useCampaignDetails";
 import { useCampaignPercentage } from "@/app/hooks/useCampaignPercentage";
 import { useCampaignsSupporters } from "@/app/hooks/useCampaignsSupporters";
-import { getImageCampaign } from "@/app/services/campaign";
+import { getImageCampaign, getSupporters } from "@/app/services/campaign";
 import {
   Box,
   Button,
@@ -52,7 +52,7 @@ export default function Campanha() {
 
   const { percentage } = useCampaignPercentage(idCampaign);
 
-  const { supporters } = useCampaignsSupporters();
+  const [supporters,setSupporters]  = useState(0);
 
   const [imageUrl, setImageUrl] = useState<string>("/placeholder.png");
 
@@ -62,9 +62,24 @@ export default function Campanha() {
         const image = await getImageCampaign(campaign.imageUrl);
         setImageUrl(image);
       }
+
+
     };
     fetchImage();
   }, [campaign]);
+
+  useEffect(() => {
+    const fetchSupporters = async () => {
+      try {
+        const result = await getSupporters(idCampaign);
+        setSupporters(result);
+      } catch (error) {
+        console.error("Erro ao buscar o número de apoiadores:", error);
+      }
+    };
+
+    fetchSupporters();
+  }, [idCampaign]);
 
   if (isPending) {
     return (
@@ -162,10 +177,10 @@ export default function Campanha() {
               </Box>
               <Box sx={{ mr:{sm:0 ,md:0 ,lg:5} ,  mt:{xs: 2,sm:0, md: 0, lg:0} , ml:{sm:2, md:2}, mb:{xs: 1}}}>
                 <Typography variant="h5"  sx={{fontSize:23, fontWeight:"bold", color: "#828282" }}>
-                  Contribuições:
+                  Apoiadores:
                 </Typography>
                 <Typography variant="h6"   sx={{fontSize:21, color: "#828282" }}>
-                  {supporters?.find((supporter) => supporter.campaignId === idCampaign)?.count || 0}
+                  {supporters}
                 </Typography>
               </Box>
             </Box>
