@@ -2,6 +2,8 @@
 import { AboutTabPanel } from "@/app/components/AboutTabPanel";
 import { CommentsTabPanel } from "@/app/components/comments/CommentsTabPanel";
 import { useCampaignDetails } from "@/app/hooks/useCampaignDetails";
+import { useCampaignPercentage } from "@/app/hooks/useCampaignPercentage";
+import { useCampaignsSupporters } from "@/app/hooks/useCampaignsSupporters";
 import { getImageCampaign } from "@/app/services/campaign";
 import {
   Box,
@@ -47,6 +49,10 @@ export default function Campanha() {
   const idCampaign = params.campaign as string;
 
   const { campaign, isPending, isError } = useCampaignDetails(idCampaign);
+
+  const { percentage } = useCampaignPercentage(idCampaign);
+
+  const { supporters } = useCampaignsSupporters();
 
   const [imageUrl, setImageUrl] = useState<string>("/placeholder.png");
 
@@ -113,6 +119,7 @@ export default function Campanha() {
               mx: 4,
               mt: { xs: 0 },
               ml: { xs: 0, sm: 6, md: 10 },
+              flexDirection: "column",
             }}
           >
             <Chip
@@ -123,30 +130,74 @@ export default function Campanha() {
               {campaign.title}
             </Typography>
 
-            <Typography variant="body1" sx={{ color: "#828282", mt: 6 }}>
+            <Typography variant="body1" sx={{ color: "#828282", mt: 3 }}>
               {campaign.preview}
             </Typography>
+
+            <Box sx={{ mt: 2 }}>
+              <Typography variant="h4" sx={{ color: "grey" }}>
+                Arrecadado:
+              </Typography>
+              <Typography variant="h4" sx={{ color: "green" }}>
+                R$
+                {typeof percentage === "number" || percentage instanceof Number
+                  ? Math.min(Number(percentage), 1) * campaign.goal
+                  : 0}
+              </Typography>
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", sm: "row", md: "row" },
+                justifyContent: "space-between",
+                mt: 3,
+              }}
+            >
+              <Box>
+                <Typography variant="h6" sx={{ color: "grey" }}>
+                  Meta:
+                </Typography>
+                <Typography variant="h6" sx={{ color: "black" }}>
+                  R${campaign.goal}
+                </Typography>
+              </Box>
+              <Box sx={{ mr: 5 , ml: {md:2 , lg: 1}}}>
+                <Typography variant="h6" sx={{ color: "grey" }}>
+                  Contribuições:
+                </Typography>
+                <Typography variant="h6" sx={{ color: "black" }}>
+                  {supporters?.find((supporter) => supporter.campaignId === idCampaign)?.count || 0}
+                </Typography>
+              </Box>
+            </Box>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                width: { xs: "70%", md: "80%" },
+                mt: { xs: 0, sm: 2, md: 3 },
+                ml: { xs: 0, sm: 6, md: 10 },
+                backgroundColor: "#32a852",
+                "&:hover": { backgroundColor: "#008000" },
+                textTransform: "none",
+              }}
+            >
+              Doar
+            </Button>
+
           </Box>
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{
-              width: { xs: "70%", md: "80%" },
-              mt: { xs: 0, sm: 2, md: 3 },
-              ml: { xs: 0, sm: 6, md: 10 },
-              backgroundColor: "#32a852",
-              "&:hover": { backgroundColor: "#008000" },
-              textTransform: "none",
-            }}
-          >
-            Doar
-          </Button>
         </Grid>
       </Grid>
 
-      <Box sx={{ width: "100%", mt: 5 }}>
+      <Box sx={{ width: "100%", mt: { xs: 5, md: 7, sm: 10 } }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs value={tabValue} onChange={handleTabChange}>
+          <Tabs
+            value={tabValue}
+            variant="scrollable"
+            scrollButtons="auto"
+            onChange={handleTabChange}
+          >
             <Tab label="Sobre" />
             <Tab label="Atualizações" />
             <Tab label="Comentários" />

@@ -13,7 +13,7 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes";
 const index = async (req: Request, res: Response) => {
   /*
     #swagger.summary = 'Lista as contribuições'
-    #swagger.parameters['ampaign'] = {
+    #swagger.parameters['Contribution'] = {
       in: 'query',
       description: 'ID da campanha para filtrar as contribuições',
       required: false,
