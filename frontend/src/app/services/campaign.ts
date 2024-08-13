@@ -5,7 +5,7 @@ export async function getCampaigns(searchQuery: String): Promise<Campaign[]> {
   return api.get(`/campaign?q=${searchQuery}`).then((response) => response.data);
 }
 
-export async function getSupporters(campaignId: String) : Promise<number> {
+export async function getSupporters(campaignId: String): Promise<number> {
   return api.get(`contribution/supporters/${campaignId}`).then((response) => response.data);
 }
 export async function getCampaignsSupporters(): Promise<

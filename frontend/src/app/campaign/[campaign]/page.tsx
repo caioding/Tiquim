@@ -52,7 +52,7 @@ export default function Campanha() {
 
   const { percentage } = useCampaignPercentage(idCampaign);
 
-  const [supporters,setSupporters]  = useState(0);
+  const [supporters, setSupporters] = useState(0);
 
   const [imageUrl, setImageUrl] = useState<string>("/placeholder.png");
 
@@ -62,8 +62,6 @@ export default function Campanha() {
         const image = await getImageCampaign(campaign.imageUrl);
         setImageUrl(image);
       }
-
-
     };
     fetchImage();
   }, [campaign]);
@@ -134,27 +132,26 @@ export default function Campanha() {
               mx: 4,
               mt: { xs: 0 },
               ml: { xs: 0, sm: 6, md: 10 },
-              mb: { xs: 2},
+              mb: { xs: 2 },
               flexDirection: "column",
             }}
           >
             <Chip
               label={campaign.category}
-              sx={{ backgroundColor: "#32A852", color: "white", mt:2, mb: 3 }}
+              sx={{ backgroundColor: "#32A852", color: "white", mt: 2, mb: 3 }}
             />
-            <Typography  variant="h4" sx={{ fontWeight: "bold" }}>
+            <Typography variant="h4" sx={{ fontWeight: "bold" }}>
               {campaign.title}
             </Typography>
 
-
             <Box sx={{ mt: 3 }}>
-              <Typography variant="h4"  sx={{fontSize:26, fontWeight: "bold", color: "#828282" }}>
+              <Typography variant="h4" sx={{ fontSize: 26, fontWeight: "bold", color: "#828282" }}>
                 Arrecadado:
               </Typography>
-              <Typography variant="h4"   sx={{fontSize:24, color: "#32A852" }}>
+              <Typography variant="h4" sx={{ fontSize: 24, color: "#32A852" }}>
                 R$
                 {typeof percentage === "number" || percentage instanceof Number
-                  ? (Math.min(Number(percentage), 1) * campaign.goal).toFixed(2).replace('.',',')
+                  ? (Math.min(Number(percentage), 1) * campaign.goal).toFixed(2).replace(".", ",")
                   : 0}
               </Typography>
             </Box>
@@ -168,44 +165,56 @@ export default function Campanha() {
               }}
             >
               <Box>
-                <Typography variant="h5"  sx={{fontSize:23, fontWeight:"bold", color: "#828282" }}>
+                <Typography
+                  variant="h5"
+                  sx={{ fontSize: 23, fontWeight: "bold", color: "#828282" }}
+                >
                   Meta:
                 </Typography>
-                <Typography variant="h6"  sx={{fontSize:21, color: "#828282" }}>
-                  R${Number(campaign.goal).toFixed(2).replace('.',',')}
+                <Typography variant="h6" sx={{ fontSize: 21, color: "#828282" }}>
+                  R${Number(campaign.goal).toFixed(2).replace(".", ",")}
                 </Typography>
               </Box>
-              <Box sx={{ mr:{sm:0 ,md:0 ,lg:5} ,  mt:{xs: 2,sm:0, md: 0, lg:0} , ml:{sm:2, md:2}, mb:{xs: 1}}}>
-                <Typography variant="h5"  sx={{fontSize:23, fontWeight:"bold", color: "#828282" }}>
+              <Box
+                sx={{
+                  mr: { sm: 0, md: 0, lg: 5 },
+                  mt: { xs: 2, sm: 0, md: 0, lg: 0 },
+                  ml: { sm: 2, md: 2 },
+                  mb: { xs: 1 },
+                }}
+              >
+                <Typography
+                  variant="h5"
+                  sx={{ fontSize: 23, fontWeight: "bold", color: "#828282" }}
+                >
                   Apoiadores:
                 </Typography>
-                <Typography variant="h6"   sx={{fontSize:21, color: "#828282" }}>
+                <Typography variant="h6" sx={{ fontSize: 21, color: "#828282" }}>
                   {supporters}
                 </Typography>
               </Box>
             </Box>
-
           </Box>
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{
-                width: { xs: "100%", sm: "100%", md: "80%" },
-                mt: { xs: 0, sm: 2, md: 1 },
-                ml: { xs: 0, sm: 6, md: 10 },
-                mb: { xs: 4},
-                backgroundColor: "#32a852",
-                "&:hover": { backgroundColor: "#008000" },
-                textTransform: "none",
-              }}
-            >
-              Doar
-            </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              width: { xs: "100%", sm: "100%", md: "80%" },
+              mt: { xs: 0, sm: 2, md: 1 },
+              ml: { xs: 0, sm: 6, md: 10 },
+              mb: { xs: 4 },
+              backgroundColor: "#32a852",
+              "&:hover": { backgroundColor: "#008000" },
+              textTransform: "none",
+            }}
+          >
+            Doar
+          </Button>
         </Grid>
       </Grid>
 
-      <Box sx={{ width: "100%", mt: { xs: 5, md: 7, sm: 10 }, mb: {xs: 2} }}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider", mt:{xs: 2} }}>
+      <Box sx={{ width: "100%", mt: { xs: 5, md: 7, sm: 10 }, mb: { xs: 2 } }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider", mt: { xs: 2 } }}>
           <Tabs
             value={tabValue}
             variant="scrollable"
