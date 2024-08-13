@@ -80,6 +80,7 @@ export default function EditCampaignModal({ campaign, open, handleClose }: EditC
       if (response) {
         setSnackbar("Campanha editada com sucesso!");
         setCampaignInfo(initialState);
+        setSelectedFile(null);
         handleClose();
         router.push("/your-campaigns");
       }

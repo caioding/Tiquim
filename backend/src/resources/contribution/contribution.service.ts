@@ -144,3 +144,24 @@ export const listTotalSupporters = async (): Promise<
 
   return list;
 };
+
+export const listSupporters = async (
+  campaignId: string,
+): Promise<{ total: number; supporters: Array<string> }> => {
+  const supporters = await prisma.contribution.findMany({
+    where: {
+      campaignId: campaignId,
+    },
+    select: {
+      userId: true,
+    },
+    distinct: ["userId"],
+  });
+
+  const supportersIds = supporters.map((contribution) => contribution.userId);
+
+  return {
+    total: supportersIds.length,
+    supporters: supportersIds,
+  };
+};

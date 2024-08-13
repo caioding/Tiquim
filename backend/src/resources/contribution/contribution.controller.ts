@@ -4,6 +4,7 @@ import {
   calculatePercentage,
   createContribution,
   listContributions,
+  listSupporters,
   listTotalSupporters,
   readContribution,
   totalSupporters,
@@ -139,4 +140,23 @@ const indexTotalSupporters = async (req: Request, res: Response) => {
   }
 };
 
-export default { index, create, read, readPercentage, readTotalSupporters, indexTotalSupporters };
+const indexSupporters = async (req: Request, res: Response) => {
+  const { campaignId } = req.params;
+
+  try {
+    const listSupports = await listSupporters(campaignId);
+    res.status(StatusCodes.OK).json(listSupports);
+  } catch (err) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
+  }
+};
+
+export default {
+  index,
+  create,
+  read,
+  readPercentage,
+  readTotalSupporters,
+  indexTotalSupporters,
+  indexSupporters,
+};
