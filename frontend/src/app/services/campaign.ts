@@ -16,7 +16,10 @@ export async function getCampaignsSupporters(): Promise<
 
 export async function getCampaignSupporters(
   campaignId: String,
-): Promise<Array<{ total: number; supporters: string[] }>> {
+): Promise<{
+  total: number;
+  supporters: { id: string; name: string; avatarUrl: string | null }[];
+}> {
   return api.get(`/contribution/allSupporters/${campaignId}`).then((response) => response.data);
 }
 
