@@ -8,6 +8,8 @@ export interface Campaign {
   updatedAt: Date;
   deadline: Date;
   category: string;
+  state: string;
+  city: string;
   goal: number;
   userId: string;
 }
