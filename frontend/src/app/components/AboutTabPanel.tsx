@@ -4,6 +4,7 @@ import { Box, CssBaseline, Grid, Typography } from "@mui/material";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { Campaign } from "../types/campaign";
 import { useCampaignPercentage } from "../hooks/useCampaignPercentage";
+import { capitalize } from "../utils/capitalize";
 
 interface TabPanelProps {
   campaign: Campaign;
@@ -41,7 +42,7 @@ export function AboutTabPanel(props: TabPanelProps) {
                 {campaign.title}
               </Typography>
               <Typography sx={{ mt: 3 }}>
-                Campanha originada em {campaign.city}/{campaign.state}
+                Campanha originada em {capitalize(campaign.city)}/{campaign.state}
               </Typography>
               <Typography variant="body1" sx={{ mt: 3 }}>
                 {campaign.description}

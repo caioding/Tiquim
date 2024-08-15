@@ -19,10 +19,11 @@ import useAuthContext from "../hooks/useAuthContext";
 import { useEffect, useState } from "react";
 import { UserDto } from "../types/user";
 import { useUser } from "../hooks/useUser";
-import { useAddress } from "../hooks/useAddress";
-import { IconButton } from "@mui/material";
+import { useCities, useStates } from "../hooks/useAddress";
+import { IconButton, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import InputFileUpload from "../components/FileUpload";
 import { useRouter } from "next/navigation";
+import { State } from "../types/address";
 
 const initialState = {
   name: "",
@@ -40,8 +41,30 @@ export default function EditAccount() {
   const [userInfo, setUserInfo] = useState<UserDto>(initialState);
   const { user } = useUser(id);
 
-  const [cep, setCep] = useState("");
-  const { address } = useAddress(cep);
+  const { states } = useStates();
+  const [selectedState, setSelectedState] = React.useState<string>(userInfo.state);
+
+  function sortStatesByName(states: State[]): State[] {
+    return states.sort((a, b) => a.nome.localeCompare(b.nome));
+  }
+
+  const sortedStates = sortStatesByName(states || []);
+
+  const { cities } = useCities(selectedState);
+  const [selectedCity, setSelectedCity] = React.useState<string>(userInfo.city);
+
+  const handleStateChange = (event: SelectChangeEvent) => {
+    const newState = event.target.value;
+    setSelectedState(newState);
+    setUserInfo({ ...userInfo, state: newState });
+    setSelectedCity("");
+  };
+
+  const handleCityChange = (event: SelectChangeEvent) => {
+    const newCity = event.target.value;
+    setSelectedCity(newCity);
+    setUserInfo({ ...userInfo, city: newCity });
+  };
 
   const [avatarUrl, setAvatarUrl] = useState<string>("/placeholder.png");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -59,13 +82,15 @@ export default function EditAccount() {
   useEffect(() => {
     if (user) {
       setUserInfo({
-        name: user?.name,
-        email: user?.email,
+        name: user.name,
+        email: user.email,
         password: "",
         city: user.city,
-        state: user?.state,
-        avatarUrl: user?.avatarUrl,
+        state: user.state,
+        avatarUrl: user.avatarUrl,
       });
+      setSelectedState(user.state || "");
+      setSelectedCity(user.city);
     }
   }, [user]);
 
@@ -81,10 +106,6 @@ export default function EditAccount() {
     if (event.target.files && event.target.files[0]) {
       setSelectedFile(event.target.files[0]);
     }
-  };
-
-  const handleCepChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCep(event.target.value);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -173,44 +194,43 @@ export default function EditAccount() {
                 }}
               />
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
+            <Grid item xs={12} sm={6}>
+              <InputLabel htmlFor="state" sx={{ color: "black" }}>
+                Estado
+              </InputLabel>
+              <Select
+                id="state"
+                value={selectedState}
+                onChange={handleStateChange}
+                label="Estado"
                 fullWidth
-                id="cep"
-                label="CEP"
-                name="cep"
-                type="text"
-                onChange={handleCepChange}
-              />
+              >
+                {sortedStates?.map((state) => (
+                  <MenuItem key={state.sigla} value={state.sigla}>
+                    {state.nome}
+                  </MenuItem>
+                ))}
+              </Select>
             </Grid>
-            <Grid item>
-              <Grid container spacing={1}>
-                <Grid item xs={6}>
-                  <TextField
-                    disabled
-                    required
-                    id="city"
-                    label="Cidade"
-                    name="city"
-                    type="text"
-                    value={address?.localidade || ""}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    disabled
-                    required
-                    id="uf"
-                    label="UF"
-                    name="uf"
-                    type="text"
-                    value={address?.uf || ""}
-                    fullWidth
-                  />
-                </Grid>
-              </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <InputLabel htmlFor="city" sx={{ color: "black" }}>
+                Cidade
+              </InputLabel>
+              <Select
+                id="city"
+                value={selectedCity}
+                onChange={handleCityChange}
+                label="Cidade"
+                disabled={!selectedState}
+                fullWidth
+              >
+                {cities?.map((city) => (
+                  <MenuItem key={city.nome} value={city.nome}>
+                    {city.nome}
+                  </MenuItem>
+                ))}
+              </Select>
             </Grid>
             <Grid item xs={12}>
               <Box

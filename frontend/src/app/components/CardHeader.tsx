@@ -1,6 +1,7 @@
 import { Box, Stack, Tooltip, Typography } from "@mui/material";
 import React from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
+import { capitalize } from "../utils/capitalize";
 
 interface CardHearderProps {
   title: string;
@@ -64,7 +65,7 @@ export function CardHeader({
           component="h2"
           sx={{ mb: 1.5, textDecoration: "underline", fontStyle: "italic", fontSize: 11 }}
         >
-          {city}/{state}
+          {capitalize(city)}/{state}
         </Typography>
       </Box>
 

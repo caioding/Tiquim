@@ -13,15 +13,23 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { IconButton, InputAdornment } from "@mui/material";
+import {
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Copyright } from "../components/Copyright";
 import { useRouter } from "next/navigation";
 import useSnackbar from "../hooks/useSnackbar";
 import { signup } from "../services/user";
-import { useAddress } from "../hooks/useAddress";
+import { useAddress, useCities, useStates } from "../hooks/useAddress";
 import InputFileUpload from "../components/FileUpload";
+import { State } from "../types/address";
 
 export default function SignUp() {
   const router = useRouter();
@@ -40,11 +48,26 @@ export default function SignUp() {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const [cep, setCep] = React.useState("");
-  const { address } = useAddress(cep);
+  const { states } = useStates();
+  const [selectedState, setSelectedState] = React.useState<string>("");
 
-  const handleCepChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCep(event.target.value);
+  function sortStatesByName(states: State[]): State[] {
+    return states.sort((a, b) => a.nome.localeCompare(b.nome));
+  }
+
+  const sortedStates = sortStatesByName(states || []);
+
+  const { cities } = useCities(selectedState);
+  const [selectedCity, setSelectedCity] = React.useState<string>("");
+
+  const handleStateChange = (event: SelectChangeEvent) => {
+    const newState = event.target.value;
+    setSelectedState(newState);
+  };
+
+  const handleCityChange = (event: SelectChangeEvent) => {
+    const newCity = event.target.value;
+    setSelectedCity(newCity);
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,8 +82,8 @@ export default function SignUp() {
 
     const password = data.get("password")?.toString() ?? "";
     const confirmPassword = data.get("confirmPassword")?.toString() ?? "";
-    const city = address?.localidade;
-    const state = address?.uf;
+    const city = selectedCity;
+    const state = selectedState;
 
     if (password !== confirmPassword) {
       setSnackbar("As senhas não coincidem", "error");
@@ -202,44 +225,43 @@ export default function SignUp() {
                 }}
               />
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
+            <Grid item xs={12} sm={6}>
+              <InputLabel htmlFor="state" sx={{ color: "black" }}>
+                Estado
+              </InputLabel>
+              <Select
+                id="state"
+                value={selectedState}
+                onChange={handleStateChange}
+                label="Estado"
                 fullWidth
-                id="cep"
-                label="CEP"
-                name="cep"
-                type="text"
-                onChange={handleCepChange}
-              />
+              >
+                {sortedStates?.map((state) => (
+                  <MenuItem key={state.sigla} value={state.sigla}>
+                    {state.nome}
+                  </MenuItem>
+                ))}
+              </Select>
             </Grid>
-            <Grid item>
-              <Grid container spacing={1}>
-                <Grid item xs={6}>
-                  <TextField
-                    disabled
-                    required
-                    id="city"
-                    label="Cidade"
-                    name="city"
-                    type="text"
-                    value={address?.localidade || ""}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    disabled
-                    required
-                    id="uf"
-                    label="UF"
-                    name="uf"
-                    type="text"
-                    value={address?.uf || ""}
-                    fullWidth
-                  />
-                </Grid>
-              </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <InputLabel htmlFor="city" sx={{ color: "black" }}>
+                Cidade
+              </InputLabel>
+              <Select
+                id="city"
+                value={selectedCity}
+                onChange={handleCityChange}
+                label="Cidade"
+                disabled={!selectedState}
+                fullWidth
+              >
+                {cities?.map((city) => (
+                  <MenuItem key={city.nome} value={city.nome}>
+                    {city.nome}
+                  </MenuItem>
+                ))}
+              </Select>
             </Grid>
             <Grid
               item

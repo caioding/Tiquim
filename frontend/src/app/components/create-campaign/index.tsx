@@ -71,15 +71,7 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
   const handleCityChange = (event: SelectChangeEvent) => {
     const newCity = event.target.value;
     setSelectedCity(newCity);
-    setCampaignInfo({ ...campaignInfo, city: capitalizeCityName(newCity) });
-  };
-
-  const capitalizeCityName = (cityName: string): string => {
-    return cityName
-      .toLowerCase()
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
+    setCampaignInfo({ ...campaignInfo, city: newCity });
   };
 
   const {
