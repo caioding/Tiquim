@@ -65,14 +65,21 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
   const handleStateChange = (event: SelectChangeEvent) => {
     const newState = event.target.value;
     setSelectedState(newState);
-    console.log(newState);
     setCampaignInfo({ ...campaignInfo, state: newState, city: "" });
   };
 
   const handleCityChange = (event: SelectChangeEvent) => {
     const newCity = event.target.value;
     setSelectedCity(newCity);
-    setCampaignInfo({ ...campaignInfo, city: newCity });
+    setCampaignInfo({ ...campaignInfo, city: capitalizeCityName(newCity) });
+  };
+
+  const capitalizeCityName = (cityName: string): string => {
+    return cityName
+      .toLowerCase()
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   };
 
   const {
@@ -102,6 +109,7 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
 
         setSnackbar("Campanha criada com sucesso!");
         setCampaignInfo(initialState);
+        setSelectedState("");
         handleClose();
       } catch (error) {
         setSnackbar("Erro na criação da campanha", "error");

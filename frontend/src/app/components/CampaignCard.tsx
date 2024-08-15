@@ -90,6 +90,8 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
           author={user.name}
           createdAt={datetime}
           completedPercentage={completedPercentage}
+          city={campaign.city}
+          state={campaign.state}
         />
         <Typography variant="body2" color="text.secondary" sx={{ fontSize: "14px", mt: 1 }}>
           {campaign.preview}

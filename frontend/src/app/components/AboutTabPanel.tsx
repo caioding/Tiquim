@@ -40,7 +40,9 @@ export function AboutTabPanel(props: TabPanelProps) {
               <Typography variant="h4" sx={{ fontWeight: "bold", mt: 3 }}>
                 {campaign.title}
               </Typography>
-
+              <Typography sx={{ mt: 3 }}>
+                Campanha originada em {campaign.city}/{campaign.state}
+              </Typography>
               <Typography variant="body1" sx={{ mt: 3 }}>
                 {campaign.description}
               </Typography>
@@ -65,8 +67,16 @@ export function AboutTabPanel(props: TabPanelProps) {
                     completedPercentage === 100
                       ? [{ label: "Alcançado", value: 100, color: "green" }]
                       : [
-                          { label: "Alcançado", value: completedPercentage, color: "green" },
-                          { label: "Restante", value: 100 - completedPercentage, color: "#D1FFBD" },
+                          {
+                            label: "Alcançado",
+                            value: completedPercentage,
+                            color: "green",
+                          },
+                          {
+                            label: "Restante",
+                            value: 100 - completedPercentage,
+                            color: "#D1FFBD",
+                          },
                         ],
                   innerRadius: 100,
                   outerRadius: 80,
