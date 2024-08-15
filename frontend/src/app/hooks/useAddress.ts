@@ -25,6 +25,7 @@ export function useCities(state: string) {
   const { data } = useQuery({
     queryKey: ["cities", state],
     queryFn: () => getCities(state),
+    enabled: !!state,
   });
 
   return { cities: data as City[] };
