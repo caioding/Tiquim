@@ -100,6 +100,26 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
 
     if (selectedFile) {
       try {
+        if (formattedData.title.length > 50) {
+          setSnackbar("O título deve ter no máximo 50 caracteres", "error");
+          return;
+        }
+
+        if (formattedData.preview.length > 120) {
+          setSnackbar("O título deve ter no máximo 120 caracteres", "error");
+          return;
+        }
+
+        if (formattedData.description.length > 1000) {
+          setSnackbar("O título deve ter no máximo 1000 caracteres", "error");
+          return;
+        }
+
+        if (formattedData.deadline < formattedData.createdAt) {
+          setSnackbar("O prazo não pode ser anterior à data de criação.", "error");
+          return;
+        }
+
         const response = await createCampaign(formattedData, selectedFile);
 
         if (response.status != 200) {
@@ -109,6 +129,7 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
 
         setSnackbar("Campanha criada com sucesso!");
         setCampaignInfo(initialState);
+        setSelectedFile(null);
         setSelectedState("");
         handleClose();
       } catch (error) {
