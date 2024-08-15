@@ -19,23 +19,26 @@ import useRedirectIfLoggedIn from "../hooks/useRedirectIfLoggedIn";
 import useSnackbar from "../hooks/useSnackbar";
 import { login } from "../services/auth";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useCheckAvailableEmail } from "../hooks/useUser";
+import axios from "axios";
 
 export default function Login() {
   const router = useRouter();
   const { setId } = useAuthContext();
   const isLoggedIn = useRedirectIfLoggedIn();
+  const { setSnackbar } = useSnackbar();
 
   const [showPassword, setShowPassword] = React.useState(false);
+  const [emailToCheck, setEmailToCheck] = React.useState<string>("");
+  const { check: isEmailAvailable } = useCheckAvailableEmail(emailToCheck);
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const { setSnackbar } = useSnackbar();
-
-  if (isLoggedIn) {
-    return null;
-  }
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmailToCheck(event.target.value);
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -47,8 +50,12 @@ export default function Login() {
     };
 
     try {
-      const response = await login(credentials);
+      if (isEmailAvailable) {
+        setSnackbar("Email não cadastrado", "error");
+        return;
+      }
 
+      const response = await login(credentials);
       if (!response) {
         setSnackbar("Erro ao efetuar o login", "error");
         throw new Error("Error on login attempt");
@@ -59,10 +66,17 @@ export default function Login() {
       setSnackbar("Login efetuado com sucesso!");
       router.push("/");
     } catch (error) {
-      setSnackbar("Erro ao efetuar o login", "error");
-      console.log(error);
+      if (axios.isAxiosError(error) && error.response && error.response.status === 401) {
+        setSnackbar("Senha incorreta. Tente novamente.", "error");
+      } else {
+        setSnackbar("Erro ao efetuar o login", "error");
+      }
     }
   };
+
+  if (isLoggedIn) {
+    return null;
+  }
 
   return (
     <Grid container component="main" sx={{ height: "100vh" }}>
@@ -106,6 +120,7 @@ export default function Login() {
               id="email"
               label="Email"
               name="email"
+              onChange={handleEmailChange}
               autoComplete="email"
               autoFocus
             />

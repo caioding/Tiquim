@@ -31,6 +31,10 @@ export async function updateUser(id: string, user: UserDto): Promise<string> {
   return api.put(`/user/${id}`, user).then((response) => response.data);
 }
 
+export async function getEmail(email: string): Promise<boolean> {
+  return api.get(`/user/check/${email}`).then((response) => response.data);
+}
+
 export async function getAvatarUser(url: string): Promise<string> {
   const response = await api_base.get(`uploads/user/${url}`, {
     responseType: "blob",

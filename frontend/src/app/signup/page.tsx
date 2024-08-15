@@ -27,13 +27,16 @@ import { Copyright } from "../components/Copyright";
 import { useRouter } from "next/navigation";
 import useSnackbar from "../hooks/useSnackbar";
 import { signup } from "../services/user";
-import { useAddress, useCities, useStates } from "../hooks/useAddress";
+import { useCities, useStates } from "../hooks/useAddress";
 import InputFileUpload from "../components/FileUpload";
 import { State } from "../types/address";
+import { useCheckAvailableEmail } from "../hooks/useUser";
+import useRedirectIfLoggedIn from "../hooks/useRedirectIfLoggedIn";
 
 export default function SignUp() {
   const router = useRouter();
   const { setSnackbar } = useSnackbar();
+  const isLoggedIn = useRedirectIfLoggedIn();
 
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
@@ -63,6 +66,7 @@ export default function SignUp() {
   const handleStateChange = (event: SelectChangeEvent) => {
     const newState = event.target.value;
     setSelectedState(newState);
+    setSelectedCity("");
   };
 
   const handleCityChange = (event: SelectChangeEvent) => {
@@ -74,6 +78,14 @@ export default function SignUp() {
     if (event.target.files && event.target.files[0]) {
       setSelectedFile(event.target.files[0]);
     }
+  };
+
+  const [emailToCheck, setEmailToCheck] = React.useState<string>("");
+
+  const { check: isEmailAvailable } = useCheckAvailableEmail(emailToCheck);
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmailToCheck(event.target.value);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -105,15 +117,24 @@ export default function SignUp() {
       return;
     }
 
-    if (!city || !state) {
-      console.log(city, state);
-      setSnackbar("Insira um CEP válido", "error");
+    if (!state) {
+      setSnackbar("Insira um estado", "error");
+      return;
+    }
+
+    if (!city) {
+      setSnackbar("Insira uma cidade", "error");
+      return;
+    }
+
+    if (!isEmailAvailable) {
+      setSnackbar("Email já cadastrado", "error");
       return;
     }
 
     const user = {
       name: data.get("name")?.toString() ?? "",
-      email: data.get("email")?.toString() ?? "",
+      email: emailToCheck,
       password: password,
       avatarUrl: selectedFile.name,
       city: city,
@@ -136,6 +157,10 @@ export default function SignUp() {
       console.log(err);
     }
   };
+
+  if (isLoggedIn) {
+    return null;
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -175,6 +200,7 @@ export default function SignUp() {
                 label="Email"
                 name="email"
                 type="email"
+                onChange={handleEmailChange}
                 autoComplete="email"
               />
             </Grid>

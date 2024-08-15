@@ -86,3 +86,8 @@ export const updateUser = async (id: string, user: UpdateUserDto): Promise<UserD
 export const deleteUser = async (id: string): Promise<UserDto> => {
   return await prisma.user.delete({ where: { id } });
 };
+
+export const readEmail = async (email: string): Promise<boolean> => {
+  const user = await prisma.user.findUnique({ select: { id: true }, where: { email: email } });
+  return user ? false : true;
+};

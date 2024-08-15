@@ -25,6 +25,7 @@ const router = Router();
 router.get("/", userController.index);
 router.post("/", upload.single("avatarImage"), userController.create);
 router.get("/:id", userController.read);
+router.get("/check/:email", userController.checkAvailableEmail);
 router.put("/:id", upload.single("avatarImage"), isAuth, userController.update);
 router.delete("/:id", isAdmin, userController.remove);
 

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { CreateUserDto, TypeUser, UpdateUserDto } from "./user.types";
-import { createUser, deleteUser, listUsers, readUser, updateUser } from "./user.service";
+import { createUser, deleteUser, listUsers, readEmail, readUser, updateUser } from "./user.service";
 import fs from "fs";
 import path from "path";
 
@@ -44,7 +44,7 @@ const create = async (req: Request, res: Response) => {
     const newUser = await createUser(user, userType);
     res.status(StatusCodes.OK).json(newUser);
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }
 };
@@ -125,4 +125,14 @@ const remove = async (req: Request, res: Response) => {
   }
 };
 
-export default { index, create, read, update, remove };
+const checkAvailableEmail = async (req: Request, res: Response) => {
+  const { email } = req.params;
+  try {
+    const check = await readEmail(email);
+    res.status(StatusCodes.OK).json(check);
+  } catch (err) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
+  }
+};
+
+export default { index, create, read, update, remove, checkAvailableEmail };
