@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { CreateUserDto, TypeUser, UpdateUserDto } from "./user.types";
 import { createUser, deleteUser, listUsers, readUser, updateUser } from "./user.service";
+import fs from "fs";
+import path from "path";
 
 const index = async (req: Request, res: Response) => {
   /*
@@ -35,9 +37,14 @@ const create = async (req: Request, res: Response) => {
     schema: { $ref: '#/definitions/User' }
     }
     */
+    if (req.file) {
+      user.avatarUrl = req.file.filename;
+    }
+
     const newUser = await createUser(user, userType);
     res.status(StatusCodes.OK).json(newUser);
   } catch (err) {
+    console.log(err)
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }
 };
@@ -73,9 +80,23 @@ const update = async (req: Request, res: Response) => {
   }
   */
   const { id } = req.params;
-  const product = req.body as UpdateUserDto;
+  const user = req.body as UpdateUserDto;
+
+  if (req.file) {
+    const oldImageUrl = user.avatarUrl;
+
+    if (oldImageUrl) {
+      const filePath = path.join(__dirname, "..", "..", "uploads", "campaigns", oldImageUrl);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+
+    user.avatarUrl = req.file.filename;
+  }
+
   try {
-    const updatedProduct = await updateUser(id, product);
+    const updatedUser = await updateUser(id, user);
     res.status(StatusCodes.NO_CONTENT).json();
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
@@ -90,6 +111,14 @@ const remove = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const deletedProduct = await deleteUser(id);
+    const oldImageUrl = deletedProduct.avatarUrl;
+
+    if (oldImageUrl) {
+      const filePath = path.join(__dirname, "..", "..", "uploads", "campaigns", oldImageUrl);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
     res.status(StatusCodes.NO_CONTENT).json();
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);

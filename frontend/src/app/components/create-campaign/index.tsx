@@ -357,7 +357,7 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
                   }}
                   src={selectedFile ? URL.createObjectURL(selectedFile) : ""}
                 />
-                <InputFileUpload onFileChange={handleFileChange} />
+                <InputFileUpload fileName="campaignImage" onFileChange={handleFileChange} />
                 <IconButton
                   aria-label="delete"
                   color="success"

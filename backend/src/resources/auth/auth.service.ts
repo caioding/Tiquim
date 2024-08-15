@@ -18,6 +18,8 @@ export const checkCredentials = async (credentials: LoginDto): Promise<UserDto |
     email: user.email,
     userTypeId: user.userTypeId,
     avatarUrl: user.avatarUrl,
+    city: user.city,
+    state: user.state,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   };
