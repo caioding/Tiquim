@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getUser } from "../services/user";
+import { getEmail, getUser } from "../services/user";
 
 export function useUser(id: string) {
   const { data, isPending, isError } = useQuery({
@@ -8,4 +8,14 @@ export function useUser(id: string) {
   });
 
   return { user: data, isPending, isError };
+}
+
+export function useCheckAvailableEmail(email: string) {
+  const { data } = useQuery({
+    queryKey: ["user", email],
+    queryFn: () => getEmail(email),
+    enabled: !!email,
+  });
+
+  return { check: data };
 }

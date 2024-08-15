@@ -9,31 +9,102 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import DeleteIcon from "@mui/icons-material/Delete";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import useSnackbar from "../hooks/useSnackbar";
-import { updateUser } from "../services/user";
+import { getAvatarUser, updateUser } from "../services/user";
 import useAuthContext from "../hooks/useAuthContext";
 import { useEffect, useState } from "react";
 import { UserDto } from "../types/user";
-import { useUser } from "../hooks/useUser";
+import { useCheckAvailableEmail, useUser } from "../hooks/useUser";
+import { useCities, useStates } from "../hooks/useAddress";
+import {
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
+import InputFileUpload from "../components/FileUpload";
+import { useRouter } from "next/navigation";
+import { State } from "../types/address";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const initialState = {
   name: "",
   email: "",
   password: "",
+  city: "",
+  state: "",
+  avatarUrl: "",
 };
 
 export default function EditAccount() {
+  const router = useRouter();
   const { setSnackbar } = useSnackbar();
   const { id } = useAuthContext();
   const [userInfo, setUserInfo] = useState<UserDto>(initialState);
   const { user } = useUser(id);
 
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const { states } = useStates();
+  const [selectedState, setSelectedState] = React.useState<string>(userInfo.state);
+
+  function sortStatesByName(states: State[]): State[] {
+    return states.sort((a, b) => a.nome.localeCompare(b.nome));
+  }
+
+  const sortedStates = sortStatesByName(states || []);
+
+  const { cities } = useCities(selectedState);
+  const [selectedCity, setSelectedCity] = React.useState<string>(userInfo.city);
+
+  const handleStateChange = (event: SelectChangeEvent) => {
+    const newState = event.target.value;
+    setSelectedState(newState);
+    setUserInfo({ ...userInfo, state: newState });
+    setSelectedCity("");
+  };
+
+  const handleCityChange = (event: SelectChangeEvent) => {
+    const newCity = event.target.value;
+    setSelectedCity(newCity);
+    setUserInfo({ ...userInfo, city: newCity });
+  };
+
+  const [avatarUrl, setAvatarUrl] = useState<string>("/placeholder.png");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      if (user?.avatarUrl && user.avatarUrl.length > 0) {
+        const image = await getAvatarUser(user.avatarUrl);
+        setAvatarUrl(image);
+      }
+    };
+    fetchImage();
+  }, [user]);
+
   useEffect(() => {
     if (user) {
-      setUserInfo({ name: user?.name, email: user?.email, password: "" });
+      setUserInfo({
+        name: user.name,
+        email: user.email,
+        password: "",
+        city: user.city,
+        state: user.state,
+        avatarUrl: user.avatarUrl,
+      });
+      setSelectedState(user.state || "");
+      setSelectedCity(user.city);
     }
   }, [user]);
 
@@ -45,6 +116,12 @@ export default function EditAccount() {
     );
   }
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setSelectedFile(event.target.files[0]);
+    }
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -52,11 +129,15 @@ export default function EditAccount() {
       name: userInfo.name.toString(),
       email: userInfo.email.toString(),
       password: userInfo.password.toString(),
+      city: userInfo.city.toString(),
+      state: userInfo.state.toString(),
+      avatarUrl: userInfo.avatarUrl.toString(),
     };
 
     try {
-      const response = await updateUser(id, formattedUserInfo);
+      const response = await updateUser(id, formattedUserInfo, selectedFile);
       setSnackbar("Informações editadas com sucesso!");
+      router.push("/");
     } catch (err) {
       setSnackbar("Erro ao efetuar a edição das informações", "error");
       console.log(err);
@@ -118,14 +199,98 @@ export default function EditAccount() {
                 fullWidth
                 name="password"
                 label="Senha"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 autoComplete="new-password"
                 value={userInfo.password}
                 onChange={(event) => {
                   setUserInfo({ ...userInfo, password: event.target.value });
                 }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputLabel htmlFor="state" sx={{ color: "black" }}>
+                Estado
+              </InputLabel>
+              <Select
+                id="state"
+                value={selectedState}
+                onChange={handleStateChange}
+                label="Estado"
+                fullWidth
+              >
+                {sortedStates?.map((state) => (
+                  <MenuItem key={state.sigla} value={state.sigla}>
+                    {state.nome}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <InputLabel htmlFor="city" sx={{ color: "black" }}>
+                Cidade
+              </InputLabel>
+              <Select
+                id="city"
+                value={selectedCity}
+                onChange={handleCityChange}
+                label="Cidade"
+                disabled={!selectedState}
+                fullWidth
+              >
+                {cities?.map((city) => (
+                  <MenuItem key={city.nome} value={city.nome}>
+                    {city.nome}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+            <Grid item xs={12}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  component="img"
+                  sx={{
+                    height: 200,
+                    width: 300,
+                  }}
+                  src={selectedFile ? URL.createObjectURL(selectedFile) : avatarUrl}
+                />
+                <InputFileUpload fileName="avatarImage" onFileChange={handleFileChange} />
+                <IconButton
+                  aria-label="delete"
+                  color="success"
+                  sx={{
+                    display: selectedFile ? "block" : "none",
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedFile(null);
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Box>
             </Grid>
             <Grid item xs={12}>
               <FormControlLabel

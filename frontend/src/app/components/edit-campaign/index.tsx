@@ -212,7 +212,7 @@ export default function EditCampaignModal({ campaign, open, handleClose }: EditC
                   }}
                   src={selectedFile ? URL.createObjectURL(selectedFile) : imageUrl}
                 />
-                <InputFileUpload onFileChange={handleFileChange} />
+                <InputFileUpload fileName="campaignImage" onFileChange={handleFileChange} />
                 <IconButton
                   aria-label="delete"
                   color="success"

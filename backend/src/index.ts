@@ -49,6 +49,7 @@ app.use(setCookieLang);
 app.use(express.json());
 app.use(router);
 
+app.use("/uploads/user", express.static(path.join(__dirname, "uploads", "users")));
 app.use("/uploads/campaign", express.static(path.join(__dirname, "uploads", "campaigns")));
 
 app.use("/api", swaggerUi.serve, swaggerUi.setup(swaggerFile));

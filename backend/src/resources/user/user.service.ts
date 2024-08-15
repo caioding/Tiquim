@@ -17,6 +17,8 @@ export const createUser = async (user: CreateUserDto, userType: TypeUser): Promi
         email: true,
         userTypeId: true,
         avatarUrl: true,
+        city: true,
+        state: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -40,6 +42,8 @@ export const listUsers = async (skip?: number, take?: number): Promise<UserDto[]
       email: true,
       userTypeId: true,
       avatarUrl: true,
+      city: true,
+      state: true,
       createdAt: true,
       updatedAt: true,
     },
@@ -56,6 +60,8 @@ export const readUser = async (id: string): Promise<UserDto | null> => {
       email: true,
       userTypeId: true,
       avatarUrl: true,
+      city: true,
+      state: true,
       createdAt: true,
       updatedAt: true,
     },
@@ -79,4 +85,9 @@ export const updateUser = async (id: string, user: UpdateUserDto): Promise<UserD
 
 export const deleteUser = async (id: string): Promise<UserDto> => {
   return await prisma.user.delete({ where: { id } });
+};
+
+export const readEmail = async (email: string): Promise<boolean> => {
+  const user = await prisma.user.findUnique({ select: { id: true }, where: { email: email } });
+  return user ? false : true;
 };
