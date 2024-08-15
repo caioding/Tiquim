@@ -12,17 +12,24 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Copyright } from "../components/Copyright";
-import { Link, Typography } from "@mui/material";
+import { IconButton, InputAdornment, Link, Typography } from "@mui/material";
 import useAuthContext from "../hooks/useAuthContext";
 import { useRouter } from "next/navigation";
 import useRedirectIfLoggedIn from "../hooks/useRedirectIfLoggedIn";
 import useSnackbar from "../hooks/useSnackbar";
 import { login } from "../services/auth";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export default function Login() {
   const router = useRouter();
   const { setId } = useAuthContext();
   const isLoggedIn = useRedirectIfLoggedIn();
+
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const { setSnackbar } = useSnackbar();
 
@@ -108,8 +115,21 @@ export default function Login() {
               fullWidth
               name="password"
               label="Senha"
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
               autoComplete="current-password"
             />
             <FormControlLabel
