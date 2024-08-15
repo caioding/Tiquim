@@ -27,8 +27,27 @@ export async function signup(user: UserDto, file: File | null): Promise<string> 
     .then((response) => response.data);
 }
 
-export async function updateUser(id: string, user: UserDto): Promise<string> {
-  return api.put(`/user/${id}`, user).then((response) => response.data);
+export async function updateUser(id: string, user: UserDto, file: File | null): Promise<string> {
+  const formData = new FormData();
+
+  formData.append("name", user.name);
+  formData.append("email", user.email);
+  formData.append("password", user.password);
+  formData.append("city", user.city);
+  formData.append("state", user.state);
+  formData.append("avatarUrl", user.avatarUrl);
+
+  if (file) {
+    formData.append("avatarImage", file);
+  }
+
+  return api
+    .put(`/user/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((response) => response.data);
 }
 
 export async function getEmail(email: string): Promise<boolean> {

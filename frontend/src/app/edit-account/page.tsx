@@ -18,12 +18,20 @@ import { getAvatarUser, updateUser } from "../services/user";
 import useAuthContext from "../hooks/useAuthContext";
 import { useEffect, useState } from "react";
 import { UserDto } from "../types/user";
-import { useUser } from "../hooks/useUser";
+import { useCheckAvailableEmail, useUser } from "../hooks/useUser";
 import { useCities, useStates } from "../hooks/useAddress";
-import { IconButton, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import {
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 import InputFileUpload from "../components/FileUpload";
 import { useRouter } from "next/navigation";
 import { State } from "../types/address";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const initialState = {
   name: "",
@@ -40,6 +48,12 @@ export default function EditAccount() {
   const { id } = useAuthContext();
   const [userInfo, setUserInfo] = useState<UserDto>(initialState);
   const { user } = useUser(id);
+
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const { states } = useStates();
   const [selectedState, setSelectedState] = React.useState<string>(userInfo.state);
@@ -121,7 +135,7 @@ export default function EditAccount() {
     };
 
     try {
-      const response = await updateUser(id, formattedUserInfo);
+      const response = await updateUser(id, formattedUserInfo, selectedFile);
       setSnackbar("Informações editadas com sucesso!");
       router.push("/");
     } catch (err) {
@@ -185,12 +199,25 @@ export default function EditAccount() {
                 fullWidth
                 name="password"
                 label="Senha"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 autoComplete="new-password"
                 value={userInfo.password}
                 onChange={(event) => {
                   setUserInfo({ ...userInfo, password: event.target.value });
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
                 }}
               />
             </Grid>
