@@ -54,6 +54,8 @@ export async function createCampaign(campaign: CreateCampaignDto, file: File | n
   formData.append("description", campaign.description);
   formData.append("preview", campaign.preview);
   formData.append("category", campaign.category);
+  formData.append("state", campaign.state);
+  formData.append("city", campaign.city);
   formData.append("userId", campaign.userId);
   formData.append("createdAt", campaign.createdAt.toISOString());
   formData.append("updatedAt", campaign.updatedAt.toISOString());

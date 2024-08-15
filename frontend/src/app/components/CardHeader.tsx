@@ -7,9 +7,18 @@ interface CardHearderProps {
   author: string;
   createdAt: string;
   completedPercentage: number;
+  state: string; // Adicionado para UF
+  city: string; // Adicionado para cidade
 }
 
-export function CardHeader({ title, author, createdAt, completedPercentage }: CardHearderProps) {
+export function CardHeader({
+  title,
+  author,
+  createdAt,
+  completedPercentage,
+  state,
+  city,
+}: CardHearderProps) {
   const getAuthorName = () => {
     const nameParts = author.trim().split(" ");
 
@@ -42,8 +51,20 @@ export function CardHeader({ title, author, createdAt, completedPercentage }: Ca
           </Typography>
         </Tooltip>
 
-        <Typography variant="caption" color="text.secondary" component="h2" sx={{ mb: 1.5 }}>
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          component="h2"
+          sx={{ mb: 0, fontSize: 12 }}
+        >
           {getAuthorName()} • Criado em {createdAt.toString()}
+        </Typography>
+        <Typography
+          variant="caption"
+          component="h2"
+          sx={{ mb: 1.5, textDecoration: "underline", fontStyle: "italic", fontSize: 11 }}
+        >
+          {city}/{state}
         </Typography>
       </Box>
 

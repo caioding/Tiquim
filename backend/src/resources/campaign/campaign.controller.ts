@@ -54,7 +54,6 @@ const create = async (req: Request, res: Response) => {
     if (req.file) {
       campaign.imageUrl = req.file.filename;
     }
-
     const newCampaign = await createCampaign(campaign, uid);
     res.status(StatusCodes.OK).json(newCampaign);
   } catch (err) {

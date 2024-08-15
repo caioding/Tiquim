@@ -62,6 +62,8 @@ model Campaign {
   description   String         @db.VarChar(1000)
   preview       String         @db.VarChar(120)
   category      String         @db.VarChar(50)
+  city          String         @db.VarChar(50)
+  state         String         @db.VarChar(20)
   imageUrl      String?        @map("image_url") @db.VarChar(255)
   userId        String         @map("user_id") @db.Char(36)
   createdAt     DateTime       @default(now()) @map("created_at")

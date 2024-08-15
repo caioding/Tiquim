@@ -7,6 +7,9 @@ import {
   Grid,
   IconButton,
   InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   TextField,
   Typography,
 } from "@mui/material";
@@ -17,17 +20,12 @@ import { useForm } from "react-hook-form";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { Campaign, CreateCampaignDto } from "../../types/campaign";
+import { State } from "../../types/address";
 import useSnackbar from "../../hooks/useSnackbar";
 import { createCampaign } from "../../services/campaign";
 import InputFileUpload from "../FileUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
-
-const formatDate = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
+import { useCities, useStates } from "@/app/hooks/useAddress";
 
 interface CreateCampaignProps {
   open: boolean;
@@ -41,6 +39,8 @@ const initialState: CreateCampaignDto = {
   description: "",
   preview: "",
   category: "",
+  state: "",
+  city: "",
   userId: "",
   createdAt: new Date(),
   updatedAt: new Date(),
@@ -49,6 +49,38 @@ const initialState: CreateCampaignDto = {
 export default function CreateCampaignModal({ open, handleClose }: CreateCampaignProps) {
   const [campaignInfo, setCampaignInfo] = useState<CreateCampaignDto>(initialState);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const { states } = useStates();
+  const [selectedState, setSelectedState] = useState<string>("");
+
+  function sortStatesByName(states: State[]): State[] {
+    return states.sort((a, b) => a.nome.localeCompare(b.nome));
+  }
+
+  const sortedStates = sortStatesByName(states || []);
+
+  const { cities } = useCities(selectedState);
+  const [selectedCity, setSelectedCity] = useState<string>("");
+
+  const handleStateChange = (event: SelectChangeEvent) => {
+    const newState = event.target.value;
+    setSelectedState(newState);
+    setCampaignInfo({ ...campaignInfo, state: newState, city: "" });
+  };
+
+  const handleCityChange = (event: SelectChangeEvent) => {
+    const newCity = event.target.value;
+    setSelectedCity(newCity);
+    setCampaignInfo({ ...campaignInfo, city: capitalizeCityName(newCity) });
+  };
+
+  const capitalizeCityName = (cityName: string): string => {
+    return cityName
+      .toLowerCase()
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
 
   const {
     register,
@@ -68,6 +100,26 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
 
     if (selectedFile) {
       try {
+        if (formattedData.title.length > 50) {
+          setSnackbar("O título deve ter no máximo 50 caracteres", "error");
+          return;
+        }
+
+        if (formattedData.preview.length > 120) {
+          setSnackbar("O título deve ter no máximo 120 caracteres", "error");
+          return;
+        }
+
+        if (formattedData.description.length > 1000) {
+          setSnackbar("O título deve ter no máximo 1000 caracteres", "error");
+          return;
+        }
+
+        if (formattedData.deadline < formattedData.createdAt) {
+          setSnackbar("O prazo não pode ser anterior à data de criação.", "error");
+          return;
+        }
+
         const response = await createCampaign(formattedData, selectedFile);
 
         if (response.status != 200) {
@@ -77,6 +129,8 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
 
         setSnackbar("Campanha criada com sucesso!");
         setCampaignInfo(initialState);
+        setSelectedFile(null);
+        setSelectedState("");
         handleClose();
       } catch (error) {
         setSnackbar("Erro na criação da campanha", "error");
@@ -186,6 +240,44 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
                 <Box sx={{ color: "error.main" }}>Esse campo é obrigatório</Box>
               )}
             </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputLabel htmlFor="state" sx={{ color: "black" }}>
+                Estado
+              </InputLabel>
+              <Select
+                id="state"
+                value={selectedState}
+                onChange={handleStateChange}
+                label="Estado"
+                fullWidth
+              >
+                {sortedStates?.map((state) => (
+                  <MenuItem key={state.sigla} value={state.sigla}>
+                    {state.nome}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <InputLabel htmlFor="city" sx={{ color: "black" }}>
+                Cidade
+              </InputLabel>
+              <Select
+                id="city"
+                value={selectedCity}
+                onChange={handleCityChange}
+                label="Cidade"
+                disabled={!selectedState}
+                fullWidth
+              >
+                {cities?.map((city) => (
+                  <MenuItem key={city.nome} value={city.nome}>
+                    {city.nome}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
             <Grid item xs={12}>
               <InputLabel htmlFor="preview" sx={{ color: "black" }}>
                 Resumo
@@ -228,7 +320,10 @@ export default function CreateCampaignModal({ open, handleClose }: CreateCampaig
                 {...register("description", { required: true })}
                 value={campaignInfo.description}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setCampaignInfo({ ...campaignInfo, description: e.target.value })
+                  setCampaignInfo({
+                    ...campaignInfo,
+                    description: e.target.value,
+                  })
                 }
               />
               {errors.description?.type === "required" && (
