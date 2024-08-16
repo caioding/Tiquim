@@ -144,3 +144,38 @@ export const listTotalSupporters = async (): Promise<
 
   return list;
 };
+
+export const listSupporters = async (
+  campaignId: string,
+): Promise<{
+  total: number;
+  supporters: Array<{ id: string; name: string; avatarUrl: string | null }>;
+}> => {
+  const supportersIds = await prisma.contribution.findMany({
+    where: {
+      campaignId: campaignId,
+    },
+    select: {
+      userId: true,
+    },
+    distinct: ["userId"],
+  });
+
+  const supportersIdsArray = supportersIds.map((contribution) => contribution.userId);
+
+  const supporters = await prisma.user.findMany({
+    where: {
+      id: { in: supportersIdsArray },
+    },
+    select: {
+      id: true,
+      name: true,
+      avatarUrl: true,
+    },
+  });
+
+  return {
+    total: supportersIds.length,
+    supporters: supporters,
+  };
+};

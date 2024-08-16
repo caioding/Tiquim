@@ -14,6 +14,15 @@ export async function getCampaignsSupporters(): Promise<
   return api.get(`/contribution/allSupporters/`).then((response) => response.data);
 }
 
+export async function getCampaignSupporters(
+  campaignId: String,
+): Promise<{
+  total: number;
+  supporters: { id: string; name: string; avatarUrl: string | null }[];
+}> {
+  return api.get(`/contribution/allSupporters/${campaignId}`).then((response) => response.data);
+}
+
 export async function getCampaignPercentage(campaignId: string): Promise<Number> {
   return api.get(`/contribution/percentage/${campaignId}`).then((response) => response.data);
 }

@@ -2,6 +2,7 @@ import { Box, Stack, Tooltip, Typography } from "@mui/material";
 import React from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { capitalize } from "../utils/capitalize";
+import { getUserName } from "../utils/name";
 
 interface CardHearderProps {
   title: string;
@@ -20,17 +21,6 @@ export function CardHeader({
   state,
   city,
 }: CardHearderProps) {
-  const getAuthorName = () => {
-    const nameParts = author.trim().split(" ");
-
-    const firstName = nameParts[0];
-    const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
-
-    const name = lastName ? `${firstName} ${lastName}` : firstName;
-
-    return name;
-  };
-
   return (
     <Stack direction="row" justifyContent="space-between" alignItems="center">
       <Box sx={{ width: "calc(100% - 60px)" }}>
@@ -58,7 +48,7 @@ export function CardHeader({
           component="h2"
           sx={{ mb: 0, fontSize: 12 }}
         >
-          {getAuthorName()} • Criado em {createdAt.toString()}
+          {getUserName(author)} • Criado em {createdAt.toString()}
         </Typography>
         <Typography
           variant="caption"
