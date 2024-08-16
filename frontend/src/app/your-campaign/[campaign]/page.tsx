@@ -23,6 +23,7 @@ import EditCampaignModal from "@/app/components/edit-campaign";
 import { useQueryClient } from "@tanstack/react-query";
 import AlertDialog from "@/app/components/DialogConfirmationDelete";
 import { CommentsTabPanel } from "@/app/components/comments/CommentsTabPanel";
+import { SupportersTabPanel } from "@/app/components/supporters/SupportersTabPanel";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -217,9 +218,7 @@ export default function YourCampaign() {
           Item Two
         </CustomTabPanel>
         <CommentsTabPanel idCampaign={idCampaign} value={tabValue} index={2} />
-        <CustomTabPanel value={tabValue} index={3}>
-          Item Four
-        </CustomTabPanel>
+        <SupportersTabPanel idCampaign={idCampaign} value={tabValue} index={3} />
       </Box>
 
       <EditCampaignModal campaign={campaign} open={open} handleClose={handleClose} />
