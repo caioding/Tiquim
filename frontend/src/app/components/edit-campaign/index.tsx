@@ -48,17 +48,14 @@ export default function EditCampaignModal({ campaign, open, handleClose }: EditC
 
   const [imageUrl, setImageUrl] = useState<string>("/placeholder.png");
 
-  useEffect(() => {
-    const fetchImage = async () => {
-      if (campaign?.imageUrl && campaign.imageUrl.length > 0) {
-        const image = await getImageCampaign(campaign.imageUrl);
-        setImageUrl(image);
-      }
-    };
-    fetchImage();
-  }, [campaign]);
+  const fetchImage = async () => {
+    if (campaign?.imageUrl && campaign.imageUrl.length > 0) {
+      const image = await getImageCampaign(campaign.imageUrl);
+      setImageUrl(image);
+    }
+  };
 
-  useEffect(() => {
+  const fillCampaignInfo = () => {
     if (campaign) {
       setCampaignInfo({
         title: campaign.title,
@@ -71,7 +68,12 @@ export default function EditCampaignModal({ campaign, open, handleClose }: EditC
       setValue("preview", campaign.preview);
       setValue("description", campaign.description);
       setValue("imageUrl", campaign.description);
+      fetchImage();
     }
+  };
+
+  useEffect(() => {
+    fillCampaignInfo();
   }, [campaign, setValue]);
 
   const handleFormSubmit = async () => {
@@ -95,8 +97,14 @@ export default function EditCampaignModal({ campaign, open, handleClose }: EditC
     }
   };
 
+  const onClose = () => {
+    fillCampaignInfo();
+    setSelectedFile(null);
+    handleClose();
+  };
+
   return (
-    <Dialog open={open} onClose={handleClose} scroll="body" maxWidth="md">
+    <Dialog open={open} onClose={onClose} scroll="body" maxWidth="md">
       <DialogContent sx={{ p: 6, backgroundColor: "#f8fafa" }}>
         <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
           <Grid item>
