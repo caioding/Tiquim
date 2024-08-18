@@ -3,6 +3,7 @@
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
+import EditIcon from "@mui/icons-material/Edit";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -15,11 +16,12 @@ import Container from "@mui/material/Container";
 import useSnackbar from "../hooks/useSnackbar";
 import { updateUser } from "../services/user";
 import useAuthContext from "../hooks/useAuthContext";
-import { Card, CardContent, Tooltip } from "@mui/material";
+import { Card, CardContent, Fab, Tooltip } from "@mui/material";
 import { useYourCampaigns } from "../hooks/useYourCampaigns";
 import { useQueryClient } from "@tanstack/react-query";
 import { getCampaignDetails } from "../services/campaign";
 import { useContributions, useContributionsByCampaign } from "../hooks/useUserContributions";
+import { useUser } from "../hooks/useUser";
 
 export default function YourProfile() {
   const { id } = useAuthContext();
@@ -31,7 +33,7 @@ export default function YourProfile() {
     isPending: isPendingContribution,
     isError: isErrorContribution,
   } = useContributionsByCampaign(contributions ?? []);
-
+  const { user } = useUser(id);
   const showYourCampaigns = () => {
     if (isPending) {
       return (
@@ -165,10 +167,21 @@ export default function YourProfile() {
         sx={{ width: 150, height: 150, mx: "auto", mb: 2 }}
       />
 
-      {/* Nome do Usuário */}
-      <Typography variant="h4" component="h1" fontWeight="bold" sx={{ mb: 10 }}>
-        Helena Maria
-      </Typography>
+      {/* Nome do Usuário e botão de editar perfil */}
+      <Box display="flex" alignItems="center" justifyContent="center" mb={10}>
+        <Typography variant="h4" component="h1" fontWeight="bold">
+          {user?.name ?? "Carregando"}
+        </Typography>
+        <Fab
+          color="success"
+          aria-label="edit"
+          onClick={() => {}}
+          sx={{ ml: 2 }}
+          href="/edit-account"
+        >
+          <EditIcon />
+        </Fab>
+      </Box>
 
       <Box sx={{ mt: 15, textAlign: "left" }}>
         <Typography variant="h6" fontSize="25px" fontWeight="bold">
