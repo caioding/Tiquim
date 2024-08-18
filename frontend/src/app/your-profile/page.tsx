@@ -31,14 +31,6 @@ export default function YourProfile() {
     isPending: isPendingContribution,
     isError: isErrorContribution,
   } = useContributionsByCampaign(contributions ?? []);
-  {
-    /*
-  mapear o vetor contributions de forma unica por id da campanha, para nao repetir campanha
-  depois disso pegar todas as campanhas pelo seu id 
-  e colocaals em um vetor
-  e depois colocalas em um card
-   */
-  }
 
   const showYourCampaigns = () => {
     if (isPending) {
@@ -178,7 +170,6 @@ export default function YourProfile() {
         Helena Maria
       </Typography>
 
-      {/* Campanhas */}
       <Box sx={{ mt: 15, textAlign: "left" }}>
         <Typography variant="h6" fontSize="25px" fontWeight="bold">
           Suas Campanhas
@@ -189,7 +180,6 @@ export default function YourProfile() {
         </Grid>
       </Box>
 
-      {/* Campanhas que esse perfil apoiou */}
       <Box sx={{ mt: 10, textAlign: "left" }}>
         <Typography variant="h6" fontSize="25px" fontWeight="bold">
           Campanhas que você apoiou
