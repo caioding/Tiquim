@@ -18,19 +18,25 @@ import useAuthContext from "../hooks/useAuthContext";
 import { Card, CardContent, Tooltip } from "@mui/material";
 import { useYourCampaigns } from "../hooks/useYourCampaigns";
 import { useQueryClient } from "@tanstack/react-query";
+import { getCampaignDetails} from "../services/campaign";
+import { useContributions, useContributionsByCampaign } from "../hooks/useUserContributions";
 
-const initialState = {
-  name: "",
-  email: "",
-  password: "",
-};
+
 
 export default function YourProfile() {
 
   const { id } = useAuthContext();
-  const [searchQuery, setSearchQuery] = React.useState("");
   const queryClient = useQueryClient();
-  const { campaigns, isPending, isError} = useYourCampaigns(searchQuery) 
+  const { campaigns, isPending, isError} = useYourCampaigns("")
+  const { contributions } = useContributions();
+  const {yourContributions, isPending: isPendingContribution, isError: isErrorContribution} = useContributionsByCampaign(contributions ?? [])
+{/*
+  mapear o vetor contributions de forma unica por id da campanha, para nao repetir campanha
+  depois disso pegar todas as campanhas pelo seu id 
+  e colocaals em um vetor
+  e depois colocalas em um card
+   */}
+  
 
   const showYourCampaigns = () => {
     if (isPending) {
@@ -45,7 +51,7 @@ export default function YourProfile() {
           Realize o login para visualizar suas campanhas.
         </Typography>
       );
-    } else if (isError) {
+    } else if (isErrorContribution) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
           Ocorreu um erro ao carregar suas campanhas.
@@ -94,6 +100,66 @@ export default function YourProfile() {
   };
 
 
+  const showCampaignsYouHelped = () => {
+    if (isPendingContribution) {
+      return (
+        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
+          Carregando...
+        </Typography>
+      );
+    } else if (id === "") {
+      return (
+        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
+          Realize o login para visualizar suas contribuições.
+        </Typography>
+      );
+    } else if (isError) {
+      return (
+        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
+          Ocorreu um erro ao carregar suas campanhas.
+        </Typography>
+      );
+    } else if (campaigns?.length === 0) {
+      return (
+        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
+          Você ainda não ajudou nenhuma campanha.
+        </Typography>
+      );
+    } else {
+      return yourContributions?.map((campaign) => (
+        <Grid item xs={12} sm={4} key={campaign.id}>
+          <Card sx={{ p: 2, borderRadius: 2 }}>
+          <CardContent>
+              <Grid container alignItems="center">
+                <Grid item sx={{width:'20%'}}>
+                  <Avatar
+                    alt={campaign.title}
+                    src={campaign.imageUrl}
+                    sx={{ width: 56, height: 56 }}
+                  />
+                </Grid>
+                <Grid item sx={{ width:'80%', minWidth:0}}>
+                  <Tooltip title={campaign.title}>
+                    <Typography 
+                      variant="body2" 
+                      fontWeight="bold" 
+                      sx={{
+                        whiteSpace: 'nowrap', 
+                        overflow:"hidden", 
+                        textOverflow: 'ellipsis',
+                        ml:1,}}>
+                      {campaign.title}
+                    </Typography>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+      ))
+        
+    }
+  }
 
     return (
         <Container maxWidth="lg" sx={{ textAlign: 'center', mt: 5, mb: 5}}>
@@ -128,29 +194,8 @@ export default function YourProfile() {
             </Typography>
     
             <Grid container spacing={2} sx={{ mt: 2 }}>
-              {[1, 3].map((index) => (
-              <Grid item xs={12} sm={4} key={index}>
-                <Card sx={{ p: 2, borderRadius: 2 }}>
-                  <CardContent>
-                    <Grid container alignItems="center">
-                      <Grid item alignContent={"left"}>
-                        <Avatar
-                          alt={`Campanha ${index}`}
-                          src={`url-da-imagem-campanha-${index}`}
-                          sx={{ width: 56, height: 56 }}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body2" fontWeight="bold" sx={{ml: 2}}>
-                          Campanha {index}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+              {showCampaignsYouHelped()}
+            </Grid>
           </Box>
         </Container>
       );
