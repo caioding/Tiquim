@@ -86,7 +86,7 @@ const update = async (req: Request, res: Response) => {
     const oldImageUrl = user.avatarUrl;
 
     if (oldImageUrl) {
-      const filePath = path.join(__dirname, "..", "..", "uploads", "campaigns", oldImageUrl);
+      const filePath = path.join(__dirname, "..", "..", "uploads", "users", oldImageUrl);
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
       }

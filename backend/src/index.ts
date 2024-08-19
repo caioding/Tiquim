@@ -51,6 +51,7 @@ app.use(router);
 
 app.use("/uploads/user", express.static(path.join(__dirname, "uploads", "users")));
 app.use("/uploads/campaign", express.static(path.join(__dirname, "uploads", "campaigns")));
+app.use("/uploads/avatars", express.static(path.join(__dirname, "uploads", "avatars")));
 
 app.use("/api", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.listen(PORT, () => {
