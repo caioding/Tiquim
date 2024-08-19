@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Avatar, Box, IconButton, Tooltip } from "@mui/material";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import User from "../types/user";
+import EditIcon from "@mui/icons-material/Edit";
 import InputFileUpload from "./FileUpload";
 
 interface UploadableAvatarProps {
@@ -27,37 +26,31 @@ export default function UploadableAvatar({ avatarUrl, onFileChange }: Uploadable
       <Avatar
         alt="User Avatar"
         src={avatarUrl}
-        sx={{ width: "100%", height: "100%", mx: "auto", mb: 2 }}
+        sx={{ width: "100%", height: "100%", mx: "auto", mb: 1 }}
       />
-      {hover && (
         <>
           <Tooltip title="Upload Avatar">
             <IconButton
               sx={{
                 position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                backgroundColor: "rgba(0, 0, 0, 0.3)",
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-                "& .MuiIconButton-label": {
-                  flexDirection: "column",
+                
+                bottom:3,
+                right: 1,
+
+                backgroundColor: "rgba(50, 168, 82 , 0.95)", // 32a852 = rgb(50, 168, 82)
+                "&:hover": {
+                  backgroundColor: "rgba(50, 168, 82, 1)"
                 },
+                boxShadow: 3,
               }}
-              aria-label="upload picture"
+              aria-label="Editar Imagem"
               component="label"
             >
-              <CloudUploadIcon fontSize="large" />
+              <EditIcon sx={{color: "rgba(255, 255, 255, 1)"}} />
               <input type="file" accept="image/*" hidden onChange={onFileChange} />
             </IconButton>
           </Tooltip>
         </>
-      )}
     </Box>
   );
 }

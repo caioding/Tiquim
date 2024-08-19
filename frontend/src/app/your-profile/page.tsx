@@ -14,7 +14,6 @@ import { Card, CardContent, Fab, Tooltip, useMediaQuery } from "@mui/material";
 import { useYourCampaigns } from "../hooks/useYourCampaigns";
 import { useQueryClient } from "@tanstack/react-query";
 import { getCampaignDetails, getImageCampaign } from "../services/campaign";
-import { getCampaignDetails, getImageCampaign } from "../services/campaign";
 import { useContributions, useContributionsByCampaign } from "../hooks/useUserContributions";
 import { useUser } from "../hooks/useUser";
 import { useEffect, useState } from "react";
@@ -32,10 +31,8 @@ export default function YourProfile() {
   const { user } = useUser(id);
 
   const [avatarUrl, setAvatarUrl] = useState<string>("/placeholder.png");
-  const [imagesUrl, setImagesUrl] = useState<{ [key: string]: string }>({});
-
+  const [imagesUrl, setImagesUrl] = useState<{[key: string]: string}>({})
   useEffect(() => {
-    const fetchAvatarImage = async () => {
     const fetchAvatarImage = async () => {
       if (user?.avatarUrl && user.avatarUrl.length > 0) {
         const image = await getAvatarUser(user.avatarUrl);
@@ -163,7 +160,7 @@ export default function YourProfile() {
                 <Grid item sx={{ width: "20%" }}>
                   <Avatar
                     alt={campaign.title}
-                    src={campaign.imageUrl}
+                    src={imagesUrl[campaign.id] ?? "/placeholder.png"}
                     sx={{ width: 56, height: 56 }}
                   />
                 </Grid>
