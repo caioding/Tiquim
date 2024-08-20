@@ -5,6 +5,7 @@ export function useUser(id: string) {
   const { data, isPending, isError } = useQuery({
     queryKey: ["user", id],
     queryFn: () => getUser(id),
+    enabled: !!id,
   });
 
   return { user: data, isPending, isError };

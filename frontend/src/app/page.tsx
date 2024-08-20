@@ -27,11 +27,8 @@ export default function Campaigns() {
     isPending: regionalPending,
     isError: regionalError,
   } = useRegionalCampaigns(user ? user.state : "", user ? user.city : "");
-  console.log(user?.city);
   const isSmallScreen = useMediaQuery("(max-width:790px)");
   const isMediumScreen = useMediaQuery("(max-width:1155px)");
-
-  console.log(regionalCampaigns);
 
   let cardsPerSlide = 1;
   if (isSmallScreen) {
@@ -121,6 +118,13 @@ export default function Campaigns() {
   };
 
   const showRegionalCampaigns = () => {
+    if (!id) {
+      return (
+        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
+          É necessário está logado para carregar campanhas regionais.
+        </Typography>
+      );
+    }
     if (regionalPending) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
