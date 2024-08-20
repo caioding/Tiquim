@@ -19,7 +19,6 @@ import useRedirectIfLoggedIn from "../hooks/useRedirectIfLoggedIn";
 import useSnackbar from "../hooks/useSnackbar";
 import { login } from "../services/auth";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useCheckAvailableEmail } from "../hooks/useUser";
 import axios from "axios";
 
 export default function Login() {
@@ -29,15 +28,9 @@ export default function Login() {
   const { setSnackbar } = useSnackbar();
 
   const [showPassword, setShowPassword] = React.useState(false);
-  const [emailToCheck, setEmailToCheck] = React.useState<string>("");
-  const { check: isEmailAvailable } = useCheckAvailableEmail(emailToCheck);
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
-  };
-
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmailToCheck(event.target.value);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -50,11 +43,6 @@ export default function Login() {
     };
 
     try {
-      if (isEmailAvailable) {
-        setSnackbar("Email não cadastrado", "error");
-        return;
-      }
-
       const response = await login(credentials);
       if (!response) {
         setSnackbar("Erro ao efetuar o login", "error");
@@ -67,7 +55,7 @@ export default function Login() {
       router.push("/");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response && error.response.status === 401) {
-        setSnackbar("Senha incorreta. Tente novamente.", "error");
+        setSnackbar("Senha ou email incorretos. Tente novamente.", "error");
       } else {
         setSnackbar("Erro ao efetuar o login", "error");
       }
@@ -120,7 +108,6 @@ export default function Login() {
               id="email"
               label="Email"
               name="email"
-              onChange={handleEmailChange}
               autoComplete="email"
               autoFocus
             />

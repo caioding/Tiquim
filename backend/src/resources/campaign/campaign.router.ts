@@ -23,6 +23,7 @@ const upload = multer({ storage: storage });
 const router = Router();
 
 router.get("/", campaignController.index);
+router.get("/region/", isAuth, campaignController.indexRegion);
 router.get("/user", isAuth, campaignController.indexUser);
 router.post("/", isAuth, upload.single("campaignImage"), campaignController.create);
 router.get("/:id", campaignController.read);

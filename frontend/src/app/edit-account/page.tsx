@@ -231,6 +231,12 @@ export default function EditAccount() {
                 onChange={handleStateChange}
                 label="Estado"
                 fullWidth
+                sx={{
+                  backgroundColor: "white",
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "transparent",
+                  },
+                }}
               >
                 {sortedStates?.map((state) => (
                   <MenuItem key={state.sigla} value={state.sigla}>
@@ -251,6 +257,12 @@ export default function EditAccount() {
                 label="Cidade"
                 disabled={!selectedState}
                 fullWidth
+                sx={{
+                  backgroundColor: "white",
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "transparent",
+                  },
+                }}
               >
                 {cities?.map((city) => (
                   <MenuItem key={city.nome} value={city.nome}>
