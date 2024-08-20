@@ -33,6 +33,17 @@ export async function getYourCampaigns(searchQuery: string): Promise<Campaign[]>
   return api.get(`/campaign/user?q=${searchQuery}`).then((response) => response.data);
 }
 
+export async function getRegionalCampaigns(state: string, city: string): Promise<Campaign[]> { 
+  return api
+    .get("/campaign/region", {
+      params: {
+        state: state,
+        city: city,
+      },
+    })
+    .then((response) => response.data);
+}
+
 export async function getUserCampaigns(userId: string): Promise<Campaign[]> {
   return api.get(`campaign/user?userId=${userId}`).then((response) => response.data);
 }

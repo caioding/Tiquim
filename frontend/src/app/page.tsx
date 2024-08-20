@@ -7,8 +7,14 @@ import { PopularCampaignsHeader } from "./components/PopularCampaignsHeader";
 import { CampaignCarousel } from "./components/CampaignCarousel";
 import { Campaign } from "./types/campaign";
 import { useCampaignsSupporters } from "./hooks/useCampaignsSupporters";
+import { RegionalCampaignsHeader } from "./components/RegionalCampaignsHeader";
+import { useRegionalCampaigns } from "./hooks/useRegionalCampaigns";
+import useAuthContext from "./hooks/useAuthContext";
+import { useUser } from "./hooks/useUser";
 
 export default function Campaigns() {
+  const { id } = useAuthContext();
+  const { user } = useUser(id);
   const { campaigns, isPending: campaignsPending, isError: campaignsError } = useCampaigns("");
   const {
     supporters,
@@ -16,8 +22,16 @@ export default function Campaigns() {
     isError: supportersError,
   } = useCampaignsSupporters();
 
+  const {
+    regionalCampaigns,
+    isPending: regionalPending,
+    isError: regionalError,
+  } = useRegionalCampaigns(user ? user.state : "", user ? user.city : "");
+  console.log(user?.city);
   const isSmallScreen = useMediaQuery("(max-width:790px)");
   const isMediumScreen = useMediaQuery("(max-width:1155px)");
+
+  console.log(regionalCampaigns);
 
   let cardsPerSlide = 1;
   if (isSmallScreen) {
@@ -106,10 +120,46 @@ export default function Campaigns() {
     }
   };
 
+  const showRegionalCampaigns = () => {
+    if (regionalPending) {
+      return (
+        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
+          Carregando...
+        </Typography>
+      );
+    } else if (regionalError) {
+      return (
+        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
+          Ocorreu um erro ao carregar as campanhas.
+        </Typography>
+      );
+    } else if (!regionalCampaigns || regionalCampaigns.length === 0) {
+      return (
+        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
+          Não há campanhas disponíveis no momento.
+        </Typography>
+      );
+    } else {
+      const groupedRegionalCampaigns: Array<Campaign[]> = [];
+      for (let i = 0; i < Math.min(regionalCampaigns.length, 12); i += cardsPerSlide) {
+        groupedRegionalCampaigns.push(regionalCampaigns.slice(i, i + cardsPerSlide));
+      }
+      return (
+        <CampaignCarousel
+          groupedCampaigns={groupedRegionalCampaigns}
+          cardsPerSlide={cardsPerSlide}
+        />
+      );
+    }
+  };
+
   return (
     <Container>
       <PopularCampaignsHeader />
       {showPopularCampaigns()}
+      <Box sx={{ mt: 5 }} />
+      <RegionalCampaignsHeader />
+      {showRegionalCampaigns()}
       <Box sx={{ mt: 5 }} />
       <RecentCampaignsHeader />
       {showRecentCampaigns()}
