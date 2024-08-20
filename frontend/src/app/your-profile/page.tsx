@@ -31,7 +31,7 @@ export default function YourProfile() {
   const { user } = useUser(id);
 
   const [avatarUrl, setAvatarUrl] = useState<string>("/placeholder.png");
-  const [imagesUrl, setImagesUrl] = useState<{[key: string]: string}>({})
+  const [imagesUrl, setImagesUrl] = useState<{ [key: string]: string }>({});
   useEffect(() => {
     const fetchAvatarImage = async () => {
       if (user?.avatarUrl && user.avatarUrl.length > 0) {
@@ -62,7 +62,6 @@ export default function YourProfile() {
       fetchCampaignImages();
     }
   }, [campaigns, yourContributions]);
-
 
   const showYourCampaigns = () => {
     if (isPending) {
@@ -190,29 +189,28 @@ export default function YourProfile() {
 
   return (
     <Container maxWidth="lg" sx={{ textAlign: "center", mt: 5, mb: 5 }}>
-      <Box position="relative" display="inline-block" sx={{mb:10}}>
-
-      <Avatar
-        alt={user?.name}
-        src={avatarUrl ?? "fallback-avatar-url"}
-        sx={{ width: 150, height: 150, mx: "auto", mb: 2 }}
-      />
+      <Box position="relative" display="inline-block" sx={{ mb: 10 }}>
+        <Avatar
+          alt={user?.name}
+          src={avatarUrl ?? "fallback-avatar-url"}
+          sx={{ width: 150, height: 150, mx: "auto", mb: 2 }}
+        />
         <Fab
           aria-label="edit"
           onClick={() => {}}
           sx={{
-            position: "absolute", 
-            bottom:3, 
-            right:0, 
-            backgroundColor:"rgba(50, 168, 82 , 0.50)", 
-            boxShadow:"none",
-            "&:hover":{
-              backgroundColor: "rgba(50, 168, 82, 1)"
-            }
+            position: "absolute",
+            bottom: 3,
+            right: 0,
+            backgroundColor: "rgba(50, 168, 82 , 0.50)",
+            boxShadow: "none",
+            "&:hover": {
+              backgroundColor: "rgba(50, 168, 82, 1)",
+            },
           }}
           href="/edit-account"
         >
-          <EditIcon sx={{color:"rgba(255, 255, 255, 1)"}}/>
+          <EditIcon sx={{ color: "rgba(255, 255, 255, 1)" }} />
         </Fab>
       </Box>
 
