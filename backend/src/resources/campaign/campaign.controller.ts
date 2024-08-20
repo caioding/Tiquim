@@ -4,6 +4,7 @@ import {
   createCampaign,
   deleteCampaign,
   listCampaigns,
+  listRegionalCampaigns,
   listUserCampaigns,
   readCampaign,
   updateCampaign,
@@ -166,4 +167,17 @@ const indexUser = async (req: Request, res: Response) => {
   }
 };
 
-export default { index, create, read, update, remove, indexUser };
+const indexRegion = async (req: Request, res: Response) => {
+  const { city, state } = req.query;
+  const skip = req.query.skip ? parseInt(req.query.skip.toString()) : undefined;
+  const take = req.query.take ? parseInt(req.query.take.toString()) : undefined;
+
+  try {
+    const campaigns = await listRegionalCampaigns(city as string, state as string, skip, take);
+    res.status(StatusCodes.OK).json(campaigns);
+  } catch (err) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
+  }
+};
+
+export default { index, create, read, update, remove, indexUser, indexRegion };

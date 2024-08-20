@@ -144,3 +144,35 @@ export const updateCampaign = async (
 export const deleteCampaign = async (id: string, uid: string): Promise<CampaignDto> => {
   return await prisma.campaign.delete({ where: { id: id, userId: uid } });
 };
+
+export const listRegionalCampaigns = async (
+  city: string,
+  state: string,
+  skip?: number,
+  take?: number,
+): Promise<CampaignDto[]> => {
+  const campaignsInCity = await prisma.campaign.findMany({
+    where: {
+      city: city,
+      state: state,
+    },
+    skip: skip,
+    take: take,
+  });
+
+  const remainingTake = take ? take - campaignsInCity.length : undefined;
+  const campaignsInState = await prisma.campaign.findMany({
+    where: {
+      city: {
+        not: city,
+      },
+      state: state,
+    },
+    skip: skip && remainingTake ? Math.max(skip - campaignsInCity.length, 0) : undefined,
+    take: remainingTake,
+  });
+
+  const combinedCampaigns = campaignsInCity.concat(campaignsInState);
+
+  return combinedCampaigns;
+};
