@@ -30,6 +30,8 @@ export default function Campaigns() {
   const isSmallScreen = useMediaQuery("(max-width:790px)");
   const isMediumScreen = useMediaQuery("(max-width:1155px)");
 
+  console.log(regionalCampaigns);
+
   let cardsPerSlide = 1;
   if (isSmallScreen) {
     cardsPerSlide = 1;
