@@ -146,10 +146,10 @@ export default function Campanha() {
             </Typography>
 
             <Box sx={{ mt: 3 }}>
-              <Typography variant="h4" sx={{ fontSize: 26, fontWeight: "bold", color: "#828282" }}>
+              <Typography variant="h6" sx={{fontWeight: "bold", color: "#828282" }}>
                 Arrecadado:
               </Typography>
-              <Typography variant="h4" sx={{ fontSize: 24, color: "#32A852" }}>
+              <Typography variant="h6" sx={{color: "#32A852" }}>
                 R$
                 {typeof percentage === "number" || percentage instanceof Number
                   ? (Math.min(Number(percentage), 1) * campaign.goal).toFixed(2).replace(".", ",")
@@ -167,12 +167,12 @@ export default function Campanha() {
             >
               <Box>
                 <Typography
-                  variant="h5"
-                  sx={{ fontSize: 23, fontWeight: "bold", color: "#828282" }}
+                  variant="h6"
+                  sx={{fontWeight: "bold", color: "#828282" }}
                 >
                   Meta:
                 </Typography>
-                <Typography variant="h6" sx={{ fontSize: 21, color: "#828282" }}>
+                <Typography variant="h6" sx={{color: "#32A852" }}>
                   R${Number(campaign.goal).toFixed(2).replace(".", ",")}
                 </Typography>
               </Box>
@@ -185,12 +185,12 @@ export default function Campanha() {
                 }}
               >
                 <Typography
-                  variant="h5"
-                  sx={{ fontSize: 23, fontWeight: "bold", color: "#828282" }}
+                  variant="h6"
+                  sx={{fontWeight: "bold", color: "#828282" }}
                 >
                   Apoiadores:
                 </Typography>
-                <Typography variant="h6" sx={{ fontSize: 21, color: "#828282" }}>
+                <Typography variant="h6" sx={{color: "#32A852" }}>
                   {supporters}
                 </Typography>
               </Box>
