@@ -31,6 +31,16 @@ export function AboutTabPanel(props: TabPanelProps) {
     completedPercentage = Math.min(percentageValue * 100, 100);
   }
 
+  const getTranslatePercentage = () => {
+    if (completedPercentage === 100) {
+      return "translate(-130%, -50%)";
+    } else if (completedPercentage <= 9) {
+      return "translate(-180%, -50%)";
+    } else {
+      return "translate(-150%, -50%)";
+    }
+  };
+
   return (
     <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`} {...other}>
       {value === index && (
@@ -93,7 +103,7 @@ export function AboutTabPanel(props: TabPanelProps) {
                 position: "absolute",
                 top: "50%",
                 left: "50%",
-                transform: "translate(-160%, -50%)",
+                transform: getTranslatePercentage(),
                 pointerEvents: "none",
               }}
             >

@@ -28,17 +28,30 @@ export const createComment = async (
   comment: CreateCommentDto,
   uid: string,
 ): Promise<CommentDto> => {
+  const campaign = await prisma.campaign.findFirst({
+    select: {
+      id: true,
+      userId: true,
+    },
+    where: {
+      id: comment.campaignId,
+    },
+  });
+
   const supporter = await prisma.contribution.findFirst({
     select: {
       userId: true,
     },
     where: {
+      id: comment.campaignId,
       userId: uid,
     },
   });
 
-  if (!supporter) {
-    throw new Error("Usuário precisa ser um apoiador para comentar");
+  const isAllowedToComment = campaign?.userId === uid || supporter;
+
+  if (!isAllowedToComment) {
+    throw new Error("Usuário precisa ser um apoiador ou o criador da campanha para comentar");
   }
 
   return await prisma.comment.create({
