@@ -2,10 +2,12 @@ import useAuthContext from "@/app/hooks/useAuthContext";
 import useSnackbar from "@/app/hooks/useSnackbar";
 import { useUser } from "@/app/hooks/useUser";
 import { createComment } from "@/app/services/comment";
+import { getAvatarUser } from "@/app/services/user";
 import { CreateCommentDTO } from "@/app/types/comment";
-import { Avatar, Button, Card, CardContent, CardHeader, TextField } from "@mui/material";
+import { Avatar, Box, Button, Card, CardContent, CardHeader, TextField } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 interface CreateCommentProps {
   idCampaign: string;
@@ -23,6 +25,19 @@ export function CreateComment({ idCampaign }: CreateCommentProps) {
   const { setSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
 
+  const [avatar, setAvatar] = useState<string>("/placeholder.png");
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      if (user?.avatarUrl && user?.avatarUrl.length > 0) {
+        const image = await getAvatarUser(user?.avatarUrl);
+        console.log(image);
+        setAvatar(image);
+      }
+    };
+    fetchImage();
+  }, [user?.avatarUrl]);
+
   const handleFormSubmit = async () => {
     if (id === "") {
       setSnackbar("Você precisa estar logado para comentar", "error");
@@ -35,6 +50,7 @@ export function CreateComment({ idCampaign }: CreateCommentProps) {
         queryClient.invalidateQueries({ queryKey: ["comments", idCampaign] });
       } catch (error) {
         setSnackbar("Erro na criação do comentário", "error");
+        console.log(error);
       }
     }
   };
@@ -43,8 +59,19 @@ export function CreateComment({ idCampaign }: CreateCommentProps) {
     <Card sx={{ width: { xs: "100%", sm: "80%" }, height: "auto" }}>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: "red" }} aria-label="recipe">
-            {user?.name?.charAt(0).toUpperCase() ?? "D"}
+          <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
+            {avatar ? (
+              <Box
+                component="img"
+                sx={{
+                  height: 40,
+                  width: 40,
+                }}
+                src={avatar}
+              />
+            ) : (
+              <AccountCircleIcon sx={{ height: "auto", width: "auto" }} />
+            )}
           </Avatar>
         }
         title={user?.name ?? "Desconhecido"}

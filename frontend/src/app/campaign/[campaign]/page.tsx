@@ -232,7 +232,12 @@ export default function Campanha() {
         <CustomTabPanel value={tabValue} index={1}>
           Item Two
         </CustomTabPanel>
-        <CommentsTabPanel idCampaign={idCampaign} value={tabValue} index={2} />
+        <CommentsTabPanel
+          idCampaign={idCampaign}
+          idOwner={campaign.userId}
+          value={tabValue}
+          index={2}
+        />
         <SupportersTabPanel idCampaign={idCampaign} value={tabValue} index={3} />
       </Box>
     </Container>

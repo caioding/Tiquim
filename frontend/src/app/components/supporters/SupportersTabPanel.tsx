@@ -1,4 +1,4 @@
-import { Container, Grid } from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
 import { SupporterCard } from "./SupporterCard";
 import { useCampaignSupporters } from "@/app/hooks/useCampaignSupporters";
 
@@ -10,6 +10,18 @@ interface SupportersTabPanelProps {
 
 export function SupportersTabPanel({ idCampaign, value, index }: SupportersTabPanelProps) {
   const { supporters } = useCampaignSupporters(idCampaign);
+
+  const supportersCards = () => {
+    return (
+      <Grid container spacing={3}>
+        {supporters?.supporters.map((supporter) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={supporter.id}>
+            <SupporterCard name={supporter.name} avatarUrl={supporter.avatarUrl ?? ""} />
+          </Grid>
+        ))}
+      </Grid>
+    );
+  };
 
   return (
     <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`}>
@@ -23,13 +35,13 @@ export function SupportersTabPanel({ idCampaign, value, index }: SupportersTabPa
             p: 3,
           }}
         >
-          <Grid container spacing={3}>
-            {supporters?.supporters.map((supporter) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={supporter.id}>
-                <SupporterCard name={supporter.name} avatarUrl={supporter.avatarUrl ?? ""} />
-              </Grid>
-            ))}
-          </Grid>
+          {supporters?.supporters.length === 0 ? (
+            <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center", mt: 5 }}>
+              A campanha ainda não possui apoiadores!
+            </Typography>
+          ) : (
+            supportersCards()
+          )}
         </Container>
       )}
     </div>

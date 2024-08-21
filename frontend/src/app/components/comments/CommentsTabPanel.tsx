@@ -10,11 +10,12 @@ import useAuthContext from "@/app/hooks/useAuthContext";
 
 interface TabPanelProps {
   idCampaign: string;
+  idOwner: string;
   index: number;
   value: number;
 }
 
-export function CommentsTabPanel({ idCampaign, value, index }: TabPanelProps) {
+export function CommentsTabPanel({ idCampaign, idOwner, value, index }: TabPanelProps) {
   const { comments } = useComments(idCampaign);
 
   const sortedComments = sortByDateDesc(comments ?? []);
@@ -23,7 +24,11 @@ export function CommentsTabPanel({ idCampaign, value, index }: TabPanelProps) {
 
   const { id } = useAuthContext();
 
+  const isOwner = id === idOwner;
+
   const isSupporter = supporters?.supporters.some((supporter) => supporter.id === id);
+
+  const isAllowedToComment = isOwner || isSupporter;
 
   return (
     <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`}>
@@ -41,7 +46,7 @@ export function CommentsTabPanel({ idCampaign, value, index }: TabPanelProps) {
             p: 3,
           }}
         >
-          {isSupporter ? (
+          {isAllowedToComment ? (
             <CreateComment idCampaign={idCampaign} />
           ) : (
             <Typography variant="h6" sx={{ fontWeight: "bold", textAlign: "center" }}>
