@@ -1,31 +1,76 @@
 "use client";
 import React from "react";
-import { InputBase, Box, Container, IconButton, Menu, MenuItem, Typography } from "@mui/material";
+import {
+  InputBase,
+  Box,
+  Container,
+  IconButton,
+  Menu,
+  MenuItem,
+  Typography,
+  Grid,
+  InputLabel,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import SortIcon from "@mui/icons-material/Sort";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { CampaignsHeader } from "../components/CampaignsHeader";
 import { CampaignCard } from "../components/CampaignCard";
 import { useCampaigns } from "../hooks/useCampaigns";
 import { useCampaignsSupporters } from "../hooks/useCampaignsSupporters";
+import { useCities, useStates } from "../hooks/useAddress";
+import { State } from "../types/address";
 
 export default function AllCampaigns() {
   const [searchQuery, setSearchQuery] = React.useState("");
   const { campaigns, isPending, isError } = useCampaigns(searchQuery);
-  const {
-    supporters,
-    isPending: supportersPending,
-    isError: supportersError,
-  } = useCampaignsSupporters();
+  const { supporters } = useCampaignsSupporters();
   const [filteredCampaigns, setFilteredCampaign] = React.useState(campaigns);
-  const [sortBy, setSortBy] = React.useState<"title" | "date">("title");
+  const [sortBy, setSortBy] = React.useState<"title" | "create" | "end" | "popular">("title");
   const [sortDirection, setSortDirection] = React.useState<"asc" | "desc">("asc");
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorElSort, setAnchorElSort] = React.useState<null | HTMLElement>(null);
+  const [anchorElFilter, setAnchorElFilter] = React.useState<null | HTMLElement>(null);
+  const [selectedCategory, setSelectedCategory] = React.useState("");
+  const [selectedState, setSelectedState] = React.useState("");
+  const [selectedCity, setSelectedCity] = React.useState("");
 
-  const open = Boolean(anchorEl);
+  const openSort = Boolean(anchorElSort);
+  const openFilter = Boolean(anchorElFilter);
+
+  const { states } = useStates();
+  function sortStatesByName(states: State[]): State[] {
+    return states.sort((a, b) => a.nome.localeCompare(b.nome));
+  }
+
+  const sortedStates = sortStatesByName(states || []);
+
+  const { cities } = useCities(selectedState);
+
+  const categories = [
+    "Assistência Social",
+    "Educação",
+    "Esportes",
+    "Meio Ambiente",
+    "Proteção Animal",
+    "Cultura",
+    "Sustentabilidade",
+    "Tecnologia e Inclusão",
+    "Saúde",
+  ];
 
   React.useEffect(() => {
     filterAndSortData(sortBy, sortDirection);
-  }, [searchQuery, sortBy, sortDirection, campaigns]);
+  }, [
+    searchQuery,
+    sortBy,
+    sortDirection,
+    selectedCategory,
+    selectedState,
+    selectedCity,
+    campaigns,
+  ]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -33,53 +78,66 @@ export default function AllCampaigns() {
 
   const handleSortChange = (value: string) => {
     const [newSortBy, newSortDirection] = value.split(":");
-    setSortBy(newSortBy as "title" | "date");
+    setSortBy(newSortBy as "title" | "create" | "end" | "popular");
     setSortDirection(newSortDirection as "asc" | "desc");
-    filterAndSortData(newSortBy as "title" | "date", newSortDirection as "asc" | "desc");
-    setAnchorEl(null);
+    filterAndSortData(
+      newSortBy as "title" | "create" | "end" | "popular",
+      newSortDirection as "asc" | "desc",
+    );
+    setAnchorElSort(null);
   };
 
-  const filterAndSortData = (sortBy: "title" | "date", direction: "asc" | "desc") => {
+  const handleStateChange = (event: SelectChangeEvent) => {
+    const newState = event.target.value;
+    setSelectedState(newState);
+    setSelectedCity("");
+  };
+
+  const handleCityChange = (event: SelectChangeEvent) => {
+    const newCity = event.target.value;
+    setSelectedCity(newCity);
+  };
+
+  const filterAndSortData = (
+    sortBy: "title" | "create" | "end" | "popular",
+    direction: "asc" | "desc",
+  ) => {
     if (campaigns) {
-      const filtered = campaigns.sort((a, b) => {
-        let comparison = 0;
-        if (sortBy === "title") {
-          comparison = a.title.localeCompare(b.title);
-        } else if (sortBy === "date") {
-          const dateA = new Date(a.createdAt);
-          const dateB = new Date(b.createdAt);
-          comparison = dateA.getTime() - dateB.getTime();
-        } else if (sortBy === "popular") {
-          const supportersMap = new Map(supporters?.map((item) => [item.campaignId, item.count]));
-          const countA = supportersMap?.get(a.id) || 0;
-          const countB = supportersMap?.get(b.id) || 0;
-          return countB - countA;
-        }
-        return direction === "asc" ? comparison : -comparison;
-      });
+      const filtered = campaigns
+        .filter((campaign) => {
+          return (
+            (selectedCategory ? campaign.category === selectedCategory : true) &&
+            (selectedState ? campaign.state === selectedState : true) &&
+            (selectedCity ? campaign.city === selectedCity : true)
+          );
+        })
+        .sort((a, b) => {
+          let comparison = 0;
+          if (sortBy === "title") {
+            comparison = a.title.localeCompare(b.title);
+          } else if (sortBy === "create") {
+            comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+          } else if (sortBy === "end") {
+            comparison = new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+          } else if (sortBy === "popular") {
+            const supportersMap = new Map(supporters?.map((item) => [item.campaignId, item.count]));
+            const countA = supportersMap?.get(a.id) || 0;
+            const countB = supportersMap?.get(b.id) || 0;
+            return countB - countA;
+          }
+          return direction === "asc" ? comparison : -comparison;
+        });
       setFilteredCampaign(filtered);
     }
   };
 
   const showCampaigns = () => {
     if (isPending) {
-      return (
-        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Carregando...
-        </Typography>
-      );
+      return <Typography variant="h5">Carregando...</Typography>;
     } else if (isError) {
-      return (
-        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Ocorreu um erro ao carregar as campanhas.
-        </Typography>
-      );
+      return <Typography variant="h5">Ocorreu um erro ao carregar as campanhas.</Typography>;
     } else if (campaigns?.length === 0) {
-      return (
-        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Não há campanhas disponíveis no momento.
-        </Typography>
-      );
+      return <Typography variant="h5">Não há campanhas disponíveis no momento.</Typography>;
     } else {
       return filteredCampaigns?.map((campaign) => (
         <CampaignCard key={campaign.id} campaign={campaign} />
@@ -99,12 +157,7 @@ export default function AllCampaigns() {
         }}
       >
         <CampaignsHeader />
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <Box
             component="form"
             sx={{
@@ -123,25 +176,100 @@ export default function AllCampaigns() {
               inputProps={{ "aria-label": "search" }}
               value={searchQuery}
               onChange={handleSearchChange}
-              sx={{
-                color: "inherit",
-                paddingLeft: 1,
-                "& .MuiInputBase-input": {
-                  padding: 1,
-                },
-              }}
+              sx={{ color: "inherit", paddingLeft: 1, "& .MuiInputBase-input": { padding: 1 } }}
             />
           </Box>
-
-          <IconButton onClick={(event) => setAnchorEl(event.currentTarget)} sx={{ height: "100%" }}>
+          <IconButton
+            onClick={(event) => setAnchorElSort(event.currentTarget)}
+            sx={{ height: "100%" }}
+          >
             <SortIcon />
           </IconButton>
-          <Menu anchorEl={anchorEl} open={open} onClose={() => setAnchorEl(null)}>
+          <Menu anchorEl={anchorElSort} open={openSort} onClose={() => setAnchorElSort(null)}>
             <MenuItem onClick={() => handleSortChange("title:asc")}>Nome (A-Z)</MenuItem>
             <MenuItem onClick={() => handleSortChange("title:desc")}>Nome (Z-A)</MenuItem>
             <MenuItem onClick={() => handleSortChange("popular:asc")}>Mais populares</MenuItem>
-            <MenuItem onClick={() => handleSortChange("date:asc")}>Data (Mais antigo)</MenuItem>
-            <MenuItem onClick={() => handleSortChange("date:desc")}>Data (Mais recente)</MenuItem>
+            <MenuItem onClick={() => handleSortChange("create:asc")}>Mais antigos</MenuItem>
+            <MenuItem onClick={() => handleSortChange("create:desc")}>Mais recentes</MenuItem>
+            <MenuItem onClick={() => handleSortChange("end:asc")}>Prazos mais próximos</MenuItem>
+            <MenuItem onClick={() => handleSortChange("end:desc")}>Prazos mais distantes</MenuItem>
+          </Menu>
+          <IconButton
+            onClick={(event) => setAnchorElFilter(event.currentTarget)}
+            sx={{ height: "100%" }}
+          >
+            <FilterAltIcon />
+          </IconButton>
+          <Menu anchorEl={anchorElFilter} open={openFilter} onClose={() => setAnchorElFilter(null)}>
+            <Grid container spacing={2} sx={{ padding: 2 }}>
+              <Grid item xs={12} sm={9}>
+                <InputLabel htmlFor="category" sx={{ color: "black" }}>
+                  Categoria
+                </InputLabel>
+                <Select
+                  id="category"
+                  value={selectedCategory}
+                  onChange={(event) => setSelectedCategory(event.target.value)}
+                  fullWidth
+                  sx={{ backgroundColor: "white" }}
+                >
+                  <MenuItem value="">Nenhum</MenuItem>
+                  {categories.map((category) => (
+                    <MenuItem key={category} value={category}>
+                      {category}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+              <Grid item xs={12} sm={9}>
+                <InputLabel htmlFor="state" sx={{ color: "black" }}>
+                  Estado
+                </InputLabel>
+                <Select
+                  id="state"
+                  value={selectedState}
+                  onChange={handleStateChange}
+                  label="Estado"
+                  fullWidth
+                  sx={{
+                    backgroundColor: "white",
+                  }}
+                >
+                  <MenuItem value="">Nenhum</MenuItem>
+                  {sortedStates.map((state) => (
+                    <MenuItem key={state.sigla} value={state.sigla}>
+                      {state.nome}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+              <Grid item xs={12} sm={9}>
+                <InputLabel htmlFor="city" sx={{ color: "black" }}>
+                  Cidade
+                </InputLabel>
+                <Select
+                  id="city"
+                  value={selectedCity}
+                  onChange={handleCityChange}
+                  fullWidth
+                  sx={{
+                    backgroundColor: "white",
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "transparent",
+                    },
+                  }}
+                  disabled={!selectedState}
+                >
+                  <MenuItem value="">Nenhum</MenuItem>
+                  {cities?.map((city) => (
+                    <MenuItem key={city.nome} value={city.nome}>
+                      {city.nome}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+              <Grid item xs={12}></Grid>
+            </Grid>
           </Menu>
         </Box>
       </Box>
