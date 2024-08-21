@@ -18,12 +18,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useRouter } from "next/navigation";
 import useCampaignOwner from "@/app/hooks/useCampaignOwner";
 import useSnackbar from "@/app/hooks/useSnackbar";
-import { deleteCampaign, getImageCampaign } from "@/app/services/campaign";
+import { deleteCampaign, getImageCampaign, getSupporters } from "@/app/services/campaign";
 import EditCampaignModal from "@/app/components/edit-campaign";
 import { useQueryClient } from "@tanstack/react-query";
 import AlertDialog from "@/app/components/DialogConfirmationDelete";
 import { CommentsTabPanel } from "@/app/components/comments/CommentsTabPanel";
 import { SupportersTabPanel } from "@/app/components/supporters/SupportersTabPanel";
+import { useCampaignPercentage } from "@/app/hooks/useCampaignPercentage";
+import { error } from "console";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -59,6 +61,10 @@ export default function YourCampaign() {
 
   const { isPending, isError, isOwner, campaign } = useCampaignOwner(idCampaign);
 
+  const { percentage } = useCampaignPercentage(idCampaign);
+
+  const [supporters, setSupporters] = useState(0);
+
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [campaignToDelete, setCampaignToDelete] = useState<string>("null");
@@ -74,6 +80,19 @@ export default function YourCampaign() {
     };
     fetchImage();
   }, [campaign]);
+
+  useEffect(() => {
+    const fetchSupporters = async () => {
+      try {
+        const result = await getSupporters(idCampaign);
+        setSupporters(result);
+      } catch (error) {
+        console.error("Erro ao buscar o número de apoiadores:", error);
+      }
+    };
+
+    fetchSupporters();
+  }, [idCampaign]);
 
   if (isPending) {
     return (
@@ -164,6 +183,8 @@ export default function YourCampaign() {
               mx: 4,
               mt: { xs: 0 },
               ml: { xs: 0, sm: 6, md: 10 },
+              mb: { xs: 2 },
+              flexDirection: "column",
             }}
           >
             <Box
@@ -197,9 +218,50 @@ export default function YourCampaign() {
               {campaign.title}
             </Typography>
 
-            <Typography variant="body1" sx={{ color: "#828282", mt: 6 }}>
-              {campaign.preview}
-            </Typography>
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
+                Arrecadado:
+              </Typography>
+              <Typography variant="h6" sx={{ color: "#32A852" }}>
+                R$
+                {typeof percentage === "number" || percentage instanceof Number
+                  ? (Math.min(Number(percentage), 1) * campaign.goal).toFixed(2).replace(".", ",")
+                  : 0}
+              </Typography>
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", sm: "row", md: "row" },
+                justifyContent: "space-between",
+                mt: 3,
+              }}
+            >
+              <Box>
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
+                  Meta:
+                </Typography>
+                <Typography variant="h6" sx={{ color: "#32A852" }}>
+                  R${Number(campaign.goal).toFixed(2).replace(".", ",")}
+                </Typography>
+              </Box>
+              <Box
+                sx={{
+                  mr: { sm: 0, md: 0, lg: 5 },
+                  mt: { xs: 2, sm: 0, md: 0, lg: 0 },
+                  ml: { sm: 2, md: 2 },
+                  mb: { xs: 1 },
+                }}
+              >
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
+                  Apoiadores:
+                </Typography>
+                <Typography variant="h6" sx={{ color: "#32A852" }}>
+                  {supporters}
+                </Typography>
+              </Box>
+            </Box>
           </Box>
         </Grid>
       </Grid>
