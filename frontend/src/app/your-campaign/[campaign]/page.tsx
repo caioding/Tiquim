@@ -63,7 +63,7 @@ export default function YourCampaign() {
 
   const { percentage } = useCampaignPercentage(idCampaign);
 
-  const [supporters, setSupporters] = useState(0)
+  const [supporters, setSupporters] = useState(0);
 
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
@@ -86,10 +86,10 @@ export default function YourCampaign() {
       try {
         const result = await getSupporters(idCampaign);
         setSupporters(result);
-      }catch(error) {
+      } catch (error) {
         console.error("Erro ao buscar o número de apoiadores:", error);
       }
-    }
+    };
 
     fetchSupporters();
   }, [idCampaign]);
@@ -183,7 +183,7 @@ export default function YourCampaign() {
               mx: 4,
               mt: { xs: 0 },
               ml: { xs: 0, sm: 6, md: 10 },
-              mb: { xs : 2},
+              mb: { xs: 2 },
               flexDirection: "column",
             }}
           >
@@ -219,10 +219,10 @@ export default function YourCampaign() {
             </Typography>
 
             <Box sx={{ mt: 3 }}>
-              <Typography variant="h6" sx={{fontWeight: "bold", color: "#828282" }}>
+              <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
                 Arrecadado:
               </Typography>
-              <Typography variant="h6" sx={{color: "#32A852" }}>
+              <Typography variant="h6" sx={{ color: "#32A852" }}>
                 R$
                 {typeof percentage === "number" || percentage instanceof Number
                   ? (Math.min(Number(percentage), 1) * campaign.goal).toFixed(2).replace(".", ",")
@@ -239,13 +239,10 @@ export default function YourCampaign() {
               }}
             >
               <Box>
-                <Typography
-                  variant="h6"
-                  sx={{ fontWeight: "bold", color: "#828282" }}
-                >
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
                   Meta:
                 </Typography>
-                <Typography variant="h6" sx={{color: "#32A852" }}>
+                <Typography variant="h6" sx={{ color: "#32A852" }}>
                   R${Number(campaign.goal).toFixed(2).replace(".", ",")}
                 </Typography>
               </Box>
@@ -257,10 +254,7 @@ export default function YourCampaign() {
                   mb: { xs: 1 },
                 }}
               >
-                <Typography
-                  variant="h6"
-                  sx={{fontWeight: "bold", color: "#828282" }}
-                >
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
                   Apoiadores:
                 </Typography>
                 <Typography variant="h6" sx={{ color: "#32A852" }}>
@@ -268,7 +262,6 @@ export default function YourCampaign() {
                 </Typography>
               </Box>
             </Box>
-
           </Box>
         </Grid>
       </Grid>
