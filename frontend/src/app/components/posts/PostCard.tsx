@@ -1,7 +1,7 @@
-import { Avatar, Box, Button, Card, CardContent, CardHeader, Typography } from "@mui/material";
+import { Button, Card, CardContent, CardHeader, Typography } from "@mui/material";
 import { PostHeader } from "./PostHeader";
 import { Post } from "@/app/types/post";
-import { removePost } from "@/app/services/post";
+import { useRemovePost } from "@/app/hooks/useRemovePost";
 
 interface PostCardProps {
   post: Post;
@@ -9,11 +9,12 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, isOwner }: PostCardProps) {
+  const { mutate } = useRemovePost();
+
   const handleRemoveBtn = () => {
     const check = window.confirm("Você tem certeza que deseja excluir a postagem?");
     if (check) {
-      removePost(post.id);
-      window.location.reload();
+      mutate(post.id);
     }
   };
 
