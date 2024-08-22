@@ -3,15 +3,17 @@ import { getUserName } from "@/app/utils/name";
 import { Avatar, Box, Card, CardHeader } from "@mui/material";
 import { useEffect, useState } from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useRouter } from "next/navigation";
 
 interface SupporterCardProps {
   name: string;
   avatarUrl: string;
+  userId: string
 }
 
-export function SupporterCard({ name, avatarUrl }: SupporterCardProps) {
+export function SupporterCard({ name, avatarUrl, userId }: SupporterCardProps) {
   const [avatar, setAvatar] = useState<string>("/placeholder.png");
-
+  const router = useRouter();
   useEffect(() => {
     const fetchImage = async () => {
       if (avatarUrl && avatarUrl.length > 0) {
@@ -23,6 +25,9 @@ export function SupporterCard({ name, avatarUrl }: SupporterCardProps) {
     fetchImage();
   }, [avatarUrl]);
 
+  const handleAvatarClick = () => {
+    router.push(`/profile/${userId}`)
+  }
   return (
     <Card sx={{ width: { xs: "100%", sm: "200px" }, height: "72px" }}>
       <CardHeader
@@ -34,8 +39,10 @@ export function SupporterCard({ name, avatarUrl }: SupporterCardProps) {
                 sx={{
                   height: 40,
                   width: 40,
+                  cursor: 'pointer'
                 }}
                 src={avatar}
+                onClick={handleAvatarClick}
               />
             ) : (
               <AccountCircleIcon sx={{ height: "auto", width: "auto" }} />

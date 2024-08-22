@@ -87,19 +87,19 @@ export default function Profile() {
     } else if (id === "") {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Realize o login para visualizar suas campanhas.
+          Realize o login para visualizar essas campanhas.
         </Typography>
       );
     } else if (isErrorContribution) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Ocorreu um erro ao carregar suas campanhas.
+          Ocorreu um erro ao carregar as campanhas.
         </Typography>
       );
     } else if (campaigns?.length === 0) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Você ainda não criou nenhuma campanha.
+          Usuário ainda não criou nenhuma campanha.
         </Typography>
       );
     } else {
@@ -149,19 +149,19 @@ export default function Profile() {
     } else if (id === "") {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Realize o login para visualizar suas contribuições.
+          Realize o login para visualizar as contribuições.
         </Typography>
       );
     } else if (isError) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Ocorreu um erro ao carregar suas campanhas.
+          Ocorreu um erro ao carregar as campanhas.
         </Typography>
       );
     } else if (yourContributions?.length === 0) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Você ainda não ajudou nenhuma campanha.
+          Usuário ainda não ajudou nenhuma campanha.
         </Typography>
       );
     } else {
@@ -229,7 +229,7 @@ export default function Profile() {
 
       <Box sx={{ mt: 10, textAlign: "left" }}>
         <Typography variant="h6" fontSize="25px" fontWeight="bold">
-          Campanhas que {user?.name} apoiou
+          {user?.name} apoiou
         </Typography>
 
         <Grid container spacing={2} sx={{ mt: 2 }}>
