@@ -7,32 +7,44 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import useSnackbar from "../hooks/useSnackbar";
-import { getAvatarUser, updateUser } from "../services/user";
-import useAuthContext from "../hooks/useAuthContext";
+import useSnackbar from "../../hooks/useSnackbar";
+import { getAvatarUser, updateUser } from "../../services/user";
+import useAuthContext from "../../hooks/useAuthContext";
 import { Card, CardContent, Fab, Tooltip, useMediaQuery } from "@mui/material";
-import { useYourCampaigns } from "../hooks/useYourCampaigns";
+import { useYourCampaigns } from "../../hooks/useYourCampaigns";
 import { useQueryClient } from "@tanstack/react-query";
-import { getCampaignDetails, getImageCampaign } from "../services/campaign";
-import { useContributions, useCampaignsByContribution } from "../hooks/useUserContributions";
-import { useUser } from "../hooks/useUser";
+import { getCampaignDetails, getImageCampaign } from "../../services/campaign";
+import { useContributions, useCampaignsByContribution } from "../../hooks/useUserContributions";
+import { useUser } from "../../hooks/useUser";
 import { useEffect, useState } from "react";
-import { useUserCampaigns } from "../hooks/useUserCampaigns";
+import { useParams, usePathname } from "next/navigation";
+import { useRouter } from "next/router";
+import { useUserCampaigns } from "@/app/hooks/useUserCampaigns";
 
-export default function YourProfile() {
+export default function Profile() {
+
   const { id } = useAuthContext();
+
+  const pathname = usePathname();
+  const userId = pathname ? pathname.split('/').pop() : null; 
   const queryClient = useQueryClient();
-  const { campaigns, isPending, isError } = useUserCampaigns(id);
-  const { contributions } = useContributions(id);
+  const { campaigns, isPending, isError } = useUserCampaigns(userId!);
+
+  const { contributions } = useContributions(userId!);
   const {
     yourContributions,
     isPending: isPendingContribution,
     isError: isErrorContribution,
+    
   } = useCampaignsByContribution(contributions ?? []);
-  const { user } = useUser(id);
+  
+  const { user: user2 } = useUser(id); //user anterior
+  
+  const { user } = useUser(userId!); //user da path
 
   const [avatarUrl, setAvatarUrl] = useState<string>("/placeholder.png");
-  const [imagesUrl, setImagesUrl] = useState<{[key: string]: string}>({})
+  const [imagesUrl, setImagesUrl] = useState<{ [key: string]: string }>({});
+
   useEffect(() => {
     const fetchAvatarImage = async () => {
       if (user?.avatarUrl && user.avatarUrl.length > 0) {
@@ -41,8 +53,8 @@ export default function YourProfile() {
       }
     };
     fetchAvatarImage();
-    console.log(id)
-  }, [user,id]);
+  }, [user]);
+
 
   useEffect(() => {
     const fetchCampaignImages = async () => {
@@ -64,7 +76,6 @@ export default function YourProfile() {
       fetchCampaignImages();
     }
   }, [campaigns, yourContributions]);
-
 
   const showYourCampaigns = () => {
     if (isPending) {
@@ -128,7 +139,7 @@ export default function YourProfile() {
     }
   };
 
-  const showCampaignsYouHelped = () => {
+  const showCampaignsHelped = () => {
     if (isPendingContribution) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
@@ -192,30 +203,12 @@ export default function YourProfile() {
 
   return (
     <Container maxWidth="lg" sx={{ textAlign: "center", mt: 5, mb: 5 }}>
-      <Box position="relative" display="inline-block" sx={{mb:10}}>
-
-      <Avatar
-        alt={user?.name}
-        src={avatarUrl ?? "fallback-avatar-url"}
-        sx={{ width: 150, height: 150, mx: "auto", mb: 2 }}
-      />
-        <Fab
-          aria-label="edit"
-          onClick={() => {}}
-          sx={{
-            position: "absolute", 
-            bottom:3, 
-            right:0, 
-            backgroundColor:"rgba(50, 168, 82 , 0.50)", 
-            boxShadow:"none",
-            "&:hover":{
-              backgroundColor: "rgba(50, 168, 82, 1)"
-            }
-          }}
-          href="/edit-account"
-        >
-          <EditIcon sx={{color:"rgba(255, 255, 255, 1)"}}/>
-        </Fab>
+      <Box position="relative" display="inline-block" sx={{ mb: 10 }}>
+        <Avatar
+          alt={user?.name}
+          src={avatarUrl ?? "fallback-avatar-url"}
+          sx={{ width: 150, height: 150, mx: "auto", mb: 2 }}
+        />
       </Box>
 
       <Box display="flex" alignItems="center" justifyContent="center" mb={10}>
@@ -226,7 +219,7 @@ export default function YourProfile() {
 
       <Box sx={{ mt: 15, textAlign: "left" }}>
         <Typography variant="h6" fontSize="25px" fontWeight="bold">
-          Suas Campanhas
+          Campanhas de {user?.name}
         </Typography>
 
         <Grid container spacing={2} sx={{ mt: 2 }}>
@@ -236,11 +229,11 @@ export default function YourProfile() {
 
       <Box sx={{ mt: 10, textAlign: "left" }}>
         <Typography variant="h6" fontSize="25px" fontWeight="bold">
-          Campanhas que você apoiou
+          Campanhas que {user?.name} apoiou
         </Typography>
 
         <Grid container spacing={2} sx={{ mt: 2 }}>
-          {showCampaignsYouHelped()}
+          {showCampaignsHelped()}
         </Grid>
       </Box>
     </Container>

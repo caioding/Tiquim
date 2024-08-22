@@ -35,6 +35,9 @@ export async function getYourCampaigns(searchQuery: string): Promise<Campaign[]>
   return api.get(`/campaign/user?q=${searchQuery}`).then((response) => response.data);
 }
 
+export async function getUserCampaigns(userId: string): Promise<Campaign[]> {
+  return api.get(`campaign/user?userId=${userId}`).then((response) => response.data);
+}
 export async function updateCampaign(id: string, campaign: UpdateCampaignDto, file: File | null) {
   const formData = new FormData();
   formData.append("title", campaign.title);
