@@ -71,7 +71,6 @@ export default function EditAccount() {
     const newState = event.target.value;
     setSelectedState(newState);
     setUserInfo({ ...userInfo, state: newState });
-    setUserInfo({ ...userInfo, city: "" });
     setSelectedCity("");
   };
 
@@ -134,16 +133,6 @@ export default function EditAccount() {
       state: userInfo.state.toString(),
       avatarUrl: userInfo.avatarUrl.toString(),
     };
-
-    if (formattedUserInfo.city == "") {
-      setSnackbar("Selecione uma cidade", "error");
-      return;
-    }
-
-    if (formattedUserInfo.state == "") {
-      setSnackbar("Selecione um estado", "error");
-      return;
-    }
 
     try {
       const response = await updateUser(id, formattedUserInfo, selectedFile);
@@ -233,17 +222,20 @@ export default function EditAccount() {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <InputLabel id="stateLabel" sx={{ color: "black" }}>
+              <InputLabel htmlFor="state" sx={{ color: "black" }}>
                 Estado
               </InputLabel>
               <Select
-                labelId="stateLabel"
                 id="state"
                 value={selectedState}
                 onChange={handleStateChange}
+                label="Estado"
                 fullWidth
                 sx={{
                   backgroundColor: "white",
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "transparent",
+                  },
                 }}
               >
                 {sortedStates?.map((state) => (
@@ -255,18 +247,21 @@ export default function EditAccount() {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <InputLabel id="cityLabel" sx={{ color: "black" }}>
+              <InputLabel htmlFor="city" sx={{ color: "black" }}>
                 Cidade
               </InputLabel>
               <Select
-                labelId="cityLabel"
                 id="city"
                 value={selectedCity}
                 onChange={handleCityChange}
+                label="Cidade"
                 disabled={!selectedState}
                 fullWidth
                 sx={{
                   backgroundColor: "white",
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "transparent",
+                  },
                 }}
               >
                 {cities?.map((city) => (
