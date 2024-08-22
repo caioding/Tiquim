@@ -5,6 +5,8 @@ import { ReactQueryClientProvider } from "./components/ReactQueryClient";
 import AuthProvider from "./states/AuthProvider";
 import SnackbarStateProvider from "./states/SnackbarProvider";
 import CustomSnackbar from "./components/CustomSnackbar";
+import { Payment } from "@mui/icons-material";
+import PaymentContext, { PaymentProvider } from "./states/PaymentProvider";
 
 export const metadata: Metadata = {
   title: "Campanhas",
@@ -22,10 +24,12 @@ export default function RootLayout({
         <ReactQueryClientProvider>
           <SnackbarStateProvider>
             <AuthProvider>
-              <Navbar />
-              {children}
-              <CustomSnackbar />
-              <Footer />
+              <PaymentProvider>
+                <Navbar />
+                {children}
+                <CustomSnackbar />
+                <Footer />
+              </PaymentProvider>
             </AuthProvider>
           </SnackbarStateProvider>
         </ReactQueryClientProvider>

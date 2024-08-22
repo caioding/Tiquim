@@ -163,7 +163,7 @@ export default function SignUp() {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" sx={{ mb: 5 }}>
       <CssBaseline />
       <Box
         sx={{
@@ -252,11 +252,10 @@ export default function SignUp() {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <InputLabel id="stateLabel" sx={{ color: "black" }}>
+              <InputLabel htmlFor="state" sx={{ color: "black" }}>
                 Estado
               </InputLabel>
               <Select
-                labelId="stateLabel"
                 id="state"
                 value={selectedState}
                 onChange={handleStateChange}
@@ -264,6 +263,9 @@ export default function SignUp() {
                 fullWidth
                 sx={{
                   backgroundColor: "white",
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "transparent",
+                  },
                 }}
               >
                 {sortedStates?.map((state) => (
@@ -275,18 +277,21 @@ export default function SignUp() {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <InputLabel id="cityLabel" sx={{ color: "black" }}>
+              <InputLabel htmlFor="city" sx={{ color: "black" }}>
                 Cidade
               </InputLabel>
               <Select
-                labelId="cityLabel"
                 id="city"
                 value={selectedCity}
                 onChange={handleCityChange}
+                label="Cidade"
                 disabled={!selectedState}
                 fullWidth
                 sx={{
                   backgroundColor: "white",
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "transparent",
+                  },
                 }}
               >
                 {cities?.map((city) => (
