@@ -12,6 +12,7 @@ import {
   InputLabel,
   Select,
   SelectChangeEvent,
+  Popover,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import SortIcon from "@mui/icons-material/Sort";
@@ -96,6 +97,11 @@ export default function AllCampaigns() {
   const handleCityChange = (event: SelectChangeEvent) => {
     const newCity = event.target.value;
     setSelectedCity(newCity);
+  };
+
+  const handleCategoryChange = (event: SelectChangeEvent) => {
+    const newCategory = event.target.value;
+    setSelectedCategory(newCategory);
   };
 
   const filterAndSortData = (
@@ -200,16 +206,29 @@ export default function AllCampaigns() {
           >
             <FilterAltIcon />
           </IconButton>
-          <Menu anchorEl={anchorElFilter} open={openFilter} onClose={() => setAnchorElFilter(null)}>
+          <Popover
+            anchorEl={anchorElFilter}
+            open={Boolean(anchorElFilter)}
+            onClose={() => setAnchorElFilter(null)}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+          >
             <Grid container spacing={2} sx={{ padding: 2 }}>
               <Grid item xs={12} sm={9}>
-                <InputLabel htmlFor="category" sx={{ color: "black" }}>
+                <InputLabel id="categoryLabel" sx={{ color: "black" }}>
                   Categoria
                 </InputLabel>
                 <Select
+                  labelId="categoryLabel"
                   id="category"
                   value={selectedCategory}
-                  onChange={(event) => setSelectedCategory(event.target.value)}
+                  onChange={handleCategoryChange}
                   fullWidth
                   sx={{ backgroundColor: "white" }}
                 >
@@ -222,14 +241,14 @@ export default function AllCampaigns() {
                 </Select>
               </Grid>
               <Grid item xs={12} sm={9}>
-                <InputLabel htmlFor="state" sx={{ color: "black" }}>
+                <InputLabel id="stateLabel" sx={{ color: "black" }}>
                   Estado
                 </InputLabel>
                 <Select
+                  labelId="stateLabel"
                   id="state"
                   value={selectedState}
                   onChange={handleStateChange}
-                  label="Estado"
                   fullWidth
                   sx={{
                     backgroundColor: "white",
@@ -244,19 +263,17 @@ export default function AllCampaigns() {
                 </Select>
               </Grid>
               <Grid item xs={12} sm={9}>
-                <InputLabel htmlFor="city" sx={{ color: "black" }}>
+                <InputLabel id="cityLabel" sx={{ color: "black" }}>
                   Cidade
                 </InputLabel>
                 <Select
+                  labelId="cityLabel"
                   id="city"
                   value={selectedCity}
                   onChange={handleCityChange}
                   fullWidth
                   sx={{
                     backgroundColor: "white",
-                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "transparent",
-                    },
                   }}
                   disabled={!selectedState}
                 >
@@ -270,7 +287,7 @@ export default function AllCampaigns() {
               </Grid>
               <Grid item xs={12}></Grid>
             </Grid>
-          </Menu>
+          </Popover>
         </Box>
       </Box>
 
