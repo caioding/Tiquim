@@ -29,9 +29,7 @@ export default function Profile() {
     isError: isErrorContribution,
   } = useCampaignsByContribution(contributions ?? []);
 
-  const { user: user2 } = useUser(id); //user anterior
-
-  const { user } = useUser(userId!); //user da path
+  const { user } = useUser(userId!);
 
   const [avatarUrl, setAvatarUrl] = useState<string>("/placeholder.png");
   const [imagesUrl, setImagesUrl] = useState<{ [key: string]: string }>({});

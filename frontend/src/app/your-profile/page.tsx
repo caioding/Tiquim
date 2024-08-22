@@ -37,8 +37,7 @@ export default function YourProfile() {
       }
     };
     fetchAvatarImage();
-    console.log(id);
-  }, [user, id]);
+  }, [user]);
 
   useEffect(() => {
     const fetchCampaignImages = async () => {
