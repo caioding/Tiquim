@@ -1,33 +1,25 @@
 "use client";
 
 import Avatar from "@mui/material/Avatar";
-import EditIcon from "@mui/icons-material/Edit";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import useSnackbar from "../../hooks/useSnackbar";
-import { getAvatarUser, updateUser } from "../../services/user";
+import { getAvatarUser } from "../../services/user";
 import useAuthContext from "../../hooks/useAuthContext";
 import { Card, CardContent, Fab, Tooltip, useMediaQuery } from "@mui/material";
-import { useYourCampaigns } from "../../hooks/useYourCampaigns";
-import { useQueryClient } from "@tanstack/react-query";
-import { getCampaignDetails, getImageCampaign } from "../../services/campaign";
+import { getImageCampaign } from "../../services/campaign";
 import { useContributions, useCampaignsByContribution } from "../../hooks/useUserContributions";
 import { useUser } from "../../hooks/useUser";
 import { useEffect, useState } from "react";
-import { useParams, usePathname } from "next/navigation";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import { useUserCampaigns } from "@/app/hooks/useUserCampaigns";
 
 export default function Profile() {
-
   const { id } = useAuthContext();
 
   const pathname = usePathname();
-  const userId = pathname ? pathname.split('/').pop() : null; 
-  const queryClient = useQueryClient();
+  const userId = pathname ? pathname.split("/").pop() : null;
   const { campaigns, isPending, isError } = useUserCampaigns(userId!);
 
   const { contributions } = useContributions(userId!);
@@ -35,11 +27,10 @@ export default function Profile() {
     yourContributions,
     isPending: isPendingContribution,
     isError: isErrorContribution,
-    
   } = useCampaignsByContribution(contributions ?? []);
-  
+
   const { user: user2 } = useUser(id); //user anterior
-  
+
   const { user } = useUser(userId!); //user da path
 
   const [avatarUrl, setAvatarUrl] = useState<string>("/placeholder.png");
@@ -54,7 +45,6 @@ export default function Profile() {
     };
     fetchAvatarImage();
   }, [user]);
-
 
   useEffect(() => {
     const fetchCampaignImages = async () => {

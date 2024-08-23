@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 interface SupporterCardProps {
   name: string;
   avatarUrl: string;
-  userId: string
+  userId: string;
 }
 
 export function SupporterCard({ name, avatarUrl, userId }: SupporterCardProps) {
@@ -26,8 +26,8 @@ export function SupporterCard({ name, avatarUrl, userId }: SupporterCardProps) {
   }, [avatarUrl]);
 
   const handleAvatarClick = () => {
-    router.push(`/profile/${userId}`)
-  }
+    router.push(`/profile/${userId}`);
+  };
   return (
     <Card sx={{ width: { xs: "100%", sm: "200px" }, height: "72px" }}>
       <CardHeader
@@ -39,7 +39,7 @@ export function SupporterCard({ name, avatarUrl, userId }: SupporterCardProps) {
                 sx={{
                   height: 40,
                   width: 40,
-                  cursor: 'pointer'
+                  cursor: "pointer",
                 }}
                 src={avatar}
                 onClick={handleAvatarClick}

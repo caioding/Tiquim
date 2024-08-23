@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Avatar, Box, IconButton, Tooltip } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import InputFileUpload from "./FileUpload";
 
 interface UploadableAvatarProps {
   avatarUrl: string;
@@ -28,29 +27,29 @@ export default function UploadableAvatar({ avatarUrl, onFileChange }: Uploadable
         src={avatarUrl}
         sx={{ width: "100%", height: "100%", mx: "auto", mb: 1 }}
       />
-        <>
-          <Tooltip title="Upload Avatar">
-            <IconButton
-              sx={{
-                position: "absolute",
-                
-                bottom:3,
-                right: 1,
+      <>
+        <Tooltip title="Upload Avatar">
+          <IconButton
+            sx={{
+              position: "absolute",
 
-                backgroundColor: "rgba(50, 168, 82 , 0.95)", // 32a852 = rgb(50, 168, 82)
-                "&:hover": {
-                  backgroundColor: "rgba(50, 168, 82, 1)"
-                },
-                boxShadow: 3,
-              }}
-              aria-label="Editar Imagem"
-              component="label"
-            >
-              <EditIcon sx={{color: "rgba(255, 255, 255, 1)"}} />
-              <input type="file" accept="image/*" hidden onChange={onFileChange} />
-            </IconButton>
-          </Tooltip>
-        </>
+              bottom: 3,
+              right: 1,
+
+              backgroundColor: "rgba(50, 168, 82 , 0.95)", // 32a852 = rgb(50, 168, 82)
+              "&:hover": {
+                backgroundColor: "rgba(50, 168, 82, 1)",
+              },
+              boxShadow: 3,
+            }}
+            aria-label="Editar Imagem"
+            component="label"
+          >
+            <EditIcon sx={{ color: "rgba(255, 255, 255, 1)" }} />
+            <input type="file" accept="image/*" hidden onChange={onFileChange} />
+          </IconButton>
+        </Tooltip>
+      </>
     </Box>
   );
 }

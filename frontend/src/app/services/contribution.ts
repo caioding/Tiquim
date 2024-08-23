@@ -4,10 +4,9 @@ import { Campaign } from "../types/campaign";
 import { getCampaignDetails } from "./campaign";
 
 export async function getContributions(userId: string): Promise<Contribution[]> {
-  if(userId) {
-  return api.get(`/contribution?userId=${userId}`).then((response) => response.data);  
-  }
-  else return api.get(`/contribution`,  { params: { userId } }).then((response) => response.data);
+  if (userId) {
+    return api.get(`/contribution?userId=${userId}`).then((response) => response.data);
+  } else return api.get(`/contribution`, { params: { userId } }).then((response) => response.data);
 }
 
 export async function getCampaignsContributed(contributions: Contribution[]): Promise<Campaign[]> {
