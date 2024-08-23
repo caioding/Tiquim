@@ -8,6 +8,7 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const isAuth = (req: Request, res: Response, next: NextFunction) => {
-  if (req.session.userTypeId === UserType.CLIENT) next();
+  if (req.session.userTypeId === UserType.CLIENT || req.session.userTypeId === UserType.ADMIN)
+    next();
   else return res.status(StatusCodes.FORBIDDEN).json(ReasonPhrases.FORBIDDEN);
 };
