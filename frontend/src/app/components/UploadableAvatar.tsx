@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Avatar, Box, IconButton, Tooltip } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import InputFileUpload from "./FileUpload";
 
 interface UploadableAvatarProps {
   avatarUrl: string;

@@ -1,34 +1,39 @@
 "use client";
 
 import Avatar from "@mui/material/Avatar";
-import EditIcon from "@mui/icons-material/Edit";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { getAvatarUser } from "../services/user";
-import useAuthContext from "../hooks/useAuthContext";
-import { Card, CardContent, Fab, Tooltip } from "@mui/material";
-import { useQueryClient } from "@tanstack/react-query";
-import { getImageCampaign } from "../services/campaign";
-import { useContributions, useCampaignsByContribution } from "../hooks/useUserContributions";
-import { useUser } from "../hooks/useUser";
+import { getAvatarUser } from "../../services/user";
+import useAuthContext from "../../hooks/useAuthContext";
+import { Card, CardContent, Fab, Tooltip, useMediaQuery } from "@mui/material";
+import { getImageCampaign } from "../../services/campaign";
+import { useContributions, useCampaignsByContribution } from "../../hooks/useUserContributions";
+import { useUser } from "../../hooks/useUser";
 import { useEffect, useState } from "react";
-import { useUserCampaigns } from "../hooks/useUserCampaigns";
+import { usePathname } from "next/navigation";
+import { useUserCampaigns } from "@/app/hooks/useUserCampaigns";
 
-export default function YourProfile() {
+export default function Profile() {
   const { id } = useAuthContext();
-  const { campaigns, isPending, isError } = useUserCampaigns(id);
-  const { contributions } = useContributions(id);
+
+  const pathname = usePathname();
+  const userId = pathname ? pathname.split("/").pop() : null;
+  const { campaigns, isPending, isError } = useUserCampaigns(userId!);
+
+  const { contributions } = useContributions(userId!);
   const {
     yourContributions,
     isPending: isPendingContribution,
     isError: isErrorContribution,
   } = useCampaignsByContribution(contributions ?? []);
-  const { user } = useUser(id);
+
+  const { user } = useUser(userId!);
 
   const [avatarUrl, setAvatarUrl] = useState<string>("/placeholder.png");
   const [imagesUrl, setImagesUrl] = useState<{ [key: string]: string }>({});
+
   useEffect(() => {
     const fetchAvatarImage = async () => {
       if (user?.avatarUrl && user.avatarUrl.length > 0) {
@@ -70,19 +75,19 @@ export default function YourProfile() {
     } else if (id === "") {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Realize o login para visualizar suas campanhas.
+          Realize o login para visualizar essas campanhas.
         </Typography>
       );
     } else if (isErrorContribution) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Ocorreu um erro ao carregar suas campanhas.
+          Ocorreu um erro ao carregar as campanhas.
         </Typography>
       );
     } else if (campaigns?.length === 0) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Você ainda não criou nenhuma campanha.
+          Usuário ainda não criou nenhuma campanha.
         </Typography>
       );
     } else {
@@ -122,7 +127,7 @@ export default function YourProfile() {
     }
   };
 
-  const showCampaignsYouHelped = () => {
+  const showCampaignsHelped = () => {
     if (isPendingContribution) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
@@ -132,19 +137,19 @@ export default function YourProfile() {
     } else if (id === "") {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Realize o login para visualizar suas contribuições.
+          Realize o login para visualizar as contribuições.
         </Typography>
       );
     } else if (isError) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Ocorreu um erro ao carregar suas campanhas.
+          Ocorreu um erro ao carregar as campanhas.
         </Typography>
       );
     } else if (yourContributions?.length === 0) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Você ainda não ajudou nenhuma campanha.
+          Usuário ainda não ajudou nenhuma campanha.
         </Typography>
       );
     } else {
@@ -192,23 +197,6 @@ export default function YourProfile() {
           src={avatarUrl ?? "fallback-avatar-url"}
           sx={{ width: 150, height: 150, mx: "auto", mb: 2 }}
         />
-        <Fab
-          aria-label="edit"
-          onClick={() => {}}
-          sx={{
-            position: "absolute",
-            bottom: 3,
-            right: 0,
-            backgroundColor: "rgba(50, 168, 82 , 0.50)",
-            boxShadow: "none",
-            "&:hover": {
-              backgroundColor: "rgba(50, 168, 82, 1)",
-            },
-          }}
-          href="/edit-account"
-        >
-          <EditIcon sx={{ color: "rgba(255, 255, 255, 1)" }} />
-        </Fab>
       </Box>
 
       <Box display="flex" alignItems="center" justifyContent="center" mb={10}>
@@ -219,7 +207,7 @@ export default function YourProfile() {
 
       <Box sx={{ mt: 15, textAlign: "left" }}>
         <Typography variant="h6" fontSize="25px" fontWeight="bold">
-          Suas Campanhas
+          Campanhas de {user?.name}
         </Typography>
 
         <Grid container spacing={2} sx={{ mt: 2 }}>
@@ -229,11 +217,11 @@ export default function YourProfile() {
 
       <Box sx={{ mt: 10, textAlign: "left" }}>
         <Typography variant="h6" fontSize="25px" fontWeight="bold">
-          Campanhas que você apoiou
+          {user?.name} apoiou
         </Typography>
 
         <Grid container spacing={2} sx={{ mt: 2 }}>
-          {showCampaignsYouHelped()}
+          {showCampaignsHelped()}
         </Grid>
       </Box>
     </Container>

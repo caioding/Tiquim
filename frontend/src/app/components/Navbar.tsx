@@ -31,7 +31,6 @@ const navItems = [
   { name: "Inicio", path: "/" },
   { name: "Todas as Campanhas", path: "/all-campaigns" },
   { name: "Suas Campanhas", path: "/your-campaigns" },
-  { name: "Mensagem", path: "#" },
   { name: "Perfil", path: "/your-profile" },
 ];
 
