@@ -48,9 +48,11 @@ const create = async (req: Request, res: Response) => {
   try {
     const newComment = await createReportComment(comment, uid);
     res.status(StatusCodes.OK).json(newComment);
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
+    if (err.message === "Só é possível denunciar uma vez") {
+      return res.status(StatusCodes.BAD_REQUEST).json({ error: err.message });
+    }
   }
 };
 

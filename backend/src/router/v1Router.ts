@@ -8,7 +8,7 @@ import paymentMethodRouter from "../resources/paymentMethod/paymentMethod.router
 import contributionRouter from "../resources/contribution/contribution.router"
 import rewardRouter from "../resources/reward/reward.router"
 import commentRouter from "../resources/comment/comment.router"
-import reportCommentRouter from "../resources/commentReport/reportComment.router"
+import reportCommentRouter from "../resources/reportComment/reportComment.router"
 
 const router = Router();
 
