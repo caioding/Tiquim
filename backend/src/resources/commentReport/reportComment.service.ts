@@ -1,15 +1,15 @@
 import { Request } from "express";
 import { PrismaClient } from "@prisma/client";
-import { CommentReportDto, CreateCommentReportDto } from "./commentReport.types";
+import { reportCommentDto, CreateReportCommentDto } from "./reportComment.types";
 
 const prisma = new PrismaClient();
 
-export const listCommentReports = async (
+export const listReportComments = async (
   campaignId: string,
   skip?: number,
   take?: number,
-): Promise<CommentReportDto[]> => {
-  return prisma.commentReport.findMany({
+): Promise<reportCommentDto[]> => {
+  return prisma.reportComment.findMany({
     select: {
       id: true,
       commentId: true,
@@ -23,10 +23,10 @@ export const listCommentReports = async (
   });
 };
 
-export const createCommentReport = async (
-  commentReport: CreateCommentReportDto,
+export const createReportComment = async (
+  commentReport: CreateReportCommentDto,
   uid: string,
-): Promise<CommentReportDto> => {
+): Promise<reportCommentDto> => {
   const comment = await prisma.comment.findUnique({
     select: {
       id: true,
@@ -40,7 +40,7 @@ export const createCommentReport = async (
     throw new Error("O Comentário à ser denunciado não existe");
   }
 
-  const alreadyReported = await prisma.commentReport.findFirst({
+  const alreadyReported = await prisma.reportComment.findFirst({
     select: { id: true },
     where: { commentId: comment.id, userId: uid },
   });
@@ -49,7 +49,7 @@ export const createCommentReport = async (
     throw new Error("Só é possível denunciar uma vez");
   }
 
-  return await prisma.commentReport.create({
+  return await prisma.reportComment.create({
     select: {
       id: true,
       commentId: true,
@@ -64,10 +64,10 @@ export const createCommentReport = async (
   });
 };
 
-export const deleteCommentReport = async (id: string): Promise<CommentReportDto> => {
-  return await prisma.commentReport.delete({ where: { id: id } });
+export const deleteReportComment = async (id: string): Promise<reportCommentDto> => {
+  return await prisma.reportComment.delete({ where: { id: id } });
 };
 
-export const deleteAllCommentReport = async (commentId: string): Promise<void> => {
-  await prisma.commentReport.deleteMany({ where: { commentId: commentId } });
+export const deleteAllReportComments = async (commentId: string): Promise<void> => {
+  await prisma.reportComment.deleteMany({ where: { commentId: commentId } });
 };

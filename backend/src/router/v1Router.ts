@@ -8,7 +8,7 @@ import paymentMethodRouter from "../resources/paymentMethod/paymentMethod.router
 import contributionRouter from "../resources/contribution/contribution.router"
 import rewardRouter from "../resources/reward/reward.router"
 import commentRouter from "../resources/comment/comment.router"
-import commentReportRouter from "../resources/commentReport/commentReport.router"
+import reportCommentRouter from "../resources/commentReport/reportComment.router"
 
 const router = Router();
 
@@ -36,7 +36,7 @@ rewardRouter);
 router.use("/comment", // #swagger.tags = ['Comment']
 commentRouter);
 
-router.use("/commentReport", // #swagger.tags = ['CommentReport']
-    commentReportRouter);
+router.use("/reportComment", // #swagger.tags = ['CommentReport']
+reportCommentRouter);
     
 export default router;

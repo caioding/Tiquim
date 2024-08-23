@@ -28,7 +28,7 @@ model User {
   userType       UserType        @relation(fields: [userTypeId], references: [id])
   userRewards    UserReward[]
   Comment        Comment[]
-  CommentReport  CommentReport[]
+  CommentReport  reportComment[]
 
   @@index([userTypeId], map: "users_user_type_id_fkey")
   @@map("users")
@@ -183,14 +183,14 @@ model Comment {
   updatedAt     DateTime        @updatedAt @map("updated_at")
   campaign      Campaign        @relation(fields: [campaignId], references: [id])
   user          User            @relation(fields: [userId], references: [id])
-  CommentReport CommentReport[]
+  CommentReport reportComment[]
 
   @@index([campaignId], map: "commentsCampaignId_fkey")
   @@index([userId], map: "commentsUserId_fkey")
   @@map("comments")
 }
 
-model CommentReport {
+model reportComment {
   id        String   @id @default(uuid()) @db.Char(36)
   commentId String   @map("comment_id") @db.Char(36)
   userId    String   @map("user_id") @db.Char(36)
@@ -200,5 +200,5 @@ model CommentReport {
   user      User     @relation(fields: [userId], references: [id])
 
   @@index([commentId], map: "reportComments_fkey")
-  @@map("comment_reports")
+  @@map("report_comments")
 }

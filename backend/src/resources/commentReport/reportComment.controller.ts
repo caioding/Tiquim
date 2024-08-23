@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { CreateCommentReportDto } from "./commentReport.types";
+import { CreateReportCommentDto } from "./reportComment.types";
 import {
-  createCommentReport,
-  deleteAllCommentReport,
-  deleteCommentReport,
-  listCommentReports,
-} from "./commentReport.service";
+  createReportComment,
+  deleteAllReportComments,
+  deleteReportComment,
+  listReportComments,
+} from "./reportComment.service";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 
 const index = async (req: Request, res: Response) => {
@@ -24,7 +24,7 @@ const index = async (req: Request, res: Response) => {
   const skip = req.query.skip ? parseInt(req.query.skip.toString()) : undefined;
   const take = req.query.take ? parseInt(req.query.take.toString()) : undefined;
   try {
-    const comments = await listCommentReports(campaignId, skip, take);
+    const comments = await listReportComments(campaignId, skip, take);
     res.status(StatusCodes.OK).json(comments);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
@@ -43,10 +43,10 @@ const create = async (req: Request, res: Response) => {
     schema: { $ref: '#/definitions/Usuario' }
     }
   */
-  const comment = req.body as CreateCommentReportDto;
+  const comment = req.body as CreateReportCommentDto;
   const uid = req.session.uid!;
   try {
-    const newComment = await createCommentReport(comment, uid);
+    const newComment = await createReportComment(comment, uid);
     res.status(StatusCodes.OK).json(newComment);
   } catch (err) {
     console.log(err);
@@ -68,7 +68,7 @@ const remove = async (req: Request, res: Response) => {
   */
   const { commentReportId } = req.params;
   try {
-    await deleteCommentReport(commentReportId);
+    await deleteReportComment(commentReportId);
     res.status(StatusCodes.NO_CONTENT).json();
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
@@ -89,7 +89,7 @@ const removeAll = async (req: Request, res: Response) => {
   */
   const { commentId } = req.params;
   try {
-    await deleteAllCommentReport(commentId);
+    await deleteAllReportComments(commentId);
     res.status(StatusCodes.NO_CONTENT).json();
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
