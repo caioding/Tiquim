@@ -9,6 +9,7 @@ import contributionRouter from "../resources/contribution/contribution.router"
 import rewardRouter from "../resources/reward/reward.router"
 import commentRouter from "../resources/comment/comment.router"
 import reportCommentRouter from "../resources/reportComment/reportComment.router"
+import reportCampaignRouter from "../resources/reportCampaign/reportCampaign.router"
 
 const router = Router();
 
@@ -36,7 +37,10 @@ rewardRouter);
 router.use("/comment", // #swagger.tags = ['Comment']
 commentRouter);
 
-router.use("/reportComment", // #swagger.tags = ['CommentReport']
+router.use("/reportComment", // #swagger.tags = ['ReportCampaign']
 reportCommentRouter);
+
+router.use("/reportCampaign", // #swagger.tags = ['ReportCampaign']
+reportCampaignRouter);
     
 export default router;
