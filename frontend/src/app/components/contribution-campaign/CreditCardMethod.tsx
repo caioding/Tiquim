@@ -5,6 +5,8 @@ import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import AddressForm from "./AddressForm";
 import CreditCardDetails from "./CreditCardDetails";
+import PaymentContext from "@/app/states/PaymentProvider";
+import { createAddress } from "@/app/services/address";
 
 const steps = ["Detalhes do Pagamento", "Endereço de Cobrança", "Revisão de Pagamento"];
 
@@ -20,17 +22,68 @@ function getStepContent(step: number) {
       throw new Error("Passo desconhecido");
   }
 }
+const initialAddressInfoState = {
+  cep: "",
+  street: "",
+  number: "",
+  neighborhood: "",
+  city: "",
+  uf: "",
+  country: "",
+}
+
 
 export default function CreditCardMethod() {
   const [activeStep, setActiveStep] = React.useState(0);
-
+  const {amount, contributionAmount, cardInfo, addressInfo, paymentMethod, setAmount} = React.useContext(PaymentContext)
+  
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if(activeStep === 2 && paymentMethod === "credit") {
+       //hora que confirma o pagamento pq chegou na última aba e o usuário escolheu cartão de crédito
+      handleSubmit()
+
+    }
+    else setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
+
+  const handleSubmit = async () => {
+    
+     console.log("fim da pagina, hora de guardar os dados");
+     console.log("confirmando operação.");
+     console.log(amount);
+     console.log(contributionAmount)
+     console.log(cardInfo);
+     console.log(addressInfo);
+
+     //como nao temos como salvar o cartão, mas sim o método de pagamento, 
+     //seguirei por enquanto salvando so o endereço
+
+     
+    const formatedAddressData = {
+      ...initialAddressInfoState,
+      cep: addressInfo.zip,
+      street: addressInfo.zip,
+      number: addressInfo.number.toString(),
+      neighborhood: addressInfo.neighborhood,
+      city: addressInfo.city,
+      uf: addressInfo.state,
+      country: addressInfo.country,
+
+    }
+
+    console.log("Sending address data:", formatedAddressData);
+    
+    try {
+      const response = await createAddress(formatedAddressData);
+      console.log("Endereço criado com sucesso:", response);
+    } catch (error) {
+      console.error("Erro ao criar o endereço:", error);
+    }
+  }
 
   return (
     <Box sx={{ width: "80%", m: "auto" }}>
