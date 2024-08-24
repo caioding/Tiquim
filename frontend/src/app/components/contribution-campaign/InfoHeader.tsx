@@ -15,8 +15,14 @@ interface InfoProps {
 }
 
 export default function InfoHeader({ onPaymentMethodChange }: InfoProps) {
-  const {amount, setAmount, contributionAmount, setContributionAmount, paymentMethod, setPaymentMethod } =
-    useContext(PaymentContext);
+  const {
+    amount,
+    setAmount,
+    contributionAmount,
+    setContributionAmount,
+    paymentMethod,
+    setPaymentMethod,
+  } = useContext(PaymentContext);
 
   const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const method = (event.target as HTMLInputElement).value;

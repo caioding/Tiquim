@@ -1,3 +1,4 @@
+import { CreatePaymentMethodDto } from "../types/payment";
 import api from "./api";
 
 interface PaymentMethod {
@@ -15,4 +16,34 @@ export async function getPaymentMethod(type: string): Promise<string> {
   );
 
   return paymentMethod.id;
+}
+
+export async function createPaymentMethod(cardData: CreatePaymentMethodDto, paymentMethod: string) {
+  const formData = new FormData();
+
+  if (paymentMethod === "credit") {
+    formData.append("type", "CREDIT");
+    formData.append("cardHolderName", cardData.cardHolderName!);
+    formData.append("cardExpiryDate", cardData.expirationDate!);
+    formData.append("cardLastDigits", cardData.cardLastDigits!);
+    formData.append("cvv", cardData.cvv!);
+
+    return api
+      .post(`/paymentMethod`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => response.data);
+  } else if (paymentMethod === "pix") {
+    formData.append("type", "PIX");
+
+    return api
+      .post(`/paymentMethod`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => response.data);
+  }
 }

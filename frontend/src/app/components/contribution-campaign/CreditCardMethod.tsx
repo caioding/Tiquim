@@ -7,6 +7,7 @@ import AddressForm from "./AddressForm";
 import CreditCardDetails from "./CreditCardDetails";
 import PaymentContext from "@/app/states/PaymentProvider";
 import { createAddress } from "@/app/services/address";
+import { createPaymentMethod } from "@/app/services/paymentMethod";
 
 const steps = ["Detalhes do Pagamento", "Endereço de Cobrança", "Revisão de Pagamento"];
 
@@ -30,20 +31,25 @@ const initialAddressInfoState = {
   city: "",
   uf: "",
   country: "",
-}
+};
 
+const initialCardDataState = {
+  cardNumber: "",
+  cardHolderName: "",
+  expirationDate: "",
+  cvv: "",
+};
 
 export default function CreditCardMethod() {
   const [activeStep, setActiveStep] = React.useState(0);
-  const {amount, contributionAmount, cardInfo, addressInfo, paymentMethod, setAmount} = React.useContext(PaymentContext)
-  
-  const handleNext = () => {
-    if(activeStep === 2 && paymentMethod === "credit") {
-       //hora que confirma o pagamento pq chegou na última aba e o usuário escolheu cartão de crédito
-      handleSubmit()
+  const { amount, contributionAmount, cardInfo, addressInfo, paymentMethod, setAmount } =
+    React.useContext(PaymentContext);
 
-    }
-    else setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  const handleNext = () => {
+    if (activeStep === 2 && paymentMethod === "credit") {
+      //hora que confirma o pagamento pq chegou na última aba e o usuário escolheu cartão de crédito
+      handleSubmit();
+    } else setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
@@ -51,18 +57,18 @@ export default function CreditCardMethod() {
   };
 
   const handleSubmit = async () => {
-    
-     console.log("fim da pagina, hora de guardar os dados");
-     console.log("confirmando operação.");
-     console.log(amount);
-     console.log(contributionAmount)
-     console.log(cardInfo);
-     console.log(addressInfo);
+    console.log("fim da pagina, hora de guardar os dados");
+    console.log("confirmando operação.");
+    console.log(amount);
+    console.log(contributionAmount);
+    console.log(cardInfo);
+    console.log(addressInfo);
 
-     //como nao temos como salvar o cartão, mas sim o método de pagamento, 
-     //seguirei por enquanto salvando so o endereço
+    //como nao temos como salvar o cartão, mas sim o método de pagamento,
 
-     
+    //update: coloquei o cartão no método de pagamento
+    //seguirei por enquanto salvando so o endereço
+
     const formatedAddressData = {
       ...initialAddressInfoState,
       cep: addressInfo.zip,
@@ -72,18 +78,42 @@ export default function CreditCardMethod() {
       city: addressInfo.city,
       uf: addressInfo.state,
       country: addressInfo.country,
+    };
 
-    }
-
-    console.log("Sending address data:", formatedAddressData);
-    
+    const formattedCardData = {
+      ...initialCardDataState,
+      cardNumber: cardInfo.cardNumber,
+      cardHolderName: cardInfo.cardHolderName,
+      expirationDate: cardInfo.expirationDate,
+      cardLastDigits: cardInfo.cardNumber.slice(-4),
+      cvv: cardInfo.cvv,
+    };
+    //console.log("Sending address data:", formatedAddressData);
+    console.log("Sending Card data:", formattedCardData);
+    console.log("Forma de pagamento", paymentMethod);
+    /*
     try {
       const response = await createAddress(formatedAddressData);
       console.log("Endereço criado com sucesso:", response);
     } catch (error) {
       console.error("Erro ao criar o endereço:", error);
     }
-  }
+     */
+
+    try {
+      if (paymentMethod === "credit") {
+        console.log("entrou no credito auau");
+        const response = await createPaymentMethod(formattedCardData, paymentMethod);
+        console.log("Forma de pagamento via cartão cadastrada");
+      } else if (paymentMethod === "pix") {
+        // outra página
+        const response = await createPaymentMethod(formattedCardData, paymentMethod);
+        console.log("Forma de pagamento via pix cadastrada");
+      }
+    } catch (err) {
+      console.log("Erro ao cadastrar forma de pagamento");
+    }
+  };
 
   return (
     <Box sx={{ width: "80%", m: "auto" }}>

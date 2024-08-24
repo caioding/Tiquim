@@ -8,13 +8,34 @@ import QRCode from "qrcode.react";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
 import { Button } from "@mui/material";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import PaymentContext from "@/app/states/PaymentProvider";
+import { createPaymentMethod } from "@/app/services/paymentMethod";
+
+const initialPixState = {
+  // a ideia no momento seria um cartão vazio
+};
 
 export default function PixMethod() {
   const [pixKey, setPixKey] = React.useState("");
+  const { amount, contributionAmount, cardInfo, addressInfo, paymentMethod, setAmount } =
+    React.useContext(PaymentContext);
 
   React.useEffect(() => {
     setPixKey(uuidv4());
   }, []);
+
+  const handleSubmit = async () => {
+    console.log("Forma de pagamento:", paymentMethod);
+    try {
+      if (paymentMethod === "pix") {
+        console.log("entrou no pix uaua");
+        const response = await createPaymentMethod(initialPixState, paymentMethod);
+        console.log("Forma de pagamento via pix cadastrada");
+      }
+    } catch (err) {
+      console.log("Erro ao cadastrar forma de pagamento:", err);
+    }
+  };
 
   return (
     <Box sx={{ width: "80%", m: "auto" }}>
@@ -50,6 +71,7 @@ export default function PixMethod() {
                   color: "white",
                   "&:hover": { backgroundColor: "#008000" },
                 }}
+                onClick={handleSubmit}
               >
                 Confirmar
               </Button>

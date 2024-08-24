@@ -50,6 +50,7 @@ const create = async (req: Request, res: Response) => {
     const nemPaymentMethod = await createPaymentMethod(paymentMethod, uid);
     res.status(StatusCodes.OK).json(nemPaymentMethod);
   } catch (err) {
+    console.log(err);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
   }
 };
@@ -115,10 +116,9 @@ const remove = async (req: Request, res: Response) => {
   #swagger.summary = 'Apaga um usuário com base no ID.'
   #swagger.parameters['id'] = { description: 'ID do usuário' }
   */
-  const uid = req.session.uid!;
   const { id } = req.params;
   try {
-    const deletedProduct = await deletePaymentMethod(id, uid);
+    const deletedProduct = await deletePaymentMethod(id);
     res.status(StatusCodes.NO_CONTENT).json();
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);

@@ -37,13 +37,14 @@ export async function createAddress(address: CreateAddressDto) {
 
   formData.append("number", address.number.toString());
   formData.append("cep", address.cep);
-  formData.append("city",address.city);
+  formData.append("city", address.city);
   formData.append("uf", address.uf);
 
-  return api.post(`/address`, formData, {
-    headers: {
-      "Content-Type": "application/json"
-    }
-  }).then((response) => response.data)
-  
+  return api
+    .post(`/address`, formData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((response) => response.data);
 }

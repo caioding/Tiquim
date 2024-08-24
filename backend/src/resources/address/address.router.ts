@@ -8,4 +8,4 @@ router.get("/", addressController.index);
 router.post("/", isAuth, addressController.create);
 router.delete("/", isAuth, addressController.remove);
 
-export default router
+export default router;

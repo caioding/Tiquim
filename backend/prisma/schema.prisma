@@ -22,7 +22,6 @@ model User {
   campaigns      Campaign[]
   contributions  Contribution[]
   addresses      Address[]
-  paymentMethods PaymentMethod[]
   messages       Message[]
   posts          Post[]
   userType       UserType        @relation(fields: [userTypeId], references: [id])
@@ -101,14 +100,15 @@ model Contribution {
 
 model PaymentMethod {
   id            String         @id @default(uuid()) @db.Char(36)
-  type          String         @db.VarChar(10)
-  userId        String         @map("user_id") @db.Char(36)
+  type          String         @db.VarChar(10) //CREDIT || PIX
+  cardHolderName String?       @db.VarChar(100) //pode ser criptografado
+  cardLastDigits String?       @db.Char(4)
+  cardExpiryDate String?       @db.Char(5)
+  cvv           String?        @db.Char(3)
   createdAt     DateTime       @default(now()) @map("created_at")
   updatedAt     DateTime       @updatedAt @map("updated_at")
   contributions Contribution[]
-  user          User           @relation(fields: [userId], references: [id])
 
-  @@index([userId], map: "payment_methods_user_id_fkey")
   @@map("payment_methods")
 }
 

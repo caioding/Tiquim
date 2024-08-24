@@ -3,7 +3,22 @@ import { PrismaClient } from "@prisma/client";
 import { PaymentMethodDto, CreatePaymentMethodDto } from "./paymentMethod.types";
 
 const prisma = new PrismaClient();
+/*
 
+model PaymentMethod {
+  id            String         @id @default(uuid()) @db.Char(36)
+  type          String         @db.VarChar(10) //CREDIT || PIX
+  cardHolderName String?       @db.VarChar(100) //criptografado
+  cardLastDigits String?       @db.Char(4)
+  cardExpiryDate String?       @db.Char(5)
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  contributions Contribution[]
+
+  @@map("payment_methods")
+}
+
+*/
 export const createPaymentMethod = async (
   paymentMethod: CreatePaymentMethodDto,
   uid: string,
@@ -12,13 +27,15 @@ export const createPaymentMethod = async (
     select: {
       id: true,
       type: true,
-      userId: true,
+      cardHolderName: true,
+      cardLastDigits: true,
+      cardExpiryDate: true,
+      cvv: true,
       createdAt: true,
       updatedAt: true,
     },
     data: {
       ...paymentMethod,
-      userId: uid,
     },
   });
 };
@@ -32,11 +49,13 @@ export const listPaymentMethods = async (
     select: {
       id: true,
       type: true,
-      userId: true,
+      cardHolderName: true,
+      cardLastDigits: true,
+      cardExpiryDate: true,
+      cvv: true,
       createdAt: true,
       updatedAt: true,
     },
-    where: { userId: uid },
     skip,
     take,
   });
@@ -50,11 +69,14 @@ export const readPaymentMethod = async (
     select: {
       id: true,
       type: true,
-      userId: true,
+      cardHolderName: true,
+      cardLastDigits: true,
+      cardExpiryDate: true,
+      cvv: true,
       createdAt: true,
       updatedAt: true,
     },
-    where: { id: id, userId: uid },
+    where: { id },
   });
 };
 
@@ -64,11 +86,11 @@ export const updatePaymentMethod = async (
   uid: string,
 ): Promise<PaymentMethodDto | null> => {
   return await prisma.paymentMethod.update({
-    where: { id: id, userId: uid },
+    where: { id },
     data: updatedPaymentMethod,
   });
 };
 
-export const deletePaymentMethod = async (id: string, uid: string): Promise<PaymentMethodDto> => {
-  return await prisma.paymentMethod.delete({ where: { id: id, userId: uid } });
+export const deletePaymentMethod = async (id: string): Promise<PaymentMethodDto> => {
+  return await prisma.paymentMethod.delete({ where: { id: id } });
 };

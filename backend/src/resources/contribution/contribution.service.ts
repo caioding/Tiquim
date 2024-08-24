@@ -7,11 +7,12 @@ export const createContribution = async (
   contribution: CreateContributionDto,
   uid: string,
 ): Promise<ContributionDto> => {
+  //obter uid aqui de algum jeito
   const paymentMethod = await prisma.paymentMethod.findUnique({
     select: {
       id: true,
     },
-    where: { id: contribution.paymentMethodId, userId: uid },
+    where: { id: contribution.paymentMethodId },
   });
   if (!paymentMethod) {
     throw new Error("Método de pagamento não pertence ao usuário logado");

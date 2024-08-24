@@ -10,13 +10,12 @@ export interface City {
 }
 
 interface Address {
-  id:        string   
-  number:    string   
-  cep:       string  
-  city:      string   
-  uf:        string   
-  userId:    string  
+  id: string;
+  number: string;
+  cep: string;
+  city: string;
+  uf: string;
+  userId: string;
 }
 
-export type CreateAddressDto = Pick<Address, 'number' | "cep" | "city" | "uf">
-
+export type CreateAddressDto = Pick<Address, "number" | "cep" | "city" | "uf">;
