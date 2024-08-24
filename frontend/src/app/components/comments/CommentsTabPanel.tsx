@@ -53,7 +53,7 @@ export function CommentsTabPanel({ idCampaign, idOwner, value, index }: TabPanel
               Doe qualquer quantia para poder comentar!
             </Typography>
           )}
-          {sortedComments?.map((comment) => <CommentCard comment={comment} />)}
+          {sortedComments?.map((comment) => <CommentCard comment={comment} id={id} />)}
         </Container>
       )}
     </div>
