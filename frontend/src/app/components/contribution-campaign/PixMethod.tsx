@@ -10,13 +10,24 @@ import { Button } from "@mui/material";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import PaymentContext from "@/app/states/PaymentProvider";
 import { createPaymentMethod } from "@/app/services/paymentMethod";
+import { createContribution } from "@/app/services/contribution";
+import { usePathname } from "next/navigation";
 
 const initialPixState = {
   // a ideia no momento seria um cartão vazio
 };
 
+const initialContributionData = {
+  amount: 0,
+  campaignId: "",
+  paymentMethodId: ",",
+};
 export default function PixMethod() {
   const [pixKey, setPixKey] = React.useState("");
+  //verificar melhor como obter o id da campanha:
+  const pathname = usePathname();
+  const campaignId = pathname ? pathname.split("/").pop() : null;
+
   const { amount, contributionAmount, cardInfo, addressInfo, paymentMethod, setAmount } =
     React.useContext(PaymentContext);
 
@@ -26,11 +37,21 @@ export default function PixMethod() {
 
   const handleSubmit = async () => {
     console.log("Forma de pagamento:", paymentMethod);
+    console.log("id da campanha:", campaignId);
     try {
       if (paymentMethod === "pix") {
         console.log("entrou no pix uaua");
-        const response = await createPaymentMethod(initialPixState, paymentMethod);
+        const savedPayment = await createPaymentMethod(initialPixState, paymentMethod);
         console.log("Forma de pagamento via pix cadastrada");
+
+        const formattedContribution = {
+          ...initialContributionData,
+          amount: amount,
+          campaignId: campaignId!,
+          paymentMethodId: savedPayment.id,
+        };
+        const savedContribution = await createContribution(formattedContribution);
+        console.log(`Contribuiu com ${amount} um valor de ${paymentMethod}`);
       }
     } catch (err) {
       console.log("Erro ao cadastrar forma de pagamento:", err);
@@ -71,7 +92,7 @@ export default function PixMethod() {
                   color: "white",
                   "&:hover": { backgroundColor: "#008000" },
                 }}
-                onClick={handleSubmit}
+                onClick={handleSubmit} //usando o botão confirmar para simular a "confirmação do pix"
               >
                 Confirmar
               </Button>

@@ -17,7 +17,7 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 interface TabPanelProps {
@@ -43,6 +43,8 @@ function CustomTabPanel(props: TabPanelProps) {
 }
 
 export default function Campanha() {
+  const router = useRouter();
+
   const params = useParams();
 
   const [tabValue, setTabValue] = useState(0);
@@ -108,6 +110,10 @@ export default function Campanha() {
     setTabValue(newValue);
   };
 
+  const handleDonateToCampaign = (e: React.SyntheticEvent, idCampaign: string) => {
+    e.stopPropagation();
+    router.push(`/contribution/${idCampaign}`);
+  };
   return (
     <Container sx={{ width: "80%", m: "auto" }}>
       <Grid container component="main" sx={{ height: "487px" }}>
@@ -208,6 +214,7 @@ export default function Campanha() {
               "&:hover": { backgroundColor: "#008000" },
               textTransform: "none",
             }}
+            onClick={(e) => handleDonateToCampaign(e, campaign.id)}
           >
             Doar
           </Button>
