@@ -41,7 +41,6 @@ export default function PixMethod() {
     console.log("id da campanha:", campaignId);
     try {
       if (paymentMethod === "pix") {
-        console.log("entrou no pix uaua");
         const savedPayment = await createPaymentMethod(initialPixState, paymentMethod);
         console.log("Forma de pagamento via pix cadastrada");
 

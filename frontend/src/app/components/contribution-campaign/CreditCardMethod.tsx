@@ -115,7 +115,6 @@ export default function CreditCardMethod() {
 
     try {
       if (paymentMethod === "credit") {
-        console.log("entrou no credito auau");
         const savedAddress = await createAddress(formatedAddressData);
         console.log("")
         const savedPaymentMethod = await createPaymentMethod(formattedCardData, paymentMethod);
