@@ -24,7 +24,8 @@ const initialContributionData = {
 };
 export default function PixMethod() {
   const [pixKey, setPixKey] = React.useState("");
-  //verificar melhor como obter o id da campanha:
+
+  //verificar melhor como obter o id da campanha: Utilizar contexto
   const pathname = usePathname();
   const campaignId = pathname ? pathname.split("/").pop() : null;
 
@@ -51,10 +52,10 @@ export default function PixMethod() {
           paymentMethodId: savedPayment.id,
         };
         const savedContribution = await createContribution(formattedContribution);
-        console.log(`Contribuiu com ${amount} um valor de ${paymentMethod}`);
+        console.log(`Contribuiu um valor de ${amount} usando ${paymentMethod}`);
       }
     } catch (err) {
-      console.log("Erro ao cadastrar forma de pagamento:", err);
+      console.log("Erro ao finalizar pagamento:", err);
     }
   };
 

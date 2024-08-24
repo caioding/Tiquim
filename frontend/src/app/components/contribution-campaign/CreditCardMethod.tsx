@@ -8,6 +8,8 @@ import CreditCardDetails from "./CreditCardDetails";
 import PaymentContext from "@/app/states/PaymentProvider";
 import { createAddress } from "@/app/services/address";
 import { createPaymentMethod } from "@/app/services/paymentMethod";
+import { createContribution } from "@/app/services/contribution";
+import { usePathname } from "next/navigation";
 
 const steps = ["Detalhes do Pagamento", "Endereço de Cobrança", "Revisão de Pagamento"];
 
@@ -40,8 +42,19 @@ const initialCardDataState = {
   cvv: "",
 };
 
+const initialContributionData = {
+  amount: 0,
+  campaignId: "",
+  paymentMethodId: ",",
+};
 export default function CreditCardMethod() {
+  
   const [activeStep, setActiveStep] = React.useState(0);
+
+  //verificar melhor como obter o id da campanha: Utilizar contexto
+  const pathname = usePathname();
+  const campaignId = pathname ? pathname.split("/").pop() : null;
+
   const { amount, contributionAmount, cardInfo, addressInfo, paymentMethod, setAmount } =
     React.useContext(PaymentContext);
 
@@ -103,15 +116,22 @@ export default function CreditCardMethod() {
     try {
       if (paymentMethod === "credit") {
         console.log("entrou no credito auau");
-        const response = await createPaymentMethod(formattedCardData, paymentMethod);
+        const savedAddress = await createAddress(formatedAddressData);
+        console.log("")
+        const savedPaymentMethod = await createPaymentMethod(formattedCardData, paymentMethod);
         console.log("Forma de pagamento via cartão cadastrada");
-      } else if (paymentMethod === "pix") {
-        // outra página
-        const response = await createPaymentMethod(formattedCardData, paymentMethod);
-        console.log("Forma de pagamento via pix cadastrada");
+
+        const formattedContribution = {
+          ...initialContributionData,
+          amount: amount,
+          campaignId: campaignId!,
+          paymentMethodId: savedPaymentMethod.id,
+        }
+        const savedContribution = await createContribution(formattedContribution)
+        console.log(`Contribuiu com ${amount} usando ${paymentMethod}`)
       }
     } catch (err) {
-      console.log("Erro ao cadastrar forma de pagamento");
+      console.log("Erro ao finalizar contribuição");
     }
   };
 
