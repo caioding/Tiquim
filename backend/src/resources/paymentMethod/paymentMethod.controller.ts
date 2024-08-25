@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CreatePaymentMethodDto } from "./paymentMethod.types";
+import { CreatePaymentMethodDto, PaymentMethodDto, PaymentType } from "./paymentMethod.types";
 import {
   createPaymentMethod,
   deletePaymentMethod,
@@ -33,7 +33,7 @@ const index = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  const paymentMethod = req.body as CreatePaymentMethodDto;
+  const paymentMethod = req.body as PaymentType;
   try {
     /*
       #swagger.summary = 'Cria um usuário novo.'
@@ -92,7 +92,7 @@ const update = async (req: Request, res: Response) => {
   */
   const { id } = req.params;
   const uid = req.session.uid!;
-  const updatedPaymentMethod = req.body as CreatePaymentMethodDto;
+  const updatedPaymentMethod = req.body as PaymentMethodDto;
 
   try {
     const paymentMethod = await updatePaymentMethod(id, updatedPaymentMethod, uid);

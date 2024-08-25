@@ -48,7 +48,6 @@ const initialContributionData = {
   paymentMethodId: ",",
 };
 export default function CreditCardMethod() {
-  
   const [activeStep, setActiveStep] = React.useState(0);
 
   //verificar melhor como obter o id da campanha: Utilizar contexto
@@ -115,8 +114,7 @@ export default function CreditCardMethod() {
 
     try {
       if (paymentMethod === "credit") {
-        const savedAddress = await createAddress(formatedAddressData);
-        console.log("")
+        //const savedAddress = await createAddress(formatedAddressData);
         const savedPaymentMethod = await createPaymentMethod(formattedCardData, paymentMethod);
         console.log("Forma de pagamento via cartão cadastrada");
 
@@ -125,9 +123,9 @@ export default function CreditCardMethod() {
           amount: amount,
           campaignId: campaignId!,
           paymentMethodId: savedPaymentMethod.id,
-        }
-        const savedContribution = await createContribution(formattedContribution)
-        console.log(`Contribuiu com ${amount} usando ${paymentMethod}`)
+        };
+        const savedContribution = await createContribution(formattedContribution);
+        console.log(`Contribuiu com ${amount} usando ${paymentMethod}`);
       }
     } catch (err) {
       console.log("Erro ao finalizar contribuição");

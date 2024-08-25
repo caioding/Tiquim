@@ -1,12 +1,8 @@
 import { PaymentMethod } from "@prisma/client";
-
 //export type CreatePaymentMethodDto = Pick<PaymentMethod, "type">;
 
 export type CreatePaymentMethodDto = {
-  type: PaymentType;
-  cardHolderName?: string;
-  cardLastDigits?: string;
-  cardExpiryDate?: string;
+  typeId: PaymentType;
 };
 export type PaymentMethodDto = PaymentMethod;
 

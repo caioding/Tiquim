@@ -27,7 +27,7 @@ model User {
   userType       UserType        @relation(fields: [userTypeId], references: [id])
   userRewards    UserReward[]
   Comment        Comment[]
-
+  CreditCards    CreditCard[]
   @@index([userTypeId], map: "users_user_type_id_fkey")
   @@map("users")
 }
@@ -99,19 +99,35 @@ model Contribution {
 }
 
 model PaymentMethod {
-  id            String         @id @default(uuid()) @db.Char(36)
-  type          String         @db.VarChar(10) //CREDIT || PIX
-  cardHolderName String?       @db.VarChar(100) //pode ser criptografado
-  cardLastDigits String?       @db.Char(4)
-  cardExpiryDate String?       @db.Char(5)
-  cvv           String?        @db.Char(3)
-  createdAt     DateTime       @default(now()) @map("created_at")
-  updatedAt     DateTime       @updatedAt @map("updated_at")
-  contributions Contribution[]
-
+  id                String         @id @default(uuid()) @db.Char(36)
+  paymentTypeId     String         @map("payment_type_id") @db.VarChar(36) //CREDIT || PIX
+  createdAt         DateTime       @default(now()) @map("created_at")
+  updatedAt         DateTime       @updatedAt @map("updated_at")
+  contributions     Contribution[]
+  paymentMethodType PaymentMethodType @relation(fields: [paymentTypeId], references: [id])
+  
+  @@index([paymentTypeId], map: "payment_method_type_id_fkey")
   @@map("payment_methods")
 }
 
+model PaymentMethodType {
+  id  String  @id @default(uuid()) @db.Char(36)
+  label String @db.Char(8)
+  paymentMethod PaymentMethod[]
+
+  @@map("payment_method_type")
+}
+
+model CreditCard {
+  id             String        @id @default(uuid()) @db.Char(36)
+  userId         String        @map("user_id") @db.Char(36)
+  cardHolderName String?       @db.VarChar(100) //pode ser criptografado
+  cardLastDigits String?       @db.Char(4)
+  cardExpiryDate String?       @db.Char(5)
+  cvv            String?       @db.Char(3)
+  user           User          @relation(fields: [userId], references: [id])
+  @@map("credit_card")
+}
 model Reward {
   id            String       @id @default(uuid()) @db.Char(36)
   title         String       @db.VarChar(50)

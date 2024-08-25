@@ -1,6 +1,7 @@
 import { Request } from "express";
 import { PrismaClient } from "@prisma/client";
-import { PaymentMethodDto, CreatePaymentMethodDto } from "./paymentMethod.types";
+import { PaymentMethodDto, CreatePaymentMethodDto, PaymentType } from "./paymentMethod.types";
+import { PaymentMethodType } from "../paymentMethodType/paymentMethodType.constants";
 
 const prisma = new PrismaClient();
 /*
@@ -18,24 +19,25 @@ model PaymentMethod {
   @@map("payment_methods")
 }
 
+
+      cardHolderName: true,
+      cardLastDigits: true,
+      cardExpiryDate: true,
+      cvv: true,
 */
 export const createPaymentMethod = async (
-  paymentMethod: CreatePaymentMethodDto,
+  paymentMethod: PaymentType,
   uid: string,
 ): Promise<PaymentMethodDto> => {
   return await prisma.paymentMethod.create({
     select: {
       id: true,
-      type: true,
-      cardHolderName: true,
-      cardLastDigits: true,
-      cardExpiryDate: true,
-      cvv: true,
+      paymentTypeId: true,
       createdAt: true,
       updatedAt: true,
     },
     data: {
-      ...paymentMethod,
+      paymentTypeId: paymentMethod === "CREDIT" ? PaymentMethodType.CREDIT : PaymentMethodType.PIX,
     },
   });
 };
@@ -48,11 +50,7 @@ export const listPaymentMethods = async (
   return prisma.paymentMethod.findMany({
     select: {
       id: true,
-      type: true,
-      cardHolderName: true,
-      cardLastDigits: true,
-      cardExpiryDate: true,
-      cvv: true,
+      paymentTypeId: true,
       createdAt: true,
       updatedAt: true,
     },
@@ -68,11 +66,7 @@ export const readPaymentMethod = async (
   return await prisma.paymentMethod.findUnique({
     select: {
       id: true,
-      type: true,
-      cardHolderName: true,
-      cardLastDigits: true,
-      cardExpiryDate: true,
-      cvv: true,
+      paymentTypeId: true,
       createdAt: true,
       updatedAt: true,
     },
@@ -82,7 +76,7 @@ export const readPaymentMethod = async (
 
 export const updatePaymentMethod = async (
   id: string,
-  updatedPaymentMethod: CreatePaymentMethodDto,
+  updatedPaymentMethod: PaymentMethodDto,
   uid: string,
 ): Promise<PaymentMethodDto | null> => {
   return await prisma.paymentMethod.update({
