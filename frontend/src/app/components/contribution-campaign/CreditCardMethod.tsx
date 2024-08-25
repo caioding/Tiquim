@@ -12,6 +12,7 @@ import { createContribution } from "@/app/services/contribution";
 import { usePathname, useRouter } from "next/navigation";
 import useSnackbar from "@/app/hooks/useSnackbar";
 import { Campaign } from "@/app/types/campaign";
+import { useContext } from "react";
 
 interface CampaignCreditProps {
   campaign: Campaign;
@@ -62,8 +63,17 @@ export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
   const pathname = usePathname();
   const campaignId = pathname ? pathname.split("/").pop() : null;
 
-  const { amount, contributionAmount, cardInfo, addressInfo, paymentMethod, setAmount } =
-    React.useContext(PaymentContext);
+  const {
+    amount,
+    contributionAmount,
+    cardInfo,
+    addressInfo,
+    paymentMethod,
+    saveAddress,
+    saveCard,
+    setAmount,
+  } = React.useContext(PaymentContext);
+  // saveAddress, setSaveAddress do context para pegar os dados
 
   const handleNext = () => {
     if (activeStep === 2 && paymentMethod === "credit") {
@@ -108,21 +118,21 @@ export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
       cardLastDigits: cardInfo.cardNumber.slice(-4),
       cvv: cardInfo.cvv,
     };
-    //console.log("Sending address data:", formatedAddressData);
+    console.log("Sending address data:", formatedAddressData);
     console.log("Sending Card data:", formattedCardData);
     console.log("Forma de pagamento", paymentMethod);
-    /*
+
     try {
       const response = await createAddress(formatedAddressData);
       console.log("Endereço criado com sucesso:", response);
     } catch (error) {
       console.error("Erro ao criar o endereço:", error);
     }
-     */
 
     try {
       if (paymentMethod === "credit") {
-        //const savedAddress = await createAddress(formatedAddressData);
+        const savedAddress = await createAddress(formatedAddressData);
+        console.log("Endereço salvo:", savedAddress);
         const savedPaymentMethod = await createPaymentMethod(formattedCardData, paymentMethod);
         console.log("Forma de pagamento via cartão cadastrada");
 

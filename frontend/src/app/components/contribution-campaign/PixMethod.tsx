@@ -33,8 +33,8 @@ export default function PixMethod() {
   const { amount, contributionAmount, cardInfo, addressInfo, paymentMethod, setAmount } =
     React.useContext(PaymentContext);
 
-    const { setSnackbar } = useSnackbar();
-    const router = useRouter();
+  const { setSnackbar } = useSnackbar();
+  const router = useRouter();
 
   React.useEffect(() => {
     setPixKey(uuidv4());
