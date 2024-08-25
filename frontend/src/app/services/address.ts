@@ -48,3 +48,7 @@ export async function createAddress(address: CreateAddressDto) {
     })
     .then((response) => response.data);
 }
+
+export async function verifyAddress(cep: string, number: string) {
+  const data = await api.get("");
+}

@@ -9,7 +9,7 @@ import contributionRouter from "../resources/contribution/contribution.router"
 import rewardRouter from "../resources/reward/reward.router"
 import commentRouter from "../resources/comment/comment.router"
 import addressRouter from "../resources/address/address.router"
-
+import creditCardRouter from "../resources/creditCard/creditCard.router"
 const router = Router();
 
 router.use("/language",
@@ -38,5 +38,8 @@ commentRouter);
     
 router.use("/address", // #swagger.tage = ['Address']
 addressRouter);
+
+router.use("/creditCard", // #swagger.tage = ['CreditCard']
+creditCardRouter);
 
 export default router;

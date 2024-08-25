@@ -121,10 +121,11 @@ model PaymentMethodType {
 model CreditCard {
   id             String        @id @default(uuid()) @db.Char(36)
   userId         String        @map("user_id") @db.Char(36)
-  cardHolderName String?       @db.VarChar(100) //pode ser criptografado
-  cardLastDigits String?       @db.Char(4)
-  cardExpiryDate String?       @db.Char(5)
-  cvv            String?       @db.Char(3)
+  cardNumber     String        @db.VarChar(60) //criptografado como fez com a senha
+  cardHolderName String        @db.VarChar(100) 
+  cardLastDigits String        @db.Char(4)
+  cardExpiryDate String        @db.Char(5)
+  cvv            String        @db.Char(3)
   user           User          @relation(fields: [userId], references: [id])
   @@map("credit_card")
 }

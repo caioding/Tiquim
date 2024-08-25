@@ -7,7 +7,7 @@ import AddressForm from "./AddressForm";
 import CreditCardDetails from "./CreditCardDetails";
 import PaymentContext from "@/app/states/PaymentProvider";
 import { createAddress } from "@/app/services/address";
-import { createPaymentMethod } from "@/app/services/paymentMethod";
+import { createCreditCard, createPaymentMethod } from "@/app/services/paymentMethod";
 import { createContribution } from "@/app/services/contribution";
 import { usePathname, useRouter } from "next/navigation";
 import useSnackbar from "@/app/hooks/useSnackbar";
@@ -94,62 +94,67 @@ export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
     console.log(cardInfo);
     console.log(addressInfo);
 
+    if (saveAddress) {
+      //se address já estiver la nao salva, uma dica pode ser verificar cep e numero do endereço
+
+      console.log("o usuario escolheu salvar o endereço");
+
+      const formatedAddressData = {
+        ...initialAddressInfoState,
+        cep: addressInfo.zip,
+        street: addressInfo.zip,
+        number: addressInfo.number.toString(),
+        neighborhood: addressInfo.neighborhood,
+        city: addressInfo.city,
+        uf: addressInfo.state,
+        country: addressInfo.country,
+      };
+
+      console.log("Sending address data:", formatedAddressData);
+      const savedAddress = await createAddress(formatedAddressData);
+    } else {
+      console.log("o usuario escolheu não salvar o endereço");
+    }
     //como nao temos como salvar o cartão, mas sim o método de pagamento,
 
     //update: coloquei o cartão no método de pagamento
-    //seguirei por enquanto salvando so o endereço
 
-    const formatedAddressData = {
-      ...initialAddressInfoState,
-      cep: addressInfo.zip,
-      street: addressInfo.zip,
-      number: addressInfo.number.toString(),
-      neighborhood: addressInfo.neighborhood,
-      city: addressInfo.city,
-      uf: addressInfo.state,
-      country: addressInfo.country,
-    };
+    if (saveCard) {
+      console.log("o usuario escolheu salvar o cartao");
 
-    const formattedCardData = {
-      ...initialCardDataState,
-      cardNumber: cardInfo.cardNumber,
-      cardHolderName: cardInfo.cardHolderName,
-      expirationDate: cardInfo.expirationDate,
-      cardLastDigits: cardInfo.cardNumber.slice(-4),
-      cvv: cardInfo.cvv,
-    };
-    console.log("Sending address data:", formatedAddressData);
-    console.log("Sending Card data:", formattedCardData);
+      const formattedCardData = {
+        ...initialCardDataState,
+        cardNumber: cardInfo.cardNumber,
+        cardHolderName: cardInfo.cardHolderName,
+        expirationDate: cardInfo.expirationDate,
+        cardLastDigits: cardInfo.cardNumber.slice(-4),
+        cvv: cardInfo.cvv,
+      };
+      const saveCard = await createCreditCard(formattedCardData);
+      console.log("Sending Card data:", formattedCardData);
+    } else {
+      console.log("o usuario escolheu nao salvar o cartao");
+    }
+
     console.log("Forma de pagamento", paymentMethod);
 
     try {
-      const response = await createAddress(formatedAddressData);
-      console.log("Endereço criado com sucesso:", response);
-    } catch (error) {
-      console.error("Erro ao criar o endereço:", error);
-    }
+      const savedPaymentMethod = await createPaymentMethod(paymentMethod);
 
-    try {
-      if (paymentMethod === "credit") {
-        const savedAddress = await createAddress(formatedAddressData);
-        console.log("Endereço salvo:", savedAddress);
-        const savedPaymentMethod = await createPaymentMethod(formattedCardData, paymentMethod);
-        console.log("Forma de pagamento via cartão cadastrada");
+      console.log("Forma de pagamento via cartão cadastrada");
 
-        const formattedContribution = {
-          ...initialContributionData,
-          amount: amount,
-          campaignId: campaignId!,
-          paymentMethodId: savedPaymentMethod.id,
-        };
-        const savedContribution = await createContribution(formattedContribution);
-        console.log(`Contribuiu com ${amount} usando ${paymentMethod}`);
-        setSnackbar("Contribuição realizada com sucesso!", "success");
-        router.push(`/campaign/${idCampaign}`);
-      }
+      const formattedContribution = {
+        ...initialContributionData,
+        amount: amount,
+        campaignId: campaignId!,
+        paymentMethodId: savedPaymentMethod.id,
+      };
+
+      const savedContribution = await createContribution(formattedContribution);
+      setSnackbar("Contribuição realizada com sucesso!", "success");
+      router.push(`/campaign/${idCampaign}`);
     } catch (err) {
-      console.log("Erro ao finalizar contribuição");
-      setSnackbar("Erro ao editar a campanha", "error");
+      setSnackbar("Erro ao criar a contribuição", "error");
     }
   };
 
