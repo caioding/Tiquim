@@ -11,7 +11,8 @@ import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import PaymentContext from "@/app/states/PaymentProvider";
 import { createPaymentMethod } from "@/app/services/paymentMethod";
 import { createContribution } from "@/app/services/contribution";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import useSnackbar from "@/app/hooks/useSnackbar";
 
 const initialPixState = {
   // a ideia no momento seria um cartão vazio
@@ -31,6 +32,9 @@ export default function PixMethod() {
 
   const { amount, contributionAmount, cardInfo, addressInfo, paymentMethod, setAmount } =
     React.useContext(PaymentContext);
+
+    const { setSnackbar } = useSnackbar();
+    const router = useRouter();
 
   React.useEffect(() => {
     setPixKey(uuidv4());
@@ -52,9 +56,12 @@ export default function PixMethod() {
         };
         const savedContribution = await createContribution(formattedContribution);
         console.log(`Contribuiu um valor de ${amount} usando ${paymentMethod}`);
+        setSnackbar("Contribuição realizada com sucesso!", "success");
+        router.push(`/campaign/${campaignId}`);
       }
     } catch (err) {
       console.log("Erro ao finalizar pagamento:", err);
+      setSnackbar("Erro ao finalizar o pagamento", "error");
     }
   };
 

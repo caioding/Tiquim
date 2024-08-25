@@ -9,7 +9,13 @@ import PaymentContext from "@/app/states/PaymentProvider";
 import { createAddress } from "@/app/services/address";
 import { createPaymentMethod } from "@/app/services/paymentMethod";
 import { createContribution } from "@/app/services/contribution";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import useSnackbar from "@/app/hooks/useSnackbar";
+import { Campaign } from "@/app/types/campaign";
+
+interface CampaignCreditProps {
+  campaign: Campaign;
+}
 
 const steps = ["Detalhes do Pagamento", "Endereço de Cobrança", "Revisão de Pagamento"];
 
@@ -47,8 +53,10 @@ const initialContributionData = {
   campaignId: "",
   paymentMethodId: ",",
 };
-export default function CreditCardMethod() {
+export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
   const [activeStep, setActiveStep] = React.useState(0);
+  const { setSnackbar } = useSnackbar();
+  const router = useRouter();
 
   //verificar melhor como obter o id da campanha: Utilizar contexto
   const pathname = usePathname();
@@ -60,7 +68,7 @@ export default function CreditCardMethod() {
   const handleNext = () => {
     if (activeStep === 2 && paymentMethod === "credit") {
       //hora que confirma o pagamento pq chegou na última aba e o usuário escolheu cartão de crédito
-      handleSubmit();
+      handleSubmit(campaignId!);
     } else setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -68,7 +76,7 @@ export default function CreditCardMethod() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (idCampaign: string) => {
     console.log("fim da pagina, hora de guardar os dados");
     console.log("confirmando operação.");
     console.log(amount);
@@ -126,9 +134,12 @@ export default function CreditCardMethod() {
         };
         const savedContribution = await createContribution(formattedContribution);
         console.log(`Contribuiu com ${amount} usando ${paymentMethod}`);
+        setSnackbar("Contribuição realizada com sucesso!", "success");
+        router.push(`/campaign/${idCampaign}`);
       }
     } catch (err) {
       console.log("Erro ao finalizar contribuição");
+      setSnackbar("Erro ao editar a campanha", "error");
     }
   };
 
