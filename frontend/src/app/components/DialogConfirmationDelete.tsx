@@ -11,8 +11,15 @@ interface AlertDialogProps {
   onConfirm: () => void;
   onCancel: () => void;
   message: string;
+  title: string;
 }
-export default function AlertDialog({ open, onConfirm, onCancel, message }: AlertDialogProps) {
+export default function AlertDialog({
+  open,
+  onConfirm,
+  onCancel,
+  message,
+  title,
+}: AlertDialogProps) {
   const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
   };
@@ -24,7 +31,7 @@ export default function AlertDialog({ open, onConfirm, onCancel, message }: Aler
       aria-describedby="alert-dialog-description"
       onClick={handleClick}
     >
-      <DialogTitle id="alert-dialog-title">{"Confirmar exclusão de campanha"}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">{message}</DialogContentText>
       </DialogContent>

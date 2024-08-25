@@ -1,7 +1,15 @@
 import { Request, Response } from "express";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { CreateUserDto, TypeUser, UpdateUserDto } from "./user.types";
-import { createUser, deleteUser, listUsers, readEmail, readUser, updateUser } from "./user.service";
+import {
+  createUser,
+  createUserAdmin,
+  deleteUser,
+  listUsers,
+  readEmail,
+  readUser,
+  updateUser,
+} from "./user.service";
 import fs from "fs";
 import path from "path";
 
@@ -24,7 +32,6 @@ const index = async (req: Request, res: Response) => {
 
 const create = async (req: Request, res: Response) => {
   const user = req.body as CreateUserDto;
-  const userType = req.query.userType as TypeUser;
   try {
     /*
     #swagger.summary = 'Cria um usuário novo.'
@@ -41,8 +48,35 @@ const create = async (req: Request, res: Response) => {
       user.avatarUrl = req.file.filename;
     }
 
-    const newUser = await createUser(user, userType);
+    const newUser = await createUser(user);
     res.status(StatusCodes.OK).json(newUser);
+  } catch (err) {
+    console.log(err);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
+  }
+};
+
+const createAdmin = async (req: Request, res: Response) => {
+  const user = req.body as CreateUserDto;
+  const uid = req.session.uid!;
+  try {
+    /*
+    #swagger.summary = 'Cria um usuário novo.'
+    #swagger.parameters['userType'] = { description: 'Tipo do usuário' }
+    #swagger.parameters['body'] = {
+    in: 'body',
+    schema: { $ref: '#/definitions/CreateUserDto' }
+    }
+    #swagger.responses[200] = {
+    schema: { $ref: '#/definitions/User' }
+    }
+    */
+    if (req.file) {
+      user.avatarUrl = req.file.filename;
+    }
+
+    const newAdmin = await createUserAdmin(user, uid);
+    res.status(StatusCodes.OK).json(newAdmin);
   } catch (err) {
     console.log(err);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
@@ -135,4 +169,4 @@ const checkAvailableEmail = async (req: Request, res: Response) => {
   }
 };
 
-export default { index, create, read, update, remove, checkAvailableEmail };
+export default { index, create, createAdmin, read, update, remove, checkAvailableEmail };

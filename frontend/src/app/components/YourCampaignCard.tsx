@@ -151,6 +151,7 @@ export function YourCampaignCard({ campaign, handleOpen }: CampaignCardProps) {
         onConfirm={handleDelete}
         onCancel={handleConfirmClose}
         message={"Tem certeza que deseja deletar essa campanha?"}
+        title="Confirmar exclusão de campanha"
       />
     </Card>
   );

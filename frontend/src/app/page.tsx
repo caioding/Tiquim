@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import { Box, Container, Typography, useMediaQuery } from "@mui/material";
 import { useCampaigns } from "./hooks/useCampaigns";
 import { RecentCampaignsHeader } from "./components/RecentCampaignsHeader";
@@ -8,7 +8,6 @@ import { CampaignCarousel } from "./components/CampaignCarousel";
 import { Campaign } from "./types/campaign";
 import { useCampaignsSupporters } from "./hooks/useCampaignsSupporters";
 import { RegionalCampaignsHeader } from "./components/RegionalCampaignsHeader";
-import { useRegionalCampaigns } from "./hooks/useRegionalCampaigns";
 import useAuthContext from "./hooks/useAuthContext";
 import { useUser } from "./hooks/useUser";
 
@@ -22,11 +21,18 @@ export default function Campaigns() {
     isError: supportersError,
   } = useCampaignsSupporters();
 
-  const {
-    regionalCampaigns,
-    isPending: regionalPending,
-    isError: regionalError,
-  } = useRegionalCampaigns(user ? user.state : "", user ? user.city : "");
+  const regionalCampaigns = useMemo(() => {
+    if (!user || !campaigns) return [];
+
+    const cityCampaigns = campaigns.filter((campaign) => campaign.city === user.city);
+
+    const stateCampaigns = campaigns.filter(
+      (campaign) => campaign.state === user.state && campaign.city !== user.city,
+    );
+
+    return [...cityCampaigns, ...stateCampaigns];
+  }, [user, campaigns]);
+
   const isSmallScreen = useMediaQuery("(max-width:790px)");
   const isMediumScreen = useMediaQuery("(max-width:1155px)");
 
@@ -125,13 +131,13 @@ export default function Campaigns() {
         </Typography>
       );
     }
-    if (regionalPending) {
+    if (campaignsPending) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
           Carregando...
         </Typography>
       );
-    } else if (regionalError) {
+    } else if (campaignsError) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
           Ocorreu um erro ao carregar as campanhas.
@@ -140,7 +146,7 @@ export default function Campaigns() {
     } else if (!regionalCampaigns || regionalCampaigns.length === 0) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Não há campanhas disponíveis no momento.
+          Não há campanhas na sua região no momento.
         </Typography>
       );
     } else {

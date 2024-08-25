@@ -5,21 +5,35 @@ import { PostsTabPanel } from "@/app/components/posts/PostsTabPanel";
 import { SupportersTabPanel } from "@/app/components/supporters/SupportersTabPanel";
 import { useCampaignDetails } from "@/app/hooks/useCampaignDetails";
 import { useCampaignPercentage } from "@/app/hooks/useCampaignPercentage";
-import { useCampaignsSupporters } from "@/app/hooks/useCampaignsSupporters";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import ReportIcon from "@mui/icons-material/Report";
+import useSnackbar from "@/app/hooks/useSnackbar";
+import AlertDialog from "@/app/components/DialogConfirmationDelete";
 import { getImageCampaign, getSupporters } from "@/app/services/campaign";
+import { createReportCampaign } from "@/app/services/report";
 import {
   Box,
   Button,
   Chip,
   Container,
   CssBaseline,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Grid,
+  IconButton,
+  Menu,
+  MenuItem,
   Tab,
   Tabs,
+  TextField,
   Typography,
 } from "@mui/material";
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import useAuthContext from "@/app/hooks/useAuthContext";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -47,16 +61,62 @@ export default function Campanha() {
   const params = useParams();
 
   const [tabValue, setTabValue] = useState(0);
-
   const idCampaign = params.campaign as string;
+  const { id } = useAuthContext();
+  const [supporters, setSupporters] = useState(0);
+  const [imageUrl, setImageUrl] = useState<string>("/placeholder.png");
+
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [reason, setReason] = React.useState<string>("");
+  const [openReasonModal, setOpenReasonModal] = React.useState(false);
 
   const { campaign, isPending, isError } = useCampaignDetails(idCampaign);
-
   const { percentage } = useCampaignPercentage(idCampaign);
 
-  const [supporters, setSupporters] = useState(0);
+  const { setSnackbar } = useSnackbar();
 
-  const [imageUrl, setImageUrl] = useState<string>("/placeholder.png");
+  const handleChangeReason = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setReason(e.target.value);
+    },
+    [setReason],
+  );
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleReport = () => {
+    setOpenReasonModal(true);
+  };
+
+  const handleConfirmReport = async () => {
+    try {
+      await createReportCampaign({ reason, campaignId: campaign?.id! });
+      setSnackbar("Denúncia feita");
+    } catch (error: any) {
+      if (error.message === "Request failed with status code 400") {
+        setSnackbar("Você já denunciou esta campanha anteriormente", "error");
+      } else {
+        console.log(error.message);
+        setSnackbar("Ocorreu um erro. Tente novamente mais tarde", "error");
+      }
+    } finally {
+      handleCancelReport();
+    }
+  };
+
+  const handleCancelReport = async () => {
+    setReason("");
+    handleMenuClose();
+    setConfirmOpen(false);
+    setOpenReasonModal(false);
+  };
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -142,6 +202,56 @@ export default function Campanha() {
               label={campaign.category}
               sx={{ backgroundColor: "#32A852", color: "white", mt: 2, mb: 3 }}
             />
+            {id && (
+              <IconButton onClick={handleMenuOpen} sx={{ ml: 36 }}>
+                <MoreVertIcon />
+              </IconButton>
+            )}
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+              <MenuItem onClick={() => setConfirmOpen(true)} sx={{ paddingX: 1 }}>
+                <ReportIcon sx={{ mr: 1, color: "red" }} />
+                <Typography sx={{ color: "red" }}>Denunciar</Typography>
+              </MenuItem>
+            </Menu>
+            <AlertDialog
+              open={confirmOpen}
+              onConfirm={handleReport}
+              onCancel={handleCancelReport}
+              message={"Tem certeza que deseja denunciar essa campanha?"}
+              title="Denúncia de Campanha"
+            />
+            <Dialog open={openReasonModal} onClose={handleCancelReport}>
+              <DialogTitle>Informe a razão da denúncia</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Por favor, explique por que você está denunciando esta campanha.
+                </DialogContentText>
+                <TextField
+                  autoFocus
+                  id="reason"
+                  label="Razão"
+                  type="text"
+                  fullWidth
+                  multiline
+                  value={reason}
+                  onChange={handleChangeReason}
+                  sx={{
+                    wordBreak: "break-word",
+                  }}
+                  inputProps={{
+                    maxLength: 500,
+                  }}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCancelReport} color="primary">
+                  Cancelar
+                </Button>
+                <Button onClick={handleConfirmReport} color="primary">
+                  Confirmar
+                </Button>
+              </DialogActions>
+            </Dialog>
             <Typography variant="h4" sx={{ fontWeight: "bold" }}>
               {campaign.title}
             </Typography>

@@ -43,7 +43,7 @@ export const createComment = async (
       userId: true,
     },
     where: {
-      id: comment.campaignId,
+      campaignId: comment.campaignId,
       userId: uid,
     },
   });
@@ -68,4 +68,8 @@ export const createComment = async (
       userId: uid,
     },
   });
+};
+
+export const deleteComment = async (id: string): Promise<CommentDto> => {
+  return await prisma.comment.delete({ where: { id: id } });
 };

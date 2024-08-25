@@ -18,9 +18,8 @@ const signup = async (req: Request, res: Response) => {
   }
   */
   const user = req.body as CreateUserDto;
-  const userType = req.query.userType as TypeUser;
   try {
-    const newUser = await createUser(user, userType);
+    const newUser = await createUser(user);
     res.status(StatusCodes.CREATED).json(newUser);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);

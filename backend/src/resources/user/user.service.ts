@@ -2,13 +2,50 @@ import { PrismaClient } from "@prisma/client";
 import { genSalt, hash } from "bcryptjs";
 import { UserType } from "../userType/userType.constants";
 import { CreateUserDto, UserDto, TypeUser, UpdateUserDto } from "./user.types";
+import { error } from "console";
 
 const prisma = new PrismaClient();
 
-export const createUser = async (user: CreateUserDto, userType: TypeUser): Promise<UserDto> => {
+export const createUser = async (user: CreateUserDto): Promise<UserDto> => {
   const rounds = parseInt(process.env.BCRYPT_ROUNDS!);
   const salt = await genSalt(rounds);
   const password = await hash(user.password, salt);
+
+  try {
+    if (user.userTypeId === "ADMIN") {
+      throw new Error("Não é possível criar um admin.");
+    }
+
+    const newUser = await prisma.user.create({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        userTypeId: true,
+        avatarUrl: true,
+        city: true,
+        state: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      data: {
+        ...user,
+        password: password,
+        userTypeId: UserType.CLIENT,
+      },
+    });
+
+    return newUser;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const createUserAdmin = async (user: CreateUserDto, uid: string): Promise<UserDto> => {
+  const rounds = parseInt(process.env.BCRYPT_ROUNDS!);
+  const salt = await genSalt(rounds);
+  const password = await hash(user.password, salt);
+
   try {
     const newUser = await prisma.user.create({
       select: {
@@ -25,9 +62,10 @@ export const createUser = async (user: CreateUserDto, userType: TypeUser): Promi
       data: {
         ...user,
         password: password,
-        userTypeId: userType === "ADMIN" ? UserType.ADMIN : UserType.CLIENT,
+        userTypeId: UserType.ADMIN,
       },
     });
+
     return newUser;
   } catch (err) {
     throw err;

@@ -238,6 +238,7 @@ export default function YourCampaign() {
         onConfirm={handleDelete}
         onCancel={handleConfirmClose}
         message="Deseja apagar essa campanha de sua lista de campahas?"
+        title="Confirmar exclusão de campanha"
       />
     </Container>
   );
