@@ -23,6 +23,9 @@ import EditCampaignModal from "@/app/components/edit-campaign";
 import AlertDialog from "@/app/components/DialogConfirmationDelete";
 import { CommentsTabPanel } from "@/app/components/comments/CommentsTabPanel";
 import { SupportersTabPanel } from "@/app/components/supporters/SupportersTabPanel";
+import { useCampaignPercentage } from "@/app/hooks/useCampaignPercentage";
+import { PostsTabPanel } from "@/app/components/posts/PostsTabPanel";
+
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -213,9 +216,12 @@ export default function YourCampaign() {
           </Tabs>
         </Box>
         <AboutTabPanel campaign={campaign} value={tabValue} index={0} />
-        <CustomTabPanel value={tabValue} index={1}>
-          Item Two
-        </CustomTabPanel>
+        <PostsTabPanel
+          idCampaign={idCampaign}
+          idOwner={campaign.userId}
+          value={tabValue}
+          index={1}
+        ></PostsTabPanel>
         <CommentsTabPanel
           idCampaign={idCampaign}
           idOwner={campaign.userId}

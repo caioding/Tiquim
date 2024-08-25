@@ -1,6 +1,7 @@
 "use client";
 import { AboutTabPanel } from "@/app/components/AboutTabPanel";
 import { CommentsTabPanel } from "@/app/components/comments/CommentsTabPanel";
+import { PostsTabPanel } from "@/app/components/posts/PostsTabPanel";
 import { SupportersTabPanel } from "@/app/components/supporters/SupportersTabPanel";
 import { useCampaignDetails } from "@/app/hooks/useCampaignDetails";
 import { useCampaignPercentage } from "@/app/hooks/useCampaignPercentage";
@@ -339,9 +340,12 @@ export default function Campanha() {
           </Tabs>
         </Box>
         <AboutTabPanel campaign={campaign} value={tabValue} index={0} />
-        <CustomTabPanel value={tabValue} index={1}>
-          Item Two
-        </CustomTabPanel>
+        <PostsTabPanel
+          idCampaign={idCampaign}
+          idOwner={campaign.userId}
+          value={tabValue}
+          index={1}
+        ></PostsTabPanel>
         <CommentsTabPanel
           idCampaign={idCampaign}
           idOwner={campaign.userId}
