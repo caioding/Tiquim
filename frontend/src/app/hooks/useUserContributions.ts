@@ -1,20 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
-import { getContributedCampaigns, getContributions } from "../services/contribution";
+import { getCampaignsContributed, getContributions } from "../services/contribution";
 import Contribution from "../types/contribution";
 
-export function useContributions() {
+export function useContributions(userId: string) {
   const { data, isPending, isError } = useQuery({
     queryKey: ["userContributions"],
-    queryFn: () => getContributions(),
+    queryFn: () => getContributions(userId),
   });
 
   return { contributions: data, isPending, isError };
 }
 
-export function useContributionsByCampaign(contributions: Contribution[]) {
+export function useCampaignsByContribution(contributions: Contribution[]) {
   const { data, isPending, isError } = useQuery({
     queryKey: ["userCampaignContribution", contributions],
-    queryFn: () => getContributedCampaigns(contributions),
+    queryFn: () => getCampaignsContributed(contributions),
   });
 
   return { yourContributions: data, isPending, isError };

@@ -44,7 +44,11 @@ const index = async (req: Request, res: Response) => {
     const campaignId = req.query.campaign ? req.query.campaign.toString() : "";
     const skip = req.query.skip ? parseInt(req.query.skip.toString()) : undefined;
     const take = req.query.take ? parseInt(req.query.take.toString()) : undefined;
-    const uid = req.session.uid ? req.session.uid : "";
+    const uid = req.query.userId
+      ? req.query.userId.toString()
+      : req.session.uid
+        ? req.session.uid
+        : "";
     const contributions = await listContributions(campaignId, uid, skip, take);
     res.status(StatusCodes.OK).json(contributions);
   } catch (err) {

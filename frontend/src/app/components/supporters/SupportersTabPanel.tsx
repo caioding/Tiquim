@@ -16,7 +16,7 @@ export function SupportersTabPanel({ idCampaign, value, index }: SupportersTabPa
       <Grid container spacing={3}>
         {supporters?.supporters.map((supporter) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={supporter.id}>
-            <SupporterCard name={supporter.name} avatarUrl={supporter.avatarUrl ?? ""} />
+            <SupporterCard name={supporter.name} avatarUrl={supporter.avatarUrl ?? ""} userId={supporter.id}/>
           </Grid>
         ))}
       </Grid>
