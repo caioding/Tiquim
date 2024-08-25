@@ -9,8 +9,8 @@ interface CardHearderProps {
   author: string;
   createdAt: string;
   completedPercentage: number;
-  state: string; // Adicionado para UF
-  city: string; // Adicionado para cidade
+  state: string;
+  city: string;
 }
 
 export function CardHeader({

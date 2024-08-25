@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -18,6 +17,7 @@ import { getAvatarUser } from "@/app/services/user";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { createReportComment } from "@/app/services/report";
+import ReportIcon from "@mui/icons-material/Report";
 import AlertDialog from "../DialogConfirmationDelete";
 import useSnackbar from "../../hooks/useSnackbar";
 
@@ -29,19 +29,44 @@ interface CommentCardProps {
 export function CommentCard({ comment, id }: CommentCardProps) {
   const { user } = useUser(comment.userId);
   const [avatar, setAvatar] = useState<string>("/placeholder.png");
-  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
 
+  const { setSnackbar } = useSnackbar();
+
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget as HTMLElement);
+    setAnchorEl(event.currentTarget);
   };
 
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
-  const { setSnackbar } = useSnackbar();
+  const handleReportBtn = () => {
+    setConfirmOpen(true);
+  };
+
+  const handleConfirmClose = () => {
+    handleMenuClose();
+    setConfirmOpen(false);
+  };
+
+  const handleReport = async () => {
+    try {
+      await createReportComment(comment.id);
+      setSnackbar("Denúncia feita");
+    } catch (error: any) {
+      if (error.message === "Request failed with status code 400") {
+        setSnackbar("Você já denunciou esta campanha anteriormente", "error");
+      } else {
+        setSnackbar("Ocorreu um erro. Tente novamente mais tarde", "error");
+      }
+    } finally {
+      handleMenuClose();
+      handleConfirmClose();
+    }
+  };
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -52,34 +77,6 @@ export function CommentCard({ comment, id }: CommentCardProps) {
     };
     fetchImage();
   }, [user?.avatarUrl]);
-
-  const handleReportBtn = () => {
-    setConfirmOpen(true);
-  };
-
-  const handleConfirmClose = () => {
-    setConfirmOpen(false);
-  };
-
-  const handleReport = async () => {
-    try {
-      await createReportComment(comment.id);
-      setSnackbar("Denúncia feita");
-      setAnchorEl(null);
-      setConfirmOpen(false);
-    } catch (error: any) {
-      if (error.message === "Request failed with status code 400") {
-        setSnackbar("Você já denunciou este comentário anteriormente", "error");
-        setAnchorEl(null);
-        setConfirmOpen(false);
-      } else {
-        console.log(error.message, "LEL");
-        setSnackbar("Ocorreu um erro. Tente novamente mais tarde", "error");
-        setAnchorEl(null);
-        setConfirmOpen(false);
-      }
-    }
-  };
 
   return (
     <Card sx={{ width: { xs: "100%", sm: "80%" }, margin: "5px auto", boxShadow: 3 }}>
@@ -125,13 +122,17 @@ export function CommentCard({ comment, id }: CommentCardProps) {
         </Typography>
       </CardContent>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-        <MenuItem onClick={handleReportBtn}>Denunciar</MenuItem>
+        <MenuItem onClick={handleReportBtn} sx={{ paddingX: 1 }}>
+          <ReportIcon sx={{ mr: 1, color: "red" }} />
+          <Typography sx={{ color: "red" }}>Denunciar</Typography>
+        </MenuItem>
       </Menu>
       <AlertDialog
         open={confirmOpen}
         onConfirm={handleReport}
         onCancel={handleConfirmClose}
         message={"Tem certeza que deseja denunciar esse comentário?"}
+        title="Denúncia de Comentário"
       />
     </Card>
   );

@@ -20,7 +20,6 @@ import useCampaignOwner from "@/app/hooks/useCampaignOwner";
 import useSnackbar from "@/app/hooks/useSnackbar";
 import { deleteCampaign, getImageCampaign } from "@/app/services/campaign";
 import EditCampaignModal from "@/app/components/edit-campaign";
-import { useQueryClient } from "@tanstack/react-query";
 import AlertDialog from "@/app/components/DialogConfirmationDelete";
 import { CommentsTabPanel } from "@/app/components/comments/CommentsTabPanel";
 import { SupportersTabPanel } from "@/app/components/supporters/SupportersTabPanel";
@@ -233,6 +232,7 @@ export default function YourCampaign() {
         onConfirm={handleDelete}
         onCancel={handleConfirmClose}
         message="Deseja apagar essa campanha de sua lista de campahas?"
+        title="Confirmar exclusão de campanha"
       />
     </Container>
   );
