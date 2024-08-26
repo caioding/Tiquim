@@ -28,7 +28,7 @@ interface Props {
 
 const drawerWidth = 240;
 const navItems = [
-  { name: "Inicio", path: "/" },
+  { name: "Início", path: "/" },
   { name: "Todas as Campanhas", path: "/all-campaigns" },
   { name: "Suas Campanhas", path: "/your-campaigns" },
   { name: "Perfil", path: "/your-profile" },
