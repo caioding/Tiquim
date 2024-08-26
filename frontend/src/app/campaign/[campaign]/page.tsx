@@ -34,6 +34,7 @@ import {
 import { useParams } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import useAuthContext from "@/app/hooks/useAuthContext";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -169,6 +170,18 @@ export default function Campanha() {
     setTabValue(newValue);
   };
 
+  const handleCopyLink = () => {
+    const clipboardInfo = `
+A campanha "${campaign.title}" precisa da sua ajuda!
+
+Acesse o link ${window.location.href} para saber mais e doar um Tiquim.
+
+Lembre-se: um Tiquim de ajuda pode mudar a realidade de alguém!`;
+
+    navigator.clipboard.writeText(clipboardInfo);
+    setSnackbar("Link da campanha copiado para a área de transferência!");
+  };
+
   return (
     <Container sx={{ width: "80%", m: "auto" }}>
       <Grid container component="main" sx={{ height: "487px" }}>
@@ -191,24 +204,38 @@ export default function Campanha() {
           <Box
             sx={{
               my: 8,
-              mx: 4,
+              mx: { xs: 0, md: 4 },
               mt: { xs: 0 },
               ml: { xs: 0, sm: 6, md: 10 },
               mb: { xs: 2 },
               flexDirection: "column",
             }}
           >
-            <Chip
-              label={campaign.category}
-              sx={{ backgroundColor: "#32A852", color: "white", mt: 2, mb: 3 }}
-            />
-            {id && (
-              <IconButton onClick={handleMenuOpen} sx={{ ml: 36 }}>
-                <MoreVertIcon />
-              </IconButton>
-            )}
+            <Box
+              sx={{
+                width: "100%",
+                height: "auto",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mt: 2,
+                mb: 3,
+              }}
+            >
+              <Chip label={campaign.category} sx={{ backgroundColor: "#32A852", color: "white" }} />
+              {id && (
+                <IconButton onClick={handleMenuOpen}>
+                  <MoreVertIcon />
+                </IconButton>
+              )}
+            </Box>
             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-              <MenuItem onClick={() => setConfirmOpen(true)} sx={{ paddingX: 1 }}>
+              <MenuItem onClick={handleCopyLink} sx={{ paddingX: 2 }}>
+                <ContentCopyIcon sx={{ mr: 1 }} />
+                <Typography>Copiar link</Typography>
+              </MenuItem>
+              <MenuItem onClick={() => setConfirmOpen(true)} sx={{ paddingX: 2 }}>
                 <ReportIcon sx={{ mr: 1, color: "red" }} />
                 <Typography sx={{ color: "red" }}>Denunciar</Typography>
               </MenuItem>
@@ -257,10 +284,10 @@ export default function Campanha() {
             </Typography>
 
             <Box sx={{ mt: 3 }}>
-              <Typography variant="h4" sx={{ fontSize: 26, fontWeight: "bold", color: "#828282" }}>
+              <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
                 Arrecadado:
               </Typography>
-              <Typography variant="h4" sx={{ fontSize: 24, color: "#32A852" }}>
+              <Typography variant="h6" sx={{ color: "#32A852" }}>
                 R$
                 {typeof percentage === "number" || percentage instanceof Number
                   ? (Math.min(Number(percentage), 1) * campaign.goal).toFixed(2).replace(".", ",")
@@ -277,13 +304,10 @@ export default function Campanha() {
               }}
             >
               <Box>
-                <Typography
-                  variant="h5"
-                  sx={{ fontSize: 23, fontWeight: "bold", color: "#828282" }}
-                >
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
                   Meta:
                 </Typography>
-                <Typography variant="h6" sx={{ fontSize: 21, color: "#828282" }}>
+                <Typography variant="h6" sx={{ color: "#828282" }}>
                   R${Number(campaign.goal).toFixed(2).replace(".", ",")}
                 </Typography>
               </Box>
@@ -295,33 +319,30 @@ export default function Campanha() {
                   mb: { xs: 1 },
                 }}
               >
-                <Typography
-                  variant="h5"
-                  sx={{ fontSize: 23, fontWeight: "bold", color: "#828282" }}
-                >
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
                   Apoiadores:
                 </Typography>
-                <Typography variant="h6" sx={{ fontSize: 21, color: "#828282" }}>
+                <Typography variant="h6" sx={{ color: "#828282" }}>
                   {supporters}
                 </Typography>
               </Box>
             </Box>
+
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                width: { xs: "100%", sm: "100%", md: "100%" },
+                mt: 5,
+                mb: { xs: 4 },
+                backgroundColor: "#32a852",
+                "&:hover": { backgroundColor: "#008000" },
+                textTransform: "none",
+              }}
+            >
+              Doar
+            </Button>
           </Box>
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{
-              width: { xs: "100%", sm: "100%", md: "80%" },
-              mt: { xs: 0, sm: 2, md: 1 },
-              ml: { xs: 0, sm: 6, md: 10 },
-              mb: { xs: 4 },
-              backgroundColor: "#32a852",
-              "&:hover": { backgroundColor: "#008000" },
-              textTransform: "none",
-            }}
-          >
-            Doar
-          </Button>
         </Grid>
       </Grid>
 
