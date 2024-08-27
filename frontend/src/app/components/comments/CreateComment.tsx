@@ -43,8 +43,7 @@ export function CreateComment({ idCampaign }: CreateCommentProps) {
       setSnackbar("Você precisa estar logado para comentar", "error");
     } else {
       try {
-        const response = await createComment(comment);
-
+        await createComment(comment);
         setSnackbar("Comentário criado com sucesso!");
         setComment(initialState);
         queryClient.invalidateQueries({ queryKey: ["comments", idCampaign] });
@@ -56,7 +55,7 @@ export function CreateComment({ idCampaign }: CreateCommentProps) {
   };
 
   return (
-    <Card sx={{ width: { xs: "100%", sm: "80%" }, height: "auto" }}>
+    <Card sx={{ width: { xs: "100%", sm: "80%" }, margin: "5px auto", boxShadow: 3 }}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">

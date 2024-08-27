@@ -1,24 +1,40 @@
 "use client";
 import { AboutTabPanel } from "@/app/components/AboutTabPanel";
 import { CommentsTabPanel } from "@/app/components/comments/CommentsTabPanel";
+import { PostsTabPanel } from "@/app/components/posts/PostsTabPanel";
 import { SupportersTabPanel } from "@/app/components/supporters/SupportersTabPanel";
 import { useCampaignDetails } from "@/app/hooks/useCampaignDetails";
 import { useCampaignPercentage } from "@/app/hooks/useCampaignPercentage";
-import { useCampaignsSupporters } from "@/app/hooks/useCampaignsSupporters";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import ReportIcon from "@mui/icons-material/Report";
+import useSnackbar from "@/app/hooks/useSnackbar";
+import AlertDialog from "@/app/components/DialogConfirmationDelete";
 import { getImageCampaign, getSupporters } from "@/app/services/campaign";
+import { createReportCampaign } from "@/app/services/report";
 import {
   Box,
   Button,
   Chip,
   Container,
   CssBaseline,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Grid,
+  IconButton,
+  Menu,
+  MenuItem,
   Tab,
   Tabs,
+  TextField,
   Typography,
 } from "@mui/material";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import useAuthContext from "@/app/hooks/useAuthContext";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -48,16 +64,62 @@ export default function Campanha() {
   const params = useParams();
 
   const [tabValue, setTabValue] = useState(0);
-
   const idCampaign = params.campaign as string;
+  const { id } = useAuthContext();
+  const [supporters, setSupporters] = useState(0);
+  const [imageUrl, setImageUrl] = useState<string>("/placeholder.png");
+
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [reason, setReason] = React.useState<string>("");
+  const [openReasonModal, setOpenReasonModal] = React.useState(false);
 
   const { campaign, isPending, isError } = useCampaignDetails(idCampaign);
-
   const { percentage } = useCampaignPercentage(idCampaign);
 
-  const [supporters, setSupporters] = useState(0);
+  const { setSnackbar } = useSnackbar();
 
-  const [imageUrl, setImageUrl] = useState<string>("/placeholder.png");
+  const handleChangeReason = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setReason(e.target.value);
+    },
+    [setReason],
+  );
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleReport = () => {
+    setOpenReasonModal(true);
+  };
+
+  const handleConfirmReport = async () => {
+    try {
+      await createReportCampaign({ reason, campaignId: campaign?.id! });
+      setSnackbar("Denúncia feita");
+    } catch (error: any) {
+      if (error.message === "Request failed with status code 400") {
+        setSnackbar("Você já denunciou esta campanha anteriormente", "error");
+      } else {
+        console.log(error.message);
+        setSnackbar("Ocorreu um erro. Tente novamente mais tarde", "error");
+      }
+    } finally {
+      handleCancelReport();
+    }
+  };
+
+  const handleCancelReport = async () => {
+    setReason("");
+    handleMenuClose();
+    setConfirmOpen(false);
+    setOpenReasonModal(false);
+  };
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -114,6 +176,18 @@ export default function Campanha() {
     e.stopPropagation();
     router.push(`/contribution/${idCampaign}`);
   };
+  const handleCopyLink = () => {
+    const clipboardInfo = `
+A campanha "${campaign.title}" precisa da sua ajuda!
+
+Acesse o link ${window.location.href} para saber mais e doar um Tiquim.
+
+Lembre-se: um Tiquim de ajuda pode mudar a realidade de alguém!`;
+
+    navigator.clipboard.writeText(clipboardInfo);
+    setSnackbar("Link da campanha copiado para a área de transferência!");
+  };
+
   return (
     <Container sx={{ width: "80%", m: "auto" }}>
       <Grid container component="main" sx={{ height: "487px" }}>
@@ -136,26 +210,90 @@ export default function Campanha() {
           <Box
             sx={{
               my: 8,
-              mx: 4,
+              mx: { xs: 0, md: 4 },
               mt: { xs: 0 },
               ml: { xs: 0, sm: 6, md: 10 },
               mb: { xs: 2 },
               flexDirection: "column",
             }}
           >
-            <Chip
-              label={campaign.category}
-              sx={{ backgroundColor: "#32A852", color: "white", mt: 2, mb: 3 }}
+            <Box
+              sx={{
+                width: "100%",
+                height: "auto",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mt: 2,
+                mb: 3,
+              }}
+            >
+              <Chip label={campaign.category} sx={{ backgroundColor: "#32A852", color: "white" }} />
+              {id && (
+                <IconButton onClick={handleMenuOpen}>
+                  <MoreVertIcon />
+                </IconButton>
+              )}
+            </Box>
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+              <MenuItem onClick={handleCopyLink} sx={{ paddingX: 2 }}>
+                <ContentCopyIcon sx={{ mr: 1 }} />
+                <Typography>Copiar link</Typography>
+              </MenuItem>
+              <MenuItem onClick={() => setConfirmOpen(true)} sx={{ paddingX: 2 }}>
+                <ReportIcon sx={{ mr: 1, color: "red" }} />
+                <Typography sx={{ color: "red" }}>Denunciar</Typography>
+              </MenuItem>
+            </Menu>
+            <AlertDialog
+              open={confirmOpen}
+              onConfirm={handleReport}
+              onCancel={handleCancelReport}
+              message={"Tem certeza que deseja denunciar essa campanha?"}
+              title="Denúncia de Campanha"
             />
+            <Dialog open={openReasonModal} onClose={handleCancelReport}>
+              <DialogTitle>Informe a razão da denúncia</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Por favor, explique por que você está denunciando esta campanha.
+                </DialogContentText>
+                <TextField
+                  autoFocus
+                  id="reason"
+                  label="Razão"
+                  type="text"
+                  fullWidth
+                  multiline
+                  value={reason}
+                  onChange={handleChangeReason}
+                  sx={{
+                    wordBreak: "break-word",
+                  }}
+                  inputProps={{
+                    maxLength: 500,
+                  }}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCancelReport} color="primary">
+                  Cancelar
+                </Button>
+                <Button onClick={handleConfirmReport} color="primary">
+                  Confirmar
+                </Button>
+              </DialogActions>
+            </Dialog>
             <Typography variant="h4" sx={{ fontWeight: "bold" }}>
               {campaign.title}
             </Typography>
 
             <Box sx={{ mt: 3 }}>
-              <Typography variant="h4" sx={{ fontSize: 26, fontWeight: "bold", color: "#828282" }}>
+              <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
                 Arrecadado:
               </Typography>
-              <Typography variant="h4" sx={{ fontSize: 24, color: "#32A852" }}>
+              <Typography variant="h6" sx={{ color: "#32A852" }}>
                 R$
                 {typeof percentage === "number" || percentage instanceof Number
                   ? (Math.min(Number(percentage), 1) * campaign.goal).toFixed(2).replace(".", ",")
@@ -172,13 +310,10 @@ export default function Campanha() {
               }}
             >
               <Box>
-                <Typography
-                  variant="h5"
-                  sx={{ fontSize: 23, fontWeight: "bold", color: "#828282" }}
-                >
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
                   Meta:
                 </Typography>
-                <Typography variant="h6" sx={{ fontSize: 21, color: "#828282" }}>
+                <Typography variant="h6" sx={{ color: "#828282" }}>
                   R${Number(campaign.goal).toFixed(2).replace(".", ",")}
                 </Typography>
               </Box>
@@ -190,34 +325,31 @@ export default function Campanha() {
                   mb: { xs: 1 },
                 }}
               >
-                <Typography
-                  variant="h5"
-                  sx={{ fontSize: 23, fontWeight: "bold", color: "#828282" }}
-                >
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
                   Apoiadores:
                 </Typography>
-                <Typography variant="h6" sx={{ fontSize: 21, color: "#828282" }}>
+                <Typography variant="h6" sx={{ color: "#828282" }}>
                   {supporters}
                 </Typography>
               </Box>
             </Box>
+
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                width: { xs: "100%", sm: "100%", md: "100%" },
+                mt: 5,
+                mb: { xs: 4 },
+                backgroundColor: "#32a852",
+                "&:hover": { backgroundColor: "#008000" },
+                textTransform: "none",
+              }}
+               onClick={(e) => handleDonateToCampaign(e, campaign.id)}
+            >
+              Doar
+            </Button>
           </Box>
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{
-              width: { xs: "100%", sm: "100%", md: "80%" },
-              mt: { xs: 0, sm: 2, md: 1 },
-              ml: { xs: 0, sm: 6, md: 10 },
-              mb: { xs: 4 },
-              backgroundColor: "#32a852",
-              "&:hover": { backgroundColor: "#008000" },
-              textTransform: "none",
-            }}
-            onClick={(e) => handleDonateToCampaign(e, campaign.id)}
-          >
-            Doar
-          </Button>
         </Grid>
       </Grid>
 
@@ -236,9 +368,12 @@ export default function Campanha() {
           </Tabs>
         </Box>
         <AboutTabPanel campaign={campaign} value={tabValue} index={0} />
-        <CustomTabPanel value={tabValue} index={1}>
-          Item Two
-        </CustomTabPanel>
+        <PostsTabPanel
+          idCampaign={idCampaign}
+          idOwner={campaign.userId}
+          value={tabValue}
+          index={1}
+        ></PostsTabPanel>
         <CommentsTabPanel
           idCampaign={idCampaign}
           idOwner={campaign.userId}

@@ -2,7 +2,7 @@ import { User } from "@prisma/client";
 
 export type CreateUserDto = Pick<
   User,
-  "name" | "email" | "password" | "avatarUrl" | "city" | "state"
+  "name" | "email" | "password" | "avatarUrl" | "city" | "state" | "userTypeId"
 >;
 export type UpdateUserDto = Pick<
   User,

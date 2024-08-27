@@ -10,6 +10,10 @@ import rewardRouter from "../resources/reward/reward.router"
 import commentRouter from "../resources/comment/comment.router"
 import addressRouter from "../resources/address/address.router"
 import creditCardRouter from "../resources/creditCard/creditCard.router"
+import reportCommentRouter from "../resources/reportComment/reportComment.router"
+import reportCampaignRouter from "../resources/reportCampaign/reportCampaign.router"
+import postRouter from "../resources/post/post.router"
+
 const router = Router();
 
 router.use("/language",
@@ -35,7 +39,16 @@ rewardRouter);
 
 router.use("/comment", // #swagger.tags = ['Comment']
 commentRouter);
-    
+
+router.use("/reportComment", // #swagger.tags = ['ReportCampaign']
+reportCommentRouter);
+
+router.use("/reportCampaign", // #swagger.tags = ['ReportCampaign']
+reportCampaignRouter);
+
+router.use("/post", // #swagger.tags = ['Post']
+postRouter);
+
 router.use("/address", // #swagger.tage = ['Address']
 addressRouter);
 

@@ -24,6 +24,7 @@ const router = Router();
 
 router.get("/", userController.index);
 router.post("/", upload.single("avatarImage"), userController.create);
+router.post("/admin", isAdmin, upload.single("avatarImage"), userController.createAdmin);
 router.get("/:id", userController.read);
 router.get("/check/:email", userController.checkAvailableEmail);
 router.put("/:id", upload.single("avatarImage"), isAuth, userController.update);
