@@ -8,54 +8,13 @@ import QRCode from "qrcode.react";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
 import { Button } from "@mui/material";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import PaymentContext from "@/app/states/PaymentProvider";
-import { createPaymentMethod } from "@/app/services/paymentMethod";
-import { createContribution } from "@/app/services/contribution";
-import { usePathname, useRouter } from "next/navigation";
-import useSnackbar from "@/app/hooks/useSnackbar";
 
-
-const initialContributionData = {
-  amount: 0,
-  campaignId: "",
-  paymentMethodId: ",",
-};
 export default function PixMethod() {
   const [pixKey, setPixKey] = React.useState("");
-
-  //verificar melhor como obter o id da campanha: Utilizar contexto
-  const pathname = usePathname();
-  const campaignId = pathname ? pathname.split("/").pop() : null;
-
-  const { amount, contributionAmount, cardInfo, addressInfo, paymentMethod, setAmount } =
-    React.useContext(PaymentContext);
-
-  const { setSnackbar } = useSnackbar();
-  const router = useRouter();
 
   React.useEffect(() => {
     setPixKey(uuidv4());
   }, []);
-
-  const handleSubmit = async () => {
-    try {
-        const savedPayment = await createPaymentMethod(paymentMethod);
-        console.log("Forma de pagamento via pix cadastrada");
-
-        const formattedContribution = {
-          ...initialContributionData,
-          amount: amount,
-          campaignId: campaignId!,
-          paymentMethodId: savedPayment.id,
-        };
-        const savedContribution = await createContribution(formattedContribution);
-        setSnackbar("Contribuição realizada com sucesso!", "success");
-        router.push(`/campaign/${campaignId}`);
-    } catch (err) {
-      console.log("Erro ao finalizar pagamento:", err);
-      setSnackbar("Erro ao finalizar o pagamento", "error");
-    }
-  };
 
   return (
     <Box sx={{ width: "80%", m: "auto" }}>
@@ -91,7 +50,6 @@ export default function PixMethod() {
                   color: "white",
                   "&:hover": { backgroundColor: "#008000" },
                 }}
-                onClick={handleSubmit} //usando o botão confirmar para simular a "confirmação do pix"
               >
                 Confirmar
               </Button>

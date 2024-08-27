@@ -1,6 +1,7 @@
 import { Router } from "express";
 import paymentMethodController from "./paymentMethod.controller";
 import { isAuth } from "../../middlewares/isAdmin";
+
 const router = Router();
 
 router.get("/", isAuth, paymentMethodController.index);

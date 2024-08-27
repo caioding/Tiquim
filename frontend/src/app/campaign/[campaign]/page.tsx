@@ -31,7 +31,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import useAuthContext from "@/app/hooks/useAuthContext";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -59,8 +59,6 @@ function CustomTabPanel(props: TabPanelProps) {
 }
 
 export default function Campanha() {
-  const router = useRouter();
-
   const params = useParams();
 
   const [tabValue, setTabValue] = useState(0);
@@ -172,10 +170,6 @@ export default function Campanha() {
     setTabValue(newValue);
   };
 
-  const handleDonateToCampaign = (e: React.SyntheticEvent, idCampaign: string) => {
-    e.stopPropagation();
-    router.push(`/contribution/${idCampaign}`);
-  };
   const handleCopyLink = () => {
     const clipboardInfo = `
 A campanha "${campaign.title}" precisa da sua ajuda!
@@ -345,7 +339,6 @@ Lembre-se: um Tiquim de ajuda pode mudar a realidade de alguém!`;
                 "&:hover": { backgroundColor: "#008000" },
                 textTransform: "none",
               }}
-               onClick={(e) => handleDonateToCampaign(e, campaign.id)}
             >
               Doar
             </Button>

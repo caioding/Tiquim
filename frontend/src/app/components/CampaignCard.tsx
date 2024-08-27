@@ -66,9 +66,9 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
     router.push(`/campaign/${idCampaign}`);
   };
 
-  const handleDonateToCampaign = (e: React.SyntheticEvent, idCampaign: string) => {
+  const handleDonateToCampaign = (e: React.SyntheticEvent) => {
     e.stopPropagation();
-    router.push(`/contribution/${idCampaign}`);
+    router.push(`/contribution`);
   };
 
   return (
@@ -106,7 +106,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
             textTransform: "none",
             "&:hover": { backgroundColor: "#008000" },
           }}
-          onClick={(e) => handleDonateToCampaign(e, campaign.id)}
+          onClick={handleDonateToCampaign}
         >
           Doar
         </Button>

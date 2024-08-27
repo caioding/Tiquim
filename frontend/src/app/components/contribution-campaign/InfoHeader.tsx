@@ -15,14 +15,8 @@ interface InfoProps {
 }
 
 export default function InfoHeader({ onPaymentMethodChange }: InfoProps) {
-  const {
-    amount,
-    setAmount,
-    contributionAmount,
-    setContributionAmount,
-    paymentMethod,
-    setPaymentMethod,
-  } = useContext(PaymentContext);
+  const { contributionAmount, setContributionAmount, paymentMethod, setPaymentMethod } =
+    useContext(PaymentContext);
 
   const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const method = (event.target as HTMLInputElement).value;
@@ -39,7 +33,6 @@ export default function InfoHeader({ onPaymentMethodChange }: InfoProps) {
         }).format(parseFloat(rawValue) / 100)
       : "R$ "; // Valor padrão quando o campo está vazio
     setContributionAmount(formattedValue);
-    setAmount(parseFloat(rawValue) / 100);
   };
 
   return (

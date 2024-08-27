@@ -27,6 +27,7 @@ const index = async (req: Request, res: Response) => {
       }
       */
     const searchTerm = req.query.q ? req.query.q.toString() : "";
+
     const skip = req.query.skip ? parseInt(req.query.skip.toString()) : undefined;
     const take = req.query.take ? parseInt(req.query.take.toString()) : undefined;
     const campaigns = await listCampaigns(searchTerm, skip, take);
