@@ -27,6 +27,10 @@ interface IPaymentContext {
   setContributionAmount: React.Dispatch<React.SetStateAction<string>>;
   paymentMethod: string;
   setPaymentMethod: React.Dispatch<React.SetStateAction<string>>;
+  saveAddress: boolean;
+  setSaveAddress: React.Dispatch<React.SetStateAction<boolean>>;
+  saveCard: boolean;
+  setSaveCard: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface PaymentProviderProps {
@@ -57,6 +61,10 @@ const initialState: IPaymentContext = {
   setAddressInfo: () => {},
   setContributionAmount: () => {},
   setPaymentMethod: () => {},
+  saveAddress: false,
+  setSaveAddress: () => {},
+  saveCard: false,
+  setSaveCard: () => {},
 };
 
 const PaymentContext = createContext<IPaymentContext>(initialState);
@@ -65,6 +73,8 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({ children }) =>
   const [amount, setAmount] = useState(0);
   const [contributionAmount, setContributionAmount] = useState("R$ ");
   const [paymentMethod, setPaymentMethod] = useState("credit");
+  const [saveAddress, setSaveAddress] = useState<boolean>(initialState.saveAddress);
+  const [saveCard, setSaveCard] = useState<boolean>(initialState.saveCard);
 
   const [cardInfo, setCardInfo] = useState({
     cardNumber: "",
@@ -95,6 +105,10 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({ children }) =>
         setContributionAmount,
         paymentMethod,
         setPaymentMethod,
+        saveAddress,
+        setSaveAddress,
+        saveCard,
+        setSaveCard,
       }}
     >
       {children}

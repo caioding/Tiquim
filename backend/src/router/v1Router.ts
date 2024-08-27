@@ -11,7 +11,8 @@ import commentRouter from "../resources/comment/comment.router"
 import reportCommentRouter from "../resources/reportComment/reportComment.router"
 import reportCampaignRouter from "../resources/reportCampaign/reportCampaign.router"
 import postRouter from "../resources/post/post.router"
-
+import addressRouter from "../resources/address/address.router"
+import creditCardRouter from "../resources/creditCard/creditCard.router"
 const router = Router();
 
 router.use("/language",
@@ -48,4 +49,10 @@ router.use("/post", // #swagger.tags = ['Post']
 postRouter);
 
     
+router.use("/address", // #swagger.tage = ['Address']
+addressRouter);
+
+router.use("/creditCard", // #swagger.tage = ['CreditCard']
+creditCardRouter);
+
 export default router;
