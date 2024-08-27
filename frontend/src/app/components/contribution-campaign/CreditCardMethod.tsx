@@ -88,8 +88,6 @@ export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
   };
 
   const handleSubmit = async (idCampaign: string) => {
-    console.log("fim da pagina, hora de guardar os dados");
-    console.log("confirmando operação.");
     console.log(amount);
     console.log(contributionAmount);
     console.log(cardInfo);
@@ -97,8 +95,6 @@ export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
 
     if (saveAddress) {
       //se address já estiver la nao salva, uma dica pode ser verificar cep e numero do endereço
-
-      console.log("o usuario escolheu salvar o endereço");
 
       const formatedAddressData = {
         ...initialAddressInfoState,
@@ -111,17 +107,10 @@ export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
         country: addressInfo.country,
       };
 
-      console.log("Sending address data:", formatedAddressData);
       const savedAddress = await createAddress(formatedAddressData);
-    } else {
-      console.log("o usuario escolheu não salvar o endereço");
-    }
-    //como nao temos como salvar o cartão, mas sim o método de pagamento,
-
-    //update: coloquei o cartão no método de pagamento
+    } else {}
 
     if (saveCard) {
-      console.log("o usuario escolheu salvar o cartao");
 
       const formattedCardData = {
         ...initialCardDataState,
@@ -137,13 +126,9 @@ export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
       console.log("o usuario escolheu nao salvar o cartao");
     }
 
-    console.log("Forma de pagamento", paymentMethod);
-
     try {
       const formattedPM = {type: paymentMethod}
       const savedPaymentMethod = await createPaymentMethod(paymentMethod);
-
-      console.log("Forma de pagamento via cartão cadastrada");
 
       const formattedContribution = {
         ...initialContributionData,
