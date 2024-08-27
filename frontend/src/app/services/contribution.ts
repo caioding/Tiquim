@@ -1,5 +1,5 @@
 import api from "./api";
-import Contribution from "../types/contribution";
+import Contribution, { CreateContributionDto } from "../types/contribution";
 import { Campaign } from "../types/campaign";
 import { getCampaignDetails } from "./campaign";
 
@@ -24,4 +24,10 @@ export async function getCampaignsContributed(contributions: Contribution[]): Pr
       throw new Error("Could not fetch campaigns you have contributed");
     }
   } else return [];
+}
+
+export async function createContribution(contributionData: CreateContributionDto) {
+  if (contributionData) {
+    return api.post("/contribution", contributionData).then((response) => response.data);
+  }
 }
