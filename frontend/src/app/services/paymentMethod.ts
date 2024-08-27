@@ -19,18 +19,29 @@ export async function getPaymentMethod(type: string): Promise<string> {
 }
 
 export async function createPaymentMethod(paymentMethod: string) {
+  
+  const formattedPaymentMethod = paymentMethod === "credit" ? "CREDIT" : "PIX"
+
+  const formData = new FormData()
+
+  formData.append("type", formattedPaymentMethod);
+
   return api
     .post(
       `/paymentMethod`,
-      { type: paymentMethod.toUpperCase() },
-      {
+      formData, {
         headers: {
-          "Content-Type": "application/json",
-        },
-      },
+          "Content-Type": "application/json"
+        }
+      }
     )
-    .then((response) => response.data);
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error("Erro ao criar o método de pagamento:", error);
+      throw error;
+    });
 }
+
 
 export async function createCreditCard(cardData: CreditCardDto) {
   const formData = new FormData();

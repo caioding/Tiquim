@@ -54,6 +54,7 @@ const initialContributionData = {
   campaignId: "",
   paymentMethodId: ",",
 };
+
 export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
   const [activeStep, setActiveStep] = React.useState(0);
   const { setSnackbar } = useSnackbar();
@@ -139,6 +140,7 @@ export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
     console.log("Forma de pagamento", paymentMethod);
 
     try {
+      const formattedPM = {type: paymentMethod}
       const savedPaymentMethod = await createPaymentMethod(paymentMethod);
 
       console.log("Forma de pagamento via cartão cadastrada");

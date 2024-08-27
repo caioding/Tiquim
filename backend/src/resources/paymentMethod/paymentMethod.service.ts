@@ -4,31 +4,23 @@ import { PaymentMethodDto, CreatePaymentMethodDto, PaymentType } from "./payment
 import { PaymentMethodType } from "../paymentMethodType/paymentMethodType.constants";
 
 const prisma = new PrismaClient();
-/*
 
-model PaymentMethod {
-  id            String         @id @default(uuid()) @db.Char(36)
-  type          String         @db.VarChar(10) //CREDIT || PIX
-  cardHolderName String?       @db.VarChar(100) //criptografado
-  cardLastDigits String?       @db.Char(4)
-  cardExpiryDate String?       @db.Char(5)
-  createdAt     DateTime       @default(now()) @map("created_at")
-  updatedAt     DateTime       @updatedAt @map("updated_at")
-  contributions Contribution[]
-
-  @@map("payment_methods")
-}
-
-
-      cardHolderName: true,
-      cardLastDigits: true,
-      cardExpiryDate: true,
-      cvv: true,
-*/
 export const createPaymentMethod = async (
-  paymentMethod: PaymentType,
-  uid: string,
+  paymentMethod: {type: string},
+
 ): Promise<PaymentMethodDto> => {
+  let paymentTypeId: string;
+
+  
+  if (paymentMethod["type"] === 'CREDIT') {
+    paymentTypeId = PaymentMethodType.CREDIT;
+  } else if (paymentMethod["type"] === 'PIX') {
+    paymentTypeId = PaymentMethodType.PIX;
+  } else {
+    throw new Error(`Tipo de pagamento inválido: ${paymentMethod}`);
+  }
+
+  
   return await prisma.paymentMethod.create({
     select: {
       id: true,
@@ -37,7 +29,7 @@ export const createPaymentMethod = async (
       updatedAt: true,
     },
     data: {
-      paymentTypeId: paymentMethod === "CREDIT" ? PaymentMethodType.CREDIT : PaymentMethodType.PIX,
+      paymentTypeId
     },
   });
 };

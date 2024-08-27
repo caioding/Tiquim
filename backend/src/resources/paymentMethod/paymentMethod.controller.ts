@@ -33,21 +33,21 @@ const index = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  const paymentMethod = req.body as PaymentType;
+  const {type} = req.body as {type: string};
   try {
     /*
-      #swagger.summary = 'Cria um usuário novo.'
-      #swagger.parameters['tipoUsuario'] = { description: 'Tipo do usuário' }
+      #swagger.summary = 'Cria um método de pagamento.'
+      #swagger.parameters['tipoUsuario'] = { description: 'método de pagamento' }
       #swagger.parameters['body'] = {
       in: 'body',
-      schema: { $ref: '#/definitions/CreateUsuarioDto' }
+      schema: { $ref: '#/definitions/PaymentMethodDto' }
       }
       #swagger.responses[200] = {
-      schema: { $ref: '#/definitions/Usuario' }
+      schema: { $ref: '#/definitions/PaymentMethod' }
       }
       */
     const uid = req.session.uid!;
-    const nemPaymentMethod = await createPaymentMethod(paymentMethod, uid);
+    const nemPaymentMethod = await createPaymentMethod({type});
     res.status(StatusCodes.OK).json(nemPaymentMethod);
   } catch (err) {
     console.log(err);
@@ -58,14 +58,14 @@ const create = async (req: Request, res: Response) => {
 const read = async (req: Request, res: Response) => {
   try {
     /*
-      #swagger.summary = 'Cria um usuário novo.'
-      #swagger.parameters['tipoUsuario'] = { description: 'Tipo do usuário' }
+      #swagger.summary = 'Retorna um método de pagamento'
+      #swagger.parameters['tipoUsuario'] = { description: 'Tipo de pagamento' }
       #swagger.parameters['body'] = {
       in: 'body',
-      schema: { $ref: '#/definitions/CreateUsuarioDto' }
+      schema: { $ref: '#/definitions/PaymentMethodDto' }
       }
       #swagger.responses[200] = {
-      schema: { $ref: '#/definitions/Usuario' }
+      schema: { $ref: '#/definitions/PaymentMethod' }
       }
       */
     const { id } = req.params;
@@ -80,14 +80,14 @@ const read = async (req: Request, res: Response) => {
 
 const update = async (req: Request, res: Response) => {
   /*
-  #swagger.summary = 'Modifica os atributos de um usuário.'
-  #swagger.parameters['id'] = { description: 'ID do usuário' }
+  #swagger.summary = 'Modifica os atributos de um método de pagamento.'
+  #swagger.parameters['id'] = { description: 'ID do método de pagamento' }
   #swagger.parameters['body'] = {
   in: 'body',
-  schema: { $ref: '#/definitions/UpdateUsuarioDto' }
+  schema: { $ref: '#/definitions/PaymentMethodDto' }
   }
   #swagger.responses[200] = {
-  schema: { $ref: '#/definitions/Usuario' }
+  schema: { $ref: '#/definitions/PaymentMethod' }
   }
   */
   const { id } = req.params;
@@ -113,8 +113,8 @@ const update = async (req: Request, res: Response) => {
 
 const remove = async (req: Request, res: Response) => {
   /*
-  #swagger.summary = 'Apaga um usuário com base no ID.'
-  #swagger.parameters['id'] = { description: 'ID do usuário' }
+  #swagger.summary = 'Apaga um método de pagamento com base no ID.'
+  #swagger.parameters['id'] = { description: 'ID do método de pagamento / transação' }
   */
   const { id } = req.params;
   try {
