@@ -22,12 +22,12 @@ model User {
   campaigns      Campaign[]
   contributions  Contribution[]
   addresses      Address[]
+  paymentMethods PaymentMethod[]
   messages       Message[]
   posts          Post[]
   userType       UserType         @relation(fields: [userTypeId], references: [id])
   userRewards    UserReward[]
   Comment        Comment[]
-  CreditCards    CreditCard[]
   CommentReport  reportComment[]
   reportCampaign reportCampaign[]
 
@@ -103,36 +103,18 @@ model Contribution {
 }
 
 model PaymentMethod {
-  id                String         @id @default(uuid()) @db.Char(36)
-  paymentTypeId     String         @map("payment_type_id") @db.VarChar(36) //CREDIT || PIX
-  createdAt         DateTime       @default(now()) @map("created_at")
-  updatedAt         DateTime       @updatedAt @map("updated_at")
-  contributions     Contribution[]
-  paymentMethodType PaymentMethodType @relation(fields: [paymentTypeId], references: [id])
-  
-  @@index([paymentTypeId], map: "payment_method_type_id_fkey")
+  id            String         @id @default(uuid()) @db.Char(36)
+  type          String         @db.VarChar(10)
+  userId        String         @map("user_id") @db.Char(36)
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  contributions Contribution[]
+  user          User           @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "payment_methods_user_id_fkey")
   @@map("payment_methods")
 }
 
-model PaymentMethodType {
-  id  String  @id @default(uuid()) @db.Char(36)
-  label String @db.Char(8)
-  paymentMethod PaymentMethod[]
-
-  @@map("payment_method_type")
-}
-
-model CreditCard {
-  id             String        @id @default(uuid()) @db.Char(36)
-  userId         String        @map("user_id") @db.Char(36)
-  cardNumber     String        @db.VarChar(60) //criptografado como fez com a senha
-  cardHolderName String        @db.VarChar(100) 
-  cardLastDigits String        @db.Char(4)
-  cardExpiryDate String        @db.Char(5)
-  cvv            String        @db.Char(3)
-  user           User          @relation(fields: [userId], references: [id])
-  @@map("credit_card")
-}
 model Reward {
   id            String       @id @default(uuid()) @db.Char(36)
   title         String       @db.VarChar(50)

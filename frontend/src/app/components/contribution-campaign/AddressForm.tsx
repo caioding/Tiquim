@@ -29,8 +29,7 @@ const StyledOutlinedInput = styled(OutlinedInput)(() => ({
 }));
 
 export default function AddressForm() {
-  const { addressInfo, setAddressInfo, saveAddress, setSaveAddress } = useContext(PaymentContext);
-  // saveAddress, setSaveAddress do context para pegar os dados
+  const { addressInfo, setAddressInfo } = useContext(PaymentContext);
   const [zip, setZip] = React.useState("");
   const { address, isLoading: isAddressLoading, isError: isAddressError } = useAddress(zip);
   const [selectedCountry, setSelectedCountry] = React.useState("");
@@ -182,8 +181,7 @@ export default function AddressForm() {
             control={
               <Checkbox
                 name="saveAddress"
-                checked={saveAddress}
-                onChange={(e) => setSaveAddress(e.target.checked)} // Editado para Salvar dados para futuras doações
+                value="yes"
                 sx={{ "&.Mui-checked": { color: "green" } }}
               />
             }

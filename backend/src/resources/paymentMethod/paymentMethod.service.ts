@@ -1,35 +1,24 @@
 import { Request } from "express";
 import { PrismaClient } from "@prisma/client";
-import { PaymentMethodDto, CreatePaymentMethodDto, PaymentType } from "./paymentMethod.types";
-import { PaymentMethodType } from "../paymentMethodType/paymentMethodType.constants";
+import { PaymentMethodDto, CreatePaymentMethodDto } from "./paymentMethod.types";
 
 const prisma = new PrismaClient();
 
 export const createPaymentMethod = async (
-  paymentMethod: {type: string},
-
+  paymentMethod: CreatePaymentMethodDto,
+  uid: string,
 ): Promise<PaymentMethodDto> => {
-  let paymentTypeId: string;
-
-  
-  if (paymentMethod["type"] === 'CREDIT') {
-    paymentTypeId = PaymentMethodType.CREDIT;
-  } else if (paymentMethod["type"] === 'PIX') {
-    paymentTypeId = PaymentMethodType.PIX;
-  } else {
-    throw new Error(`Tipo de pagamento inválido: ${paymentMethod}`);
-  }
-
-  
   return await prisma.paymentMethod.create({
     select: {
       id: true,
-      paymentTypeId: true,
+      type: true,
+      userId: true,
       createdAt: true,
       updatedAt: true,
     },
     data: {
-      paymentTypeId
+      ...paymentMethod,
+      userId: uid,
     },
   });
 };
@@ -42,10 +31,12 @@ export const listPaymentMethods = async (
   return prisma.paymentMethod.findMany({
     select: {
       id: true,
-      paymentTypeId: true,
+      type: true,
+      userId: true,
       createdAt: true,
       updatedAt: true,
     },
+    where: { userId: uid },
     skip,
     take,
   });
@@ -58,25 +49,26 @@ export const readPaymentMethod = async (
   return await prisma.paymentMethod.findUnique({
     select: {
       id: true,
-      paymentTypeId: true,
+      type: true,
+      userId: true,
       createdAt: true,
       updatedAt: true,
     },
-    where: { id },
+    where: { id: id, userId: uid },
   });
 };
 
 export const updatePaymentMethod = async (
   id: string,
-  updatedPaymentMethod: PaymentMethodDto,
+  updatedPaymentMethod: CreatePaymentMethodDto,
   uid: string,
 ): Promise<PaymentMethodDto | null> => {
   return await prisma.paymentMethod.update({
-    where: { id },
+    where: { id: id, userId: uid },
     data: updatedPaymentMethod,
   });
 };
 
-export const deletePaymentMethod = async (id: string): Promise<PaymentMethodDto> => {
-  return await prisma.paymentMethod.delete({ where: { id: id } });
+export const deletePaymentMethod = async (id: string, uid: string): Promise<PaymentMethodDto> => {
+  return await prisma.paymentMethod.delete({ where: { id: id, userId: uid } });
 };
