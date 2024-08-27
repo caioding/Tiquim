@@ -3,25 +3,6 @@ import { AddressDto, CreateAddressDto } from "./address.types";
 
 const prisma = new PrismaClient();
 
-/**
- * 
- * 
- * model Address {
-  id        String   @id @default(uuid()) @db.Char(36)
-  number    String   @db.VarChar(5)
-  cep       String   @db.Char(8)
-  city      String   @db.VarChar(100)
-  uf        String   @db.Char(2)
-  userId    String   @map("user_id") @db.Char(36)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  user      User     @relation(fields: [userId], references: [id])
-
-  @@index([userId], map: "addresses_user_id_fkey")
-  @@map("addresses")
-}
- */
-
 export const createAddress = async (
   address: CreateAddressDto,
   uid: string,
@@ -44,7 +25,6 @@ export const createAddress = async (
       },
     });
   } catch (err) {
-    console.log("erro no service: ", err);
     throw err;
   }
 };

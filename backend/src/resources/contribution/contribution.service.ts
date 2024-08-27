@@ -7,7 +7,6 @@ export const createContribution = async (
   contribution: CreateContributionDto,
   uid: string,
 ): Promise<ContributionDto> => {
-  //obter uid aqui de algum jeito
   const paymentMethod = await prisma.paymentMethod.findUnique({
     select: {
       id: true,
