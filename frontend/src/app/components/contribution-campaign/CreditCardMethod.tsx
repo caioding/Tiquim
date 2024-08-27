@@ -5,6 +5,18 @@ import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import AddressForm from "./AddressForm";
 import CreditCardDetails from "./CreditCardDetails";
+import PaymentContext from "@/app/states/PaymentProvider";
+import { createAddress } from "@/app/services/address";
+import { createCreditCard, createPaymentMethod } from "@/app/services/paymentMethod";
+import { createContribution } from "@/app/services/contribution";
+import { usePathname, useRouter } from "next/navigation";
+import useSnackbar from "@/app/hooks/useSnackbar";
+import { Campaign } from "@/app/types/campaign";
+import { useContext } from "react";
+
+interface CampaignCreditProps {
+  campaign: Campaign;
+}
 
 const steps = ["Detalhes do Pagamento", "Endereço de Cobrança", "Revisão de Pagamento"];
 
@@ -20,16 +32,117 @@ function getStepContent(step: number) {
       throw new Error("Passo desconhecido");
   }
 }
+const initialAddressInfoState = {
+  cep: "",
+  street: "",
+  number: "",
+  neighborhood: "",
+  city: "",
+  uf: "",
+  country: "",
+};
 
-export default function CreditCardMethod() {
+const initialCardDataState = {
+  cardNumber: "",
+  cardHolderName: "",
+  expirationDate: "",
+  cvv: "",
+};
+
+const initialContributionData = {
+  amount: 0,
+  campaignId: "",
+  paymentMethodId: ",",
+};
+
+export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
   const [activeStep, setActiveStep] = React.useState(0);
+  const { setSnackbar } = useSnackbar();
+  const router = useRouter();
+
+  //verificar melhor como obter o id da campanha: Utilizar contexto
+  const pathname = usePathname();
+  const campaignId = pathname ? pathname.split("/").pop() : null;
+
+  const {
+    amount,
+    contributionAmount,
+    cardInfo,
+    addressInfo,
+    paymentMethod,
+    saveAddress,
+    saveCard,
+    setAmount,
+  } = React.useContext(PaymentContext);
+  // saveAddress, setSaveAddress do context para pegar os dados
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (activeStep === 2 && paymentMethod === "credit") {
+      //hora que confirma o pagamento pq chegou na última aba e o usuário escolheu cartão de crédito
+      handleSubmit(campaignId!);
+    } else setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleSubmit = async (idCampaign: string) => {
+    console.log(amount);
+    console.log(contributionAmount);
+    console.log(cardInfo);
+    console.log(addressInfo);
+
+    if (saveAddress) {
+      //se address já estiver la nao salva, uma dica pode ser verificar cep e numero do endereço
+
+      const formatedAddressData = {
+        ...initialAddressInfoState,
+        cep: addressInfo.zip,
+        street: addressInfo.zip,
+        number: addressInfo.number.toString(),
+        neighborhood: addressInfo.neighborhood,
+        city: addressInfo.city,
+        uf: addressInfo.state,
+        country: addressInfo.country,
+      };
+
+      const savedAddress = await createAddress(formatedAddressData);
+    } else {}
+
+    if (saveCard) {
+
+      const formattedCardData = {
+        ...initialCardDataState,
+        cardNumber: cardInfo.cardNumber,
+        cardHolderName: cardInfo.cardHolderName,
+        expirationDate: cardInfo.expirationDate,
+        cardLastDigits: cardInfo.cardNumber.slice(-4),
+        cvv: cardInfo.cvv,
+      };
+      const saveCard = await createCreditCard(formattedCardData);
+      console.log("Sending Card data:", formattedCardData);
+    } else {
+      console.log("o usuario escolheu nao salvar o cartao");
+    }
+
+    try {
+      const formattedPM = {type: paymentMethod}
+      const savedPaymentMethod = await createPaymentMethod(paymentMethod);
+
+      const formattedContribution = {
+        ...initialContributionData,
+        amount: amount,
+        campaignId: campaignId!,
+        paymentMethodId: savedPaymentMethod.id,
+      };
+
+      const savedContribution = await createContribution(formattedContribution);
+      setSnackbar("Contribuição realizada com sucesso!", "success");
+      router.push(`/campaign/${idCampaign}`);
+    } catch (err) {
+      setSnackbar("Erro ao criar a contribuição", "error");
+    }
   };
 
   return (

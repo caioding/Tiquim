@@ -7,3 +7,5 @@ export default interface Contribution {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type CreateContributionDto = Pick<Contribution, "amount" | "campaignId" | "paymentMethodId">;

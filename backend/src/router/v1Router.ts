@@ -8,6 +8,8 @@ import paymentMethodRouter from "../resources/paymentMethod/paymentMethod.router
 import contributionRouter from "../resources/contribution/contribution.router"
 import rewardRouter from "../resources/reward/reward.router"
 import commentRouter from "../resources/comment/comment.router"
+import addressRouter from "../resources/address/address.router"
+import creditCardRouter from "../resources/creditCard/creditCard.router"
 import reportCommentRouter from "../resources/reportComment/reportComment.router"
 import reportCampaignRouter from "../resources/reportCampaign/reportCampaign.router"
 import postRouter from "../resources/post/post.router"
@@ -47,5 +49,10 @@ reportCampaignRouter);
 router.use("/post", // #swagger.tags = ['Post']
 postRouter);
 
-    
+router.use("/address", // #swagger.tage = ['Address']
+addressRouter);
+
+router.use("/creditCard", // #swagger.tage = ['CreditCard']
+creditCardRouter);
+
 export default router;

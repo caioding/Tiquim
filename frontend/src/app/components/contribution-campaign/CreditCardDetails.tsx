@@ -22,7 +22,8 @@ const FormGrid = styled(Grid)(() => ({
 }));
 
 export default function CreditCardDetails() {
-  const { cardInfo, setCardInfo } = useContext(PaymentContext);
+  const { cardInfo, setCardInfo, saveCard, setSaveCard } = useContext(PaymentContext);
+  // saveAddress, setSaveAddress do context para pegar os dados
   const [focus, setFocus] = React.useState<Focused | undefined>(undefined);
 
   const handleCardNumberChange = (event: { target: { value: string } }) => {
@@ -144,8 +145,9 @@ export default function CreditCardDetails() {
           <FormControlLabel
             control={
               <Checkbox
-                name="saveAddress"
-                value="yes"
+                name="saveCard"
+                checked={saveCard}
+                onChange={(e) => setSaveCard(e.target.checked)} // Editado para Salvar dados para futuras doações
                 sx={{
                   "&.Mui-checked": {
                     color: "green",

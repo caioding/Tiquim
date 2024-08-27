@@ -11,7 +11,7 @@ export const createContribution = async (
     select: {
       id: true,
     },
-    where: { id: contribution.paymentMethodId, userId: uid },
+    where: { id: contribution.paymentMethodId },
   });
   if (!paymentMethod) {
     throw new Error("Método de pagamento não pertence ao usuário logado");
