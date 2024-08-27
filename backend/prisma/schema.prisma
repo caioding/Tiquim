@@ -121,7 +121,7 @@ model PaymentMethodType {
 model CreditCard {
   id             String        @id @default(uuid()) @db.Char(36)
   userId         String        @map("user_id") @db.Char(36)
-  cardNumber     String        @db.VarChar(60) //criptografado como fez com a senha
+  cardNumber     String        @db.VarChar(60)
   cardHolderName String        @db.VarChar(100) 
   cardLastDigits String        @db.Char(4)
   cardExpiryDate String        @db.Char(5)
