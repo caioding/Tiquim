@@ -126,7 +126,8 @@ export default function CreditCardDetails() {
                     ))}
                   </Select>
                 }
-                label="Selecionar cartão salvo"
+                label=""
+                sx={{ml: 0}}
               />
             </Grid>
             <Grid item xs={12}>

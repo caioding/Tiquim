@@ -94,35 +94,54 @@ export default function YourProfile() {
     } else {
       return campaigns?.map((campaign) => (
         <Grid item xs={12} sm={6} md={4} lg={3} key={campaign.id}>
-          <Card sx={{ p: 2, borderRadius: 2, width: {xs: "100%", sm:"200px"}, height:"72px", cursor:"pointer" }}>
-           <CardHeader 
-            avatar = {
-              <Avatar sx={{bgcolor: "black"} } aria-label="recipe">
-                  {imagesUrl[campaign.id] ? (
-                    <Box 
-                      component="img"
-                      sx={{
-                        height:40,
-                        width:40,
-                        
-                      }}
-                      src={imagesUrl[campaign.id]}
-                    />
-                  ) : (
-                    <AccountCircleIcon sx = {{height: "auto", width: "auto"}} />
-                  ) }
-
+        <Card
+          sx={{
+            p: 2,
+            borderRadius: 2,
+            width: { xs: "100%", sm: "200px" },
+            height: "auto",
+            cursor: "pointer",
+          }}
+        >
+          <CardHeader
+            avatar={
+              <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
+                {imagesUrl[campaign.id] ? (
+                  <Box
+                    component="img"
+                    sx={{
+                      height: 40,
+                      width: 40,
+                    }}
+                    src={imagesUrl[campaign.id]}
+                  />
+                ) : (
+                  <AccountCircleIcon sx={{ height: "auto", width: "auto" }} />
+                )}
               </Avatar>
             }
-            
-            title={campaign.title}
-            titleTypographyProps={{fontWeight: "bold", }}
+            title={
+              <Typography
+                variant="body2"
+                sx={{
+                  fontWeight: "bold",
+                  display: "-webkit-box",
+                  WebkitBoxOrient: "vertical",
+                  WebkitLineClamp: 2,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {campaign.title}
+              </Typography>
+            }
+            titleTypographyProps={{ fontWeight: "bold" }}
             onClick={() => handleCampaignClick(campaign.id)}
-            
-           />
-          </Card>
-        </Grid>
-      ));
+          />
+        </Card>
+      </Grid>
+
+    ));
     }
   };
 
@@ -154,39 +173,53 @@ export default function YourProfile() {
     } else {
       return yourContributions?.map((campaign) => (
         <Grid item xs={12} sm={6} md={4} lg={3} key={campaign.id}>
-          <Card sx={{ p: 2, borderRadius: 2, width: {xs: "100%", sm:"200px"}, height:"72px", cursor:"pointer" }}>
-           <CardHeader 
-            avatar = {
-              <Avatar sx={{bgcolor: "black"} } aria-label="recipe">
+          <Card
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              width: { xs: "100%", sm: "200px" },
+              height: "auto",
+              cursor: "pointer",
+            }}
+          >
+            <CardHeader
+              avatar={
+                <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
                   {imagesUrl[campaign.id] ? (
-                    <Box 
+                    <Box
                       component="img"
                       sx={{
-                        height:40,
-                        width:40,
-                        
+                        height: 40,
+                        width: 40,
                       }}
                       src={imagesUrl[campaign.id]}
                     />
                   ) : (
-                    <AccountCircleIcon sx = {{height: "auto", width: "auto"}} />
-                  ) }
-
-              </Avatar>
-            }
-            
-            title={campaign.title}
-            titleTypographyProps={{
-              fontWeight: "bold", 
-              whiteSpace:"nowrap" ,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "80%"}}
-            onClick={() => handleCampaignClick(campaign.id)}
-            
-           />
+                    <AccountCircleIcon sx={{ height: "auto", width: "auto" }} />
+                  )}
+                </Avatar>
+              }
+              title={
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontWeight: "bold",
+                    display: "-webkit-box",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: 2,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {campaign.title}
+                </Typography>
+              }
+              titleTypographyProps={{ fontWeight: "bold" }}
+              onClick={() => handleCampaignClick(campaign.id)}
+            />
           </Card>
         </Grid>
+
       ));
     }
   };
