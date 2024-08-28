@@ -25,6 +25,7 @@ import { CommentsTabPanel } from "@/app/components/comments/CommentsTabPanel";
 import { SupportersTabPanel } from "@/app/components/supporters/SupportersTabPanel";
 import { useCampaignPercentage } from "@/app/hooks/useCampaignPercentage";
 import { PostsTabPanel } from "@/app/components/posts/PostsTabPanel";
+import { formatDate } from "@/app/utils/datetime";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -156,6 +157,8 @@ export default function YourCampaign() {
     setOpen(false);
   };
 
+  const deadline = formatDate(campaign.deadline).toString();
+
   return (
     <Container sx={{ width: "80%", m: "auto" }}>
       <Grid container component="main" sx={{ height: "487px" }}>
@@ -216,48 +219,50 @@ export default function YourCampaign() {
             </Typography>
 
             <Box sx={{ mt: 3 }}>
-              <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
-                Arrecadado:
-              </Typography>
-              <Typography variant="h6" sx={{ color: "#32A852" }}>
-                R$
-                {typeof percentage === "number" || percentage instanceof Number
-                  ? (Math.min(Number(percentage), 1) * campaign.goal).toFixed(2).replace(".", ",")
-                  : 0}
-              </Typography>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
+                    Arrecadado:
+                  </Typography>
+                  <Typography variant="h6" sx={{ color: "#32A852" }}>
+                    R$
+                    {typeof percentage === "number" || percentage instanceof Number
+                      ? (Math.min(Number(percentage), 1) * campaign.goal)
+                          .toFixed(2)
+                          .replace(".", ",")
+                      : 0}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
+                    Prazo:
+                  </Typography>
+                  <Typography variant="h6" sx={{ color: "#828282" }}>
+                    {deadline}
+                  </Typography>
+                </Grid>
+              </Grid>
             </Box>
 
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: { xs: "column", sm: "row", md: "row" },
-                justifyContent: "space-between",
-                mt: 3,
-              }}
-            >
-              <Box>
-                <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
-                  Meta:
-                </Typography>
-                <Typography variant="h6" sx={{ color: "#828282" }}>
-                  R${Number(campaign.goal).toFixed(2).replace(".", ",")}
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  mr: { sm: 0, md: 0, lg: 5 },
-                  mt: { xs: 2, sm: 0, md: 0, lg: 0 },
-                  ml: { sm: 2, md: 2 },
-                  mb: { xs: 1 },
-                }}
-              >
-                <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
-                  Apoiadores:
-                </Typography>
-                <Typography variant="h6" sx={{ color: "#828282" }}>
-                  {supporters}
-                </Typography>
-              </Box>
+            <Box sx={{ mt: 3 }}>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
+                    Meta:
+                  </Typography>
+                  <Typography variant="h6" sx={{ color: "#828282" }}>
+                    R${Number(campaign.goal).toFixed(2).replace(".", ",")}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="h6" sx={{ fontWeight: "bold", color: "#828282" }}>
+                    Apoiadores:
+                  </Typography>
+                  <Typography variant="h6" sx={{ color: "#828282" }}>
+                    {supporters}
+                  </Typography>
+                </Grid>
+              </Grid>
             </Box>
           </Box>
         </Grid>
@@ -272,7 +277,7 @@ export default function YourCampaign() {
             <Tab label="Apoiadores" />
           </Tabs>
         </Box>
-        <AboutTabPanel campaign={campaign} value={tabValue} index={0} />
+        <AboutTabPanel campaign={campaign} authorId={campaign.userId} value={tabValue} index={0} />
         <PostsTabPanel
           idCampaign={idCampaign}
           idOwner={campaign.userId}

@@ -20,6 +20,7 @@ import { createReportComment } from "@/app/services/report";
 import ReportIcon from "@mui/icons-material/Report";
 import AlertDialog from "../DialogConfirmationDelete";
 import useSnackbar from "../../hooks/useSnackbar";
+import { useRouter } from "next/navigation";
 
 interface CommentCardProps {
   comment: Comment;
@@ -27,6 +28,7 @@ interface CommentCardProps {
 }
 
 export function CommentCard({ comment, id }: CommentCardProps) {
+  const router = useRouter();
   const { user } = useUser(comment.userId);
   const [avatar, setAvatar] = useState<string>("/placeholder.png");
 
@@ -82,7 +84,13 @@ export function CommentCard({ comment, id }: CommentCardProps) {
     <Card sx={{ width: { xs: "100%", sm: "80%" }, margin: "5px auto", boxShadow: 3 }}>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
+          <Avatar
+            sx={{ bgcolor: "black", cursor: "pointer" }}
+            aria-label="recipe"
+            onClick={() => {
+              router.push(`/profile/${comment.userId}`);
+            }}
+          >
             {avatar ? (
               <Box
                 component="img"

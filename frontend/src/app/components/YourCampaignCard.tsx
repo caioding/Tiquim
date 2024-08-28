@@ -113,6 +113,7 @@ export function YourCampaignCard({ campaign, handleOpen }: CampaignCardProps) {
         flexDirection: "column",
         justifyContent: "space-between",
         m: { xs: "auto", sm: 0 },
+        cursor: "pointer",
       }}
       onClick={() => openCampaignDetails(campaign.id)}
     >
@@ -121,6 +122,7 @@ export function YourCampaignCard({ campaign, handleOpen }: CampaignCardProps) {
         <CardHeader
           title={campaign.title}
           author={user.name}
+          authorId={user.id}
           createdAt={datetime}
           completedPercentage={completedPercentage}
           city={campaign.city}
