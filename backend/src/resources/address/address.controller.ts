@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createAddress, deleteUserAddress, listAddress } from "./address.service";
+import { createAddress, deleteUserAddress, listAddress, readUserAddress } from "./address.service";
 import { StatusCodes } from "http-status-codes";
 import { CreateAddressDto } from "./address.types";
 
@@ -39,6 +39,20 @@ const create = async (req: Request, res: Response) => {
   }
 };
 
+const read = async (req: Request, res: Response) => {
+  const uid = req.session.uid!;
+
+  try {
+    const userAddress = await readUserAddress(uid);
+    res.status(StatusCodes.OK).json(userAddress);
+  } catch (err) {
+    console.error("Erro ao buscar os endereços", err);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Não foi possível buscar os endereços." });
+  }
+};
+
 const remove = async (req: Request, res: Response) => {
   /*
     #swagger.summary = 'Apaga o endereço com base no ID.'
@@ -54,4 +68,4 @@ const remove = async (req: Request, res: Response) => {
   }
 };
 
-export default { index, create, remove };
+export default { index, read, create, remove };

@@ -5,7 +5,7 @@ import { isAuth } from "../../middlewares/isAdmin";
 const router = Router();
 
 router.post("/", creditCardController.create);
-router.get("/:userId", isAuth, creditCardController.read);
+router.get("/:id", isAuth, creditCardController.read);
 router.put("/:id", creditCardController.update);
 router.delete("/:id", creditCardController.remove);
 
