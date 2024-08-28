@@ -60,3 +60,9 @@ export async function createCreditCard(cardData: CreditCardDto) {
     })
     .then((response) => response.data);
 }
+
+export async function getCreditCards(userId: string) {
+
+  return api.get(`/creditCard/${userId}`, {
+  }).then((response) => response.data);
+}
