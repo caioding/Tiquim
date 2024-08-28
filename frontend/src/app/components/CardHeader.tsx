@@ -1,4 +1,4 @@
-import { Box, Stack, Tooltip, Typography } from "@mui/material";
+import { Box, Link, Stack, Tooltip, Typography } from "@mui/material";
 import React from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { capitalize } from "../utils/capitalize";
@@ -7,6 +7,7 @@ import { getUserName } from "../utils/name";
 interface CardHearderProps {
   title: string;
   author: string;
+  authorId: string;
   createdAt: string;
   completedPercentage: number;
   state: string;
@@ -16,6 +17,7 @@ interface CardHearderProps {
 export function CardHeader({
   title,
   author,
+  authorId,
   createdAt,
   completedPercentage,
   state,
@@ -48,7 +50,13 @@ export function CardHeader({
           component="h2"
           sx={{ mb: 0, fontSize: 12 }}
         >
-          {getUserName(author)} • Criado em {createdAt.toString()}
+          <Link
+            href={`/profile/${authorId}`}
+            sx={{ textDecoration: "none", color: "inherit", cursor: "pointer" }}
+          >
+            {getUserName(author)}
+          </Link>{" "}
+          • Criado em {createdAt.toString()}
         </Typography>
         <Typography
           variant="caption"

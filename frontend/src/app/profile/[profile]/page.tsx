@@ -7,15 +7,16 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { getAvatarUser } from "../../services/user";
 import useAuthContext from "../../hooks/useAuthContext";
-import { Card, CardContent, Fab, Tooltip, useMediaQuery } from "@mui/material";
+import { Card, CardContent, Tooltip } from "@mui/material";
 import { getImageCampaign } from "../../services/campaign";
 import { useContributions, useCampaignsByContribution } from "../../hooks/useUserContributions";
 import { useUser } from "../../hooks/useUser";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useUserCampaigns } from "@/app/hooks/useUserCampaigns";
 
 export default function Profile() {
+  const router = useRouter();
   const { id } = useAuthContext();
 
   const pathname = usePathname();
@@ -154,7 +155,15 @@ export default function Profile() {
       );
     } else {
       return yourContributions?.map((campaign) => (
-        <Grid item xs={12} sm={4} key={campaign.id}>
+        <Grid
+          item
+          xs={12}
+          sm={4}
+          key={campaign.id}
+          onClick={() => {
+            router.push(`/campaign/${campaign.id}`);
+          }}
+        >
           <Card sx={{ p: 2, borderRadius: 2 }}>
             <CardContent>
               <Grid container alignItems="center">

@@ -1,21 +1,25 @@
 "use client";
-import React from "react";
-import { Box, CssBaseline, Grid, Typography } from "@mui/material";
+import { Box, CssBaseline, Grid, Link, Typography } from "@mui/material";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { Campaign } from "../types/campaign";
 import { useCampaignPercentage } from "../hooks/useCampaignPercentage";
 import { capitalize } from "../utils/capitalize";
+import { useUser } from "../hooks/useUser";
+import { getUserName } from "../utils/name";
 
 interface TabPanelProps {
   campaign: Campaign;
+  authorId: string;
   index: number;
   value: number;
 }
 
 export function AboutTabPanel(props: TabPanelProps) {
-  const { campaign, value, index, ...other } = props;
+  const { campaign, authorId, value, index, ...other } = props;
 
   const { percentage, isPending, isError } = useCampaignPercentage(campaign.id);
+
+  const { user } = useUser(authorId);
 
   if (isPending) {
     return <div>Loading...</div>;
@@ -52,7 +56,13 @@ export function AboutTabPanel(props: TabPanelProps) {
                 {campaign.title}
               </Typography>
               <Typography sx={{ mt: 3 }}>
-                Campanha originada em {capitalize(campaign.city)}/{campaign.state}
+                Campanha originada em {capitalize(campaign.city)}/{campaign.state} por{" "}
+                <Link
+                  href={`/profile/${authorId}`}
+                  sx={{ textDecoration: "underline", color: "#32A852", cursor: "pointer" }}
+                >
+                  {getUserName(user?.name ?? "")}
+                </Link>
               </Typography>
               <Typography variant="body1" sx={{ mt: 3 }}>
                 {campaign.description}
