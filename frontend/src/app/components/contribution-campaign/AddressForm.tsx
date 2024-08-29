@@ -40,11 +40,20 @@ interface AddressFormProps {
     state: string;
     country: string;
   };
+  setErrors: React.Dispatch<React.SetStateAction<{
+    zip: string;
+    street: string;
+    number: string;
+    neighborhood: string;
+    city: string;
+    state: string;
+    country: string;
+  }>>;
 }
 
-export default function AddressForm({ errors }: AddressFormProps) {
+export default function AddressForm({ errors, setErrors }: AddressFormProps) {
   const { id } = useAuthContext();
-  const { addressInfo, setAddressInfo, saveAddress, setSaveAddress} = useContext(PaymentContext);
+  const { addressInfo, setAddressInfo, saveAddress, setSaveAddress } = useContext(PaymentContext);
   const [zip, setZip] = React.useState("");
   const { address, isLoading: isAddressLoading, isError: isAddressError } = useAddress(zip);
   const [selectedCountry, setSelectedCountry] = React.useState("");
@@ -59,6 +68,7 @@ export default function AddressForm({ errors }: AddressFormProps) {
   const handleCepChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const cep = event.target.value;
     setAddressInfo((prev) => ({ ...prev, zip: cep }));
+    setErrors((prevErrors) => ({ ...prevErrors, zip: "" }));
 
     // Verifica se o CEP tem 8 dígitos e é brasileiro
     if (cep.length === 8 && /^[0-9]{5}-?[0-9]{3}$/.test(cep)) {
@@ -81,10 +91,12 @@ export default function AddressForm({ errors }: AddressFormProps) {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setAddressInfo((prev) => ({ ...prev, [name]: value }));
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
 
   const handleCountryChange = (event: SelectChangeEvent<string>) => {
     setAddressInfo((prev) => ({ ...prev, country: event.target.value }));
+    setErrors((prevErrors) => ({ ...prevErrors, country: "" }));
   };
 
   const handleAddressSelectionChange = async (event: { target: { value: unknown } }) => {

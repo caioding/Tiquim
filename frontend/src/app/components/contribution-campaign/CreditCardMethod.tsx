@@ -15,19 +15,15 @@ import { Campaign } from "@/app/types/campaign";
 import { useState } from "react";
 import { useContext } from "react";
 
-interface CampaignCreditProps {
-  campaign: Campaign;
-}
-
 
 const steps = ["Detalhes do Pagamento", "Endereço de Cobrança", "Revisão de Pagamento"];
 
-function getStepContent(step: number, errors: any) {
+function getStepContent(step: number, errors: any, setErrors: React.Dispatch<React.SetStateAction<any>>) {
   switch (step) {
     case 0:
       return <CreditCardDetails />;
     case 1:
-      return <AddressForm errors={errors} />;
+      return <AddressForm errors={errors} setErrors={setErrors} />;
     case 2:
       return <Review />;
     default:
@@ -216,7 +212,7 @@ export default function CreditCardMethod() {
           </Step>
         ))}
       </Stepper>
-      {getStepContent(activeStep, errors)}
+      {getStepContent(activeStep, errors, setErrors)}
       <Box
         sx={[
           {
