@@ -13,6 +13,8 @@ import { useUser } from "../hooks/useUser";
 import { useCampaignPercentage } from "../hooks/useCampaignPercentage";
 import { getImageCampaign } from "../services/campaign";
 import { formatDate } from "../utils/datetime";
+import useAuthContext from "../hooks/useAuthContext";
+import useSnackbar from "../hooks/useSnackbar";
 
 interface CampaignCardProps {
   campaign: Campaign;
@@ -26,6 +28,9 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
   const { user, isPending: userPending, isError: userError } = useUser(campaign.userId);
 
   const [imageUrl, setImageUrl] = useState<string>("/placeholder.png");
+
+  const { id } = useAuthContext();
+  const { setSnackbar } = useSnackbar();
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -68,6 +73,11 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
 
   const handleDonateToCampaign = (e: React.SyntheticEvent, idCampaign: string) => {
     e.stopPropagation();
+    if (id === "") {
+      setSnackbar("Para doar você precisa estar logado, por favor faça o login!", "error");
+      router.push("/login");
+      return null;
+    }
     router.push(`/contribution/${idCampaign}`);
   };
 

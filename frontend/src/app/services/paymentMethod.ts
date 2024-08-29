@@ -1,3 +1,4 @@
+import { Card } from "../types/card";
 import { CreatePaymentMethodDto, CreditCardDto } from "../types/payment";
 import api from "./api";
 
@@ -19,29 +20,24 @@ export async function getPaymentMethod(type: string): Promise<string> {
 }
 
 export async function createPaymentMethod(paymentMethod: string) {
-  
-  const formattedPaymentMethod = paymentMethod === "credit" ? "CREDIT" : "PIX"
+  const formattedPaymentMethod = paymentMethod === "credit" ? "CREDIT" : "PIX";
 
-  const formData = new FormData()
+  const formData = new FormData();
 
   formData.append("type", formattedPaymentMethod);
 
   return api
-    .post(
-      `/paymentMethod`,
-      formData, {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }
-    )
+    .post(`/paymentMethod`, formData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
     .then((response) => response.data)
     .catch((error) => {
       console.error("Erro ao criar o método de pagamento:", error);
       throw error;
     });
 }
-
 
 export async function createCreditCard(cardData: CreditCardDto) {
   const formData = new FormData();
@@ -61,8 +57,6 @@ export async function createCreditCard(cardData: CreditCardDto) {
     .then((response) => response.data);
 }
 
-export async function getCreditCards(id: string) {
-
-  return api.get(`/creditCard/${id}`, {
-  }).then((response) => response.data);
+export async function getCreditCards(id: string): Promise<Card[]> {
+  return api.get(`/creditCard/${id}`, {}).then((response) => response.data);
 }

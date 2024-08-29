@@ -3,7 +3,7 @@ import { getUserCampaigns } from "../services/campaign";
 
 export function useUserCampaigns(userId: string) {
   const { data, isPending, isError } = useQuery({
-    queryKey: ["userCampaigns"],
+    queryKey: ["userCampaigns", userId],
     queryFn: () => getUserCampaigns(userId),
   });
 

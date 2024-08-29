@@ -187,6 +187,11 @@ Lembre-se: um Tiquim de ajuda pode mudar a realidade de alguém!`;
 
   const handleDonateToCampaign = (e: React.SyntheticEvent, idCampaign: string) => {
     e.stopPropagation();
+    if (id === "") {
+      setSnackbar("Para doar você precisa estar logado, por favor faça o login!", "error");
+      router.push("/login");
+      return null;
+    }
     router.push(`/contribution/${idCampaign}`);
   };
 

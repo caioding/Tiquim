@@ -63,9 +63,9 @@ export default function YourProfile() {
   }, [campaigns, yourContributions]);
 
   const handleCampaignClick = (campaignLink: string) => {
-    router.push(`/campaign/${campaignLink}`)
-  }
-  
+    router.push(`/campaign/${campaignLink}`);
+  };
+
   const showYourCampaigns = () => {
     if (isPending) {
       return (
@@ -94,54 +94,53 @@ export default function YourProfile() {
     } else {
       return campaigns?.map((campaign) => (
         <Grid item xs={12} sm={6} md={4} lg={3} key={campaign.id}>
-        <Card
-          sx={{
-            p: 2,
-            borderRadius: 2,
-            width: { xs: "100%", sm: "200px" },
-            height: "auto",
-            cursor: "pointer",
-          }}
-        >
-          <CardHeader
-            avatar={
-              <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
-                {imagesUrl[campaign.id] ? (
-                  <Box
-                    component="img"
-                    sx={{
-                      height: 40,
-                      width: 40,
-                    }}
-                    src={imagesUrl[campaign.id]}
-                  />
-                ) : (
-                  <AccountCircleIcon sx={{ height: "auto", width: "auto" }} />
-                )}
-              </Avatar>
-            }
-            title={
-              <Typography
-                variant="body2"
-                sx={{
-                  fontWeight: "bold",
-                  display: "-webkit-box",
-                  WebkitBoxOrient: "vertical",
-                  WebkitLineClamp: 2,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {campaign.title}
-              </Typography>
-            }
-            titleTypographyProps={{ fontWeight: "bold" }}
-            onClick={() => handleCampaignClick(campaign.id)}
-          />
-        </Card>
-      </Grid>
-
-    ));
+          <Card
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              width: { xs: "100%", sm: "200px" },
+              height: "auto",
+              cursor: "pointer",
+            }}
+          >
+            <CardHeader
+              avatar={
+                <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
+                  {imagesUrl[campaign.id] ? (
+                    <Box
+                      component="img"
+                      sx={{
+                        height: 40,
+                        width: 40,
+                      }}
+                      src={imagesUrl[campaign.id]}
+                    />
+                  ) : (
+                    <AccountCircleIcon sx={{ height: "auto", width: "auto" }} />
+                  )}
+                </Avatar>
+              }
+              title={
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontWeight: "bold",
+                    display: "-webkit-box",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: 2,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {campaign.title}
+                </Typography>
+              }
+              titleTypographyProps={{ fontWeight: "bold" }}
+              onClick={() => handleCampaignClick(campaign.id)}
+            />
+          </Card>
+        </Grid>
+      ));
     }
   };
 
@@ -219,10 +218,17 @@ export default function YourProfile() {
             />
           </Card>
         </Grid>
-
       ));
     }
   };
+
+  if (id === "") {
+    return (
+      <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center", mb: 5 }}>
+        Realize o login para visualizar seu perfil.
+      </Typography>
+    );
+  }
 
   return (
     <Container maxWidth="lg" sx={{ textAlign: "center", mt: 5, mb: 2 }}>
@@ -272,7 +278,7 @@ export default function YourProfile() {
           Campanhas que você apoiou
         </Typography>
 
-        <Grid container spacing={3} sx={{ mt: 1}}>
+        <Grid container spacing={3} sx={{ mt: 1 }}>
           {showCampaignsYouHelped()}
         </Grid>
       </Box>
