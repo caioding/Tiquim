@@ -162,11 +162,11 @@ export default function CreditCardDetails() {
               />
             </Grid>
             <Grid container direction="row" spacing={2}>
-              <Grid item xs={3}>
+              <Grid item xs={4.6}>
                 <OutlinedInput
                   id="card-expiration"
                   autoComplete="card-expiration"
-                  placeholder="M/A"
+                  placeholder="MM/AA"
                   required
                   value={cardInfo.expirationDate}
                   onChange={handleExpirationDateChange}
@@ -174,11 +174,11 @@ export default function CreditCardDetails() {
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={4.6}>
                 <OutlinedInput
                   id="cvv"
                   autoComplete="CVV"
-                  placeholder="123"
+                  placeholder="CVV"
                   required
                   value={cardInfo.cvv}
                   onChange={handleCvvChange}
