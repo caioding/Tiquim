@@ -6,7 +6,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import * as React from "react";
 import { useState } from "react";
-import { Box, FormControl, FormLabel, Grid, OutlinedInput } from "@mui/material";
+import { Box, FormControl, FormLabel, Grid, OutlinedInput, FormHelperText } from "@mui/material";
 import { useContext } from "react";
 import PaymentContext from "../../states/PaymentProvider";
 
@@ -24,6 +24,8 @@ export default function InfoHeader({ onPaymentMethodChange }: InfoProps) {
     setPaymentMethod,
   } = useContext(PaymentContext);
 
+  const [error, setError] = useState<string | null>(null);
+
   const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const method = (event.target as HTMLInputElement).value;
     setPaymentMethod(method);
@@ -34,12 +36,20 @@ export default function InfoHeader({ onPaymentMethodChange }: InfoProps) {
     const rawValue = event.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
     const formattedValue = rawValue
       ? new Intl.NumberFormat("pt-BR", {
-          style: "currency",
-          currency: "BRL",
-        }).format(parseFloat(rawValue) / 100)
+        style: "currency",
+        currency: "BRL",
+      }).format(parseFloat(rawValue) / 100)
       : "R$ "; // Valor padrão quando o campo está vazio
+
+    const numericValue = parseFloat(rawValue) / 100;
+    if (numericValue < 1) {
+      setError("O valor deve ser no mínimo 1,00");
+    } else {
+      setError(null);
+    }
+
     setContributionAmount(formattedValue);
-    setAmount(parseFloat(rawValue) / 100);
+    setAmount(numericValue);
   };
 
   return (
@@ -66,13 +76,15 @@ export default function InfoHeader({ onPaymentMethodChange }: InfoProps) {
           </Card>
         </Grid>
         <Grid item xs={12} md={4}>
-          <FormControl sx={{ ml: 4 }}>
+          <FormControl sx={{ ml: 4 }} error={!!error}>
             <FormLabel>Valor da Contribuição</FormLabel>
             <OutlinedInput
               value={contributionAmount}
               onChange={handleContributionChange}
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
               startAdornment={<Typography sx={{ mr: 1 }}></Typography>}
             />
+            {error && <FormHelperText>{error}</FormHelperText>}
           </FormControl>
         </Grid>
         <Grid item xs={12} md={4}>
