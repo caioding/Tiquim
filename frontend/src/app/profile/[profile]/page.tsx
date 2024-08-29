@@ -18,7 +18,6 @@ import { useUserCampaigns } from "@/app/hooks/useUserCampaigns";
 
 export default function Profile() {
   const router = useRouter();
-  const { id } = useAuthContext();
   const pathname = usePathname();
   const userId = pathname ? pathname.split("/").pop() : null;
   const { campaigns, isPending, isError } = useUserCampaigns(userId!);
@@ -65,18 +64,12 @@ export default function Profile() {
       fetchCampaignImages();
     }
   }, [campaigns, yourContributions]);
-  
+
   const showYourCampaigns = () => {
     if (isPending) {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
           Carregando...
-        </Typography>
-      );
-    } else if (id === "") {
-      return (
-        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Realize o login para visualizar essas campanhas.
         </Typography>
       );
     } else if (isErrorContribution) {
@@ -92,56 +85,62 @@ export default function Profile() {
         </Typography>
       );
     } else {
-      return campaigns?.map((campaign) =>(
-        <Grid item xs={12} sm={6} md={4} lg={3} key={campaign.id} onClick={() => router.push(`/campaign/${campaign.id}`)}>
-        <Card
-          sx={{
-            p: 2,
-            borderRadius: 2,
-            width: { xs: "100%", sm: "200px" },
-            height: "auto",
-            cursor: "pointer",
-          }}
+      return campaigns?.map((campaign) => (
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          md={4}
+          lg={3}
+          key={campaign.id}
+          onClick={() => router.push(`/campaign/${campaign.id}`)}
         >
-          <CardHeader
-            avatar={
-              <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
-                {imagesUrl[campaign.id] ? (
-                  <Box
-                    component="img"
-                    sx={{
-                      height: 40,
-                      width: 40,
-                    }}
-                    src={imagesUrl[campaign.id]}
-                  />
-                ) : (
-                  <AccountCircleIcon sx={{ height: "auto", width: "auto" }} />
-                )}
-              </Avatar>
-            }
-            title={
-              <Typography
-                variant="body2"
-                sx={{
-                  fontWeight: "bold",
-                  display: "-webkit-box",
-                  WebkitBoxOrient: "vertical",
-                  WebkitLineClamp: 2,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {campaign.title}
-              </Typography>
-            }
-            titleTypographyProps={{ fontWeight: "bold" }}
-
-          />
-        </Card>
-      </Grid>
-
-    ));
+          <Card
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              width: { xs: "100%", sm: "200px" },
+              height: "auto",
+              cursor: "pointer",
+            }}
+          >
+            <CardHeader
+              avatar={
+                <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
+                  {imagesUrl[campaign.id] ? (
+                    <Box
+                      component="img"
+                      sx={{
+                        height: 40,
+                        width: 40,
+                      }}
+                      src={imagesUrl[campaign.id]}
+                    />
+                  ) : (
+                    <AccountCircleIcon sx={{ height: "auto", width: "auto" }} />
+                  )}
+                </Avatar>
+              }
+              title={
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontWeight: "bold",
+                    display: "-webkit-box",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: 2,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {campaign.title}
+                </Typography>
+              }
+              titleTypographyProps={{ fontWeight: "bold" }}
+            />
+          </Card>
+        </Grid>
+      ));
     }
   };
 
@@ -150,12 +149,6 @@ export default function Profile() {
       return (
         <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
           Carregando...
-        </Typography>
-      );
-    } else if (id === "") {
-      return (
-        <Typography variant="h5" sx={{ fontWeight: "bold", m: "auto" }}>
-          Realize o login para visualizar as contribuições.
         </Typography>
       );
     } else if (isError) {
@@ -172,55 +165,61 @@ export default function Profile() {
       );
     } else {
       return yourContributions?.map((campaign) => (
-        <Grid item xs={12} sm={6} md={4} lg={3} key={campaign.id} onClick={() => router.push(`/campaign/${campaign.id}`)}>
-        <Card
-          sx={{
-            p: 2,
-            borderRadius: 2,
-            width: { xs: "100%", sm: "200px" },
-            height: "auto",
-            cursor: "pointer",
-          }}
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          md={4}
+          lg={3}
+          key={campaign.id}
+          onClick={() => router.push(`/campaign/${campaign.id}`)}
         >
-          <CardHeader
-            avatar={
-              <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
-                {imagesUrl[campaign.id] ? (
-                  <Box
-                    component="img"
-                    sx={{
-                      height: 40,
-                      width: 40,
-                    }}
-                    src={imagesUrl[campaign.id]}
-                  />
-                ) : (
-                  <AccountCircleIcon sx={{ height: "auto", width: "auto" }} />
-                )}
-              </Avatar>
-            }
-            title={
-              <Typography
-                variant="body2"
-                sx={{
-                  fontWeight: "bold",
-                  display: "-webkit-box",
-                  WebkitBoxOrient: "vertical",
-                  WebkitLineClamp: 2,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {campaign.title}
-              </Typography>
-            }
-            titleTypographyProps={{ fontWeight: "bold" }}
-
-          />
-        </Card>
-      </Grid>
-
-    ));
+          <Card
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              width: { xs: "100%", sm: "200px" },
+              height: "auto",
+              cursor: "pointer",
+            }}
+          >
+            <CardHeader
+              avatar={
+                <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
+                  {imagesUrl[campaign.id] ? (
+                    <Box
+                      component="img"
+                      sx={{
+                        height: 40,
+                        width: 40,
+                      }}
+                      src={imagesUrl[campaign.id]}
+                    />
+                  ) : (
+                    <AccountCircleIcon sx={{ height: "auto", width: "auto" }} />
+                  )}
+                </Avatar>
+              }
+              title={
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontWeight: "bold",
+                    display: "-webkit-box",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: 2,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {campaign.title}
+                </Typography>
+              }
+              titleTypographyProps={{ fontWeight: "bold" }}
+            />
+          </Card>
+        </Grid>
+      ));
     }
   };
 

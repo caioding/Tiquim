@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CreateAddressDto } from "../types/address";
+import { Address, CreateAddressDto } from "../types/address";
 import api from "./api";
 
 export default async function getAddress(cep: string) {
@@ -53,6 +53,6 @@ export async function verifyAddress(cep: string, number: string) {
   const data = await api.get("");
 }
 
-export async function getUserAddresses(id: string) {
+export async function getUserAddresses(id: string): Promise<Address[]> {
   return api.get(`/address/${id}`).then((response) => response.data);
 }

@@ -9,7 +9,7 @@ export interface City {
   nome: string;
 }
 
-interface Address {
+export interface Address {
   id: string;
   number: string;
   cep: string;

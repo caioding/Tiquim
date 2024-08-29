@@ -45,7 +45,13 @@ export async function getRegionalCampaigns(state: string, city: string): Promise
 }
 
 export async function getUserCampaigns(userId: string): Promise<Campaign[]> {
-  return api.get(`campaign/user?userId=${userId}`).then((response) => response.data);
+  return api
+    .get(`campaign/user`, {
+      params: {
+        userId: userId,
+      },
+    })
+    .then((response) => response.data);
 }
 
 export async function updateCampaign(id: string, campaign: UpdateCampaignDto, file: File | null) {

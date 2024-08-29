@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SortIcon from "@mui/icons-material/Sort";
 import { Box, Container, Fab, IconButton, Menu, MenuItem, Typography } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
@@ -17,20 +17,20 @@ import { useQueryClient } from "@tanstack/react-query";
 export default function YourCampaigns() {
   const { id } = useAuthContext();
 
-  const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const queryClient = useQueryClient();
   const { campaigns, isPending, isError } = useYourCampaigns(searchQuery);
   const [openCreate, setOpenCreate] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [campaign, setCampaign] = useState({} as Campaign);
-  const [filteredCampaigns, setFilteredCampaign] = React.useState(campaigns);
-  const [sortBy, setSortBy] = React.useState<"title" | "date">("title");
-  const [sortDirection, setSortDirection] = React.useState<"asc" | "desc">("asc");
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [filteredCampaigns, setFilteredCampaign] = useState(campaigns);
+  const [sortBy, setSortBy] = useState<"title" | "date">("title");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const open = Boolean(anchorEl);
 
-  React.useEffect(() => {
+  useEffect(() => {
     filterAndSortData(sortBy, sortDirection);
   }, [searchQuery, sortBy, sortDirection, campaigns]);
 

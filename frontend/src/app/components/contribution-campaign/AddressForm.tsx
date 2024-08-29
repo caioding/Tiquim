@@ -30,17 +30,20 @@ const StyledOutlinedInput = styled(OutlinedInput)(() => ({
 }));
 
 export default function AddressForm() {
-  const { id } = useAuthContext()
-  
+  const { id } = useAuthContext();
+
   const { addressInfo, setAddressInfo, saveAddress, setSaveAddress } = useContext(PaymentContext);
-  
+
   const [zip, setZip] = React.useState("");
   const { address, isLoading: isAddressLoading, isError: isAddressError } = useAddress(zip);
   const [selectedCountry, setSelectedCountry] = React.useState("");
   const { countries, isLoading: isCountriesLoading, isError: isCountriesError } = useCountries();
-  const [selectedAddress, setSelectedAddress] = React.useState<string | ''>('');
-  const {userAddress, isPending: isPendingUserAddress, isError: isUserAddressError} = useUserAddress(id);
-
+  const [selectedAddress, setSelectedAddress] = React.useState<string | "">("");
+  const {
+    userAddress,
+    isPending: isPendingUserAddress,
+    isError: isUserAddressError,
+  } = useUserAddress(id);
 
   const handleCepChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const cep = event.target.value;
@@ -73,54 +76,56 @@ export default function AddressForm() {
     setAddressInfo((prev) => ({ ...prev, country: event.target.value }));
   };
 
-  const handleAddressSelectionChange = async (event: {target: {value: unknown}}) => {
+  const handleAddressSelectionChange = async (event: { target: { value: unknown } }) => {
     const addressId = event.target.value as string;
     if (userAddress) {
       const addressItem = userAddress.find((address) => address.id === addressId);
 
-      const calculatedAddress = await getAddress(addressItem.cep)
+      const calculatedAddress = await getAddress(addressItem?.cep ?? "");
 
-      if(addressItem) {
+      if (addressItem) {
         setAddressInfo({
-            zip: addressItem.cep || '',
-            street: calculatedAddress.logradouro || '',
-            number: addressItem.number || '',
-            neighborhood: calculatedAddress.bairro || '',
-            city: addressItem.city || '',
-            state: calculatedAddress.uf || '',
-            country: calculatedAddress.country || 'Brasil',
-        })
-        setSelectedAddress(addressId)
+          zip: addressItem.cep || "",
+          street: calculatedAddress.logradouro || "",
+          number: addressItem.number || "",
+          neighborhood: calculatedAddress.bairro || "",
+          city: addressItem.city || "",
+          state: calculatedAddress.uf || "",
+          country: calculatedAddress.country || "Brasil",
+        });
+        setSelectedAddress(addressId);
       } else {
-        console.warn(`Endereço de ID ${addressId} não encontrado.`)
+        console.warn(`Endereço de ID ${addressId} não encontrado.`);
       }
     } else {
-      console.warn('Nenhum endereço encontrado')
+      console.warn("Nenhum endereço encontrado");
     }
-  }
+  };
 
   return (
     <Box sx={{ maxWidth: 700, margin: "auto" }}>
       <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
-      <FormGrid item xs={12}>
-          <FormLabel htmlFor="savedAddresses" required>
-            Endereços Salvos
-          </FormLabel>
-          <Select
-            id="savedAddresses"
-            name="savedAddresses"
-            value={selectedAddress || ""}
-            onChange={handleAddressSelectionChange}
-            required
-            displayEmpty
-          >
-            {userAddress?.map((address) => (
-              <MenuItem key={address.id} value={address.id}>
-                {`CEP:${address.cep}, ${address.number}, ${address.city}, ${address.uf}`}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormGrid>
+        {userAddress && userAddress?.length > 0 && (
+          <FormGrid item xs={12}>
+            <FormLabel htmlFor="savedAddresses" required>
+              Endereços Salvos
+            </FormLabel>
+            <Select
+              id="savedAddresses"
+              name="savedAddresses"
+              value={selectedAddress || ""}
+              onChange={handleAddressSelectionChange}
+              required
+              displayEmpty
+            >
+              {userAddress?.map((address) => (
+                <MenuItem key={address.id} value={address.id}>
+                  {`CEP:${address.cep}, ${address.number}, ${address.city}, ${address.uf}`}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormGrid>
+        )}
         <FormGrid item xs={12} md={3}>
           <FormLabel htmlFor="zip" required>
             CEP
