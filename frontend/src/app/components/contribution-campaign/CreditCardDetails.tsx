@@ -172,6 +172,7 @@ export default function CreditCardDetails() {
                   onChange={handleExpirationDateChange}
                   onFocus={() => setFocus("expiry")}
                   fullWidth
+                  inputProps={{ style: { textAlign: "center" } }}
                 />
               </Grid>
               <Grid item xs={4.6}>
@@ -184,6 +185,7 @@ export default function CreditCardDetails() {
                   onChange={handleCvvChange}
                   onFocus={() => setFocus("cvc")}
                   fullWidth
+                  inputProps={{ style: { textAlign: "center" } }}
                 />
               </Grid>
             </Grid>
