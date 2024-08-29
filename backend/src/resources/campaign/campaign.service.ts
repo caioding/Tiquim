@@ -73,6 +73,7 @@ export const listUserCampaigns = async (
   uid: string,
   skip?: number,
   take?: number,
+  userId?: string,
 ): Promise<CampaignDto[]> => {
   if (searchTerm) {
     return await prisma.campaign.findMany({
@@ -102,7 +103,7 @@ export const listUserCampaigns = async (
         createdAt: true,
         updatedAt: true,
       },
-      where: { userId: uid },
+      where: { userId: userId ?? uid },
       skip,
       take,
     });

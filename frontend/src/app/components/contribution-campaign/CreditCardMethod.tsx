@@ -12,20 +12,18 @@ import { createContribution } from "@/app/services/contribution";
 import { usePathname, useRouter } from "next/navigation";
 import useSnackbar from "@/app/hooks/useSnackbar";
 import { Campaign } from "@/app/types/campaign";
+import { useState } from "react";
 import { useContext } from "react";
 
-interface CampaignCreditProps {
-  campaign: Campaign;
-}
 
 const steps = ["Detalhes do Pagamento", "Endereço de Cobrança", "Revisão de Pagamento"];
 
-function getStepContent(step: number) {
+function getStepContent(step: number, errors: any, setErrors: React.Dispatch<React.SetStateAction<any>>) {
   switch (step) {
     case 0:
-      return <CreditCardDetails />;
+      return <CreditCardDetails errors={errors} setErrors={setErrors} />;
     case 1:
-      return <AddressForm />;
+      return <AddressForm errors={errors} setErrors={setErrors} />;
     case 2:
       return <Review />;
     default:
@@ -55,12 +53,15 @@ const initialContributionData = {
   paymentMethodId: ",",
 };
 
-export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
+export default function CreditCardMethod() {
   const [activeStep, setActiveStep] = React.useState(0);
+  // const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
   const { setSnackbar } = useSnackbar();
   const router = useRouter();
 
   //verificar melhor como obter o id da campanha: Utilizar contexto
+
   const pathname = usePathname();
   const campaignId = pathname ? pathname.split("/").pop() : null;
 
@@ -76,7 +77,60 @@ export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
   } = React.useContext(PaymentContext);
   // saveAddress, setSaveAddress do context para pegar os dados
 
+  const [errors, setErrors] = React.useState({
+    zip: "",
+    street: "",
+    number: "",
+    neighborhood: "",
+    city: "",
+    state: "",
+    country: "",
+    cardNumber: "",
+    cardHolderName: "",
+    expirationDate: "",
+    cvv: "",
+  });
+
+
   const handleNext = () => {
+    if (amount < 1 || isNaN(amount)) {
+      setSnackbar("Valor de doação inválido!", "error");
+      return;
+    }
+
+    if (activeStep === 0) {
+      const newErrors = {
+        cardNumber: cardInfo.cardNumber ? "" : "Esse campo é obrigatório",
+        cardHolderName: cardInfo.cardHolderName ? "" : "Esse campo é obrigatório",
+        expirationDate: cardInfo.expirationDate ? "" : "Esse campo é obrigatório",
+        cvv: cardInfo.cvv ? "" : "Esse campo é obrigatório",
+      };
+
+      setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
+
+      if (Object.values(newErrors).some((error) => error)) {
+        return;
+      }
+    }
+
+    if (activeStep === 1) {
+      const newErrors = {
+        zip: addressInfo.zip ? "" : "Esse campo é obrigatório",
+        street: addressInfo.street ? "" : "Esse campo é obrigatório",
+        number: addressInfo.number ? "" : "Esse campo é obrigatório",
+        neighborhood: addressInfo.neighborhood ? "" : "Esse campo é obrigatório",
+        city: addressInfo.city ? "" : "Esse campo é obrigatório",
+        state: addressInfo.state ? "" : "Esse campo é obrigatório",
+        country: addressInfo.country ? "" : "Esse campo é obrigatório",
+      };
+
+      setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
+
+      if (Object.values(newErrors).some((error) => error)) {
+        return;
+      }
+    }
+
     if (activeStep === 2 && paymentMethod === "credit") {
       //hora que confirma o pagamento pq chegou na última aba e o usuário escolheu cartão de crédito
       handleSubmit(campaignId!);
@@ -121,10 +175,7 @@ export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
       };
       const saveCard = await createCreditCard(formattedCardData);
       console.log("Sending Card data:", formattedCardData);
-    } else {
-      console.log("o usuario escolheu nao salvar o cartao");
     }
-
     try {
       const formattedPM = { type: paymentMethod };
       const savedPaymentMethod = await createPaymentMethod(paymentMethod);
@@ -160,7 +211,7 @@ export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
           </Step>
         ))}
       </Stepper>
-      {getStepContent(activeStep)}
+      {getStepContent(activeStep, errors, setErrors)}
       <Box
         sx={[
           {

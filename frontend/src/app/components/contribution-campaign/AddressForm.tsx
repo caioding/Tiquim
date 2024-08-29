@@ -4,12 +4,14 @@ import FormLabel from "@mui/material/FormLabel";
 import Grid from "@mui/material/Grid";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { styled } from "@mui/system";
-import { Box, FormControlLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { useAddress } from "@/app/hooks/useAddress";
+import { Box, FormControlLabel, FormHelperText, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { useAddress, useUserAddress } from "@/app/hooks/useAddress";
 import { useCountries } from "@/app/hooks/useCountries";
 import { useContext, useEffect } from "react";
 import PaymentContext from "../../states/PaymentProvider";
-import getAddress from "../../services/address"; // Importa a função getAddress
+import getAddress from "../../services/address";
+import useAuthContext from "@/app/hooks/useAuthContext";
+
 
 // Deixa os inputs alinhados
 const FormGrid = styled(Grid)(() => ({
@@ -23,26 +25,55 @@ const StyledOutlinedInput = styled(OutlinedInput)(() => ({
     "-moz-appearance": "textfield",
   },
   "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button":
-    {
-      "-webkit-appearance": "none",
-    },
+  {
+    "-webkit-appearance": "none",
+  },
 }));
 
-export default function AddressForm() {
+interface AddressFormProps {
+  errors: {
+    zip: string;
+    street: string;
+    number: string;
+    neighborhood: string;
+    city: string;
+    state: string;
+    country: string;
+  };
+  setErrors: React.Dispatch<React.SetStateAction<{
+    zip: string;
+    street: string;
+    number: string;
+    neighborhood: string;
+    city: string;
+    state: string;
+    country: string;
+  }>>;
+}
+
+export default function AddressForm({ errors, setErrors }: AddressFormProps) {
+  const { id } = useAuthContext();
   const { addressInfo, setAddressInfo, saveAddress, setSaveAddress } = useContext(PaymentContext);
-  // saveAddress, setSaveAddress do context para pegar os dados
   const [zip, setZip] = React.useState("");
   const { address, isLoading: isAddressLoading, isError: isAddressError } = useAddress(zip);
   const [selectedCountry, setSelectedCountry] = React.useState("");
   const { countries, isLoading: isCountriesLoading, isError: isCountriesError } = useCountries();
+  const [selectedAddress, setSelectedAddress] = React.useState<string | "">("");
+  const {
+    userAddress,
+    isPending: isPendingUserAddress,
+    isError: isUserAddressError,
+  } = useUserAddress(id);
 
   const handleCepChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const cep = event.target.value;
     setAddressInfo((prev) => ({ ...prev, zip: cep }));
+    setErrors((prevErrors) => ({ ...prevErrors, zip: "" }));
 
     // Verifica se o CEP tem 8 dígitos e é brasileiro
     if (cep.length === 8 && /^[0-9]{5}-?[0-9]{3}$/.test(cep)) {
       setAddressInfo((prev) => ({ ...prev, country: "Brasil" }));
+      setErrors((prevErrors) => ({ ...prevErrors, country: "" }));
 
       // Busca o endereço pelo CEP
       const addressData = await getAddress(cep);
@@ -61,15 +92,65 @@ export default function AddressForm() {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setAddressInfo((prev) => ({ ...prev, [name]: value }));
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
 
   const handleCountryChange = (event: SelectChangeEvent<string>) => {
     setAddressInfo((prev) => ({ ...prev, country: event.target.value }));
+    setErrors((prevErrors) => ({ ...prevErrors, country: "" }));
+  };
+
+  const handleAddressSelectionChange = async (event: { target: { value: unknown } }) => {
+    const addressId = event.target.value as string;
+    if (userAddress) {
+      const addressItem = userAddress.find((address) => address.id === addressId);
+
+      const calculatedAddress = await getAddress(addressItem?.cep ?? "");
+
+      if (addressItem) {
+        setAddressInfo({
+          zip: addressItem.cep || "",
+          street: calculatedAddress.logradouro || "",
+          number: addressItem.number || "",
+          neighborhood: calculatedAddress.bairro || "",
+          city: addressItem.city || "",
+          state: calculatedAddress.uf || "",
+          country: calculatedAddress.country || "Brasil",
+        });
+        setSelectedAddress(addressId);
+        setErrors((prev) => ({ ...prev, zip: "", street: "", number: "", neighborhood: "", city: "", state: "", country: "" }));
+      } else {
+        console.warn(`Endereço de ID ${addressId} não encontrado.`);
+      }
+    } else {
+      console.warn("Nenhum endereço encontrado");
+    }
   };
 
   return (
     <Box sx={{ maxWidth: 700, margin: "auto" }}>
       <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
+        {userAddress && userAddress?.length > 0 && (
+          <FormGrid item xs={12}>
+            <FormLabel htmlFor="savedAddresses" required>
+              Endereços Salvos
+            </FormLabel>
+            <Select
+              id="savedAddresses"
+              name="savedAddresses"
+              value={selectedAddress || ""}
+              onChange={handleAddressSelectionChange}
+              required
+              displayEmpty
+            >
+              {userAddress?.map((address) => (
+                <MenuItem key={address.id} value={address.id}>
+                  {`CEP:${address.cep}, ${address.number}, ${address.city}, ${address.uf}`}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormGrid>
+        )}
         <FormGrid item xs={12} md={3}>
           <FormLabel htmlFor="zip" required>
             CEP
@@ -82,7 +163,9 @@ export default function AddressForm() {
             required
             value={addressInfo.zip}
             onChange={handleCepChange}
+            error={!!errors.zip}
           />
+          {errors.zip && <FormHelperText error>{errors.zip}</FormHelperText>}
         </FormGrid>
         <FormGrid item xs={12} md={9}>
           <FormLabel htmlFor="street" required>
@@ -97,7 +180,9 @@ export default function AddressForm() {
             value={addressInfo.street}
             onChange={handleInputChange}
             disabled={isAddressLoading || isAddressError}
+            error={!!errors.street}
           />
+          {errors.street && <FormHelperText error>{errors.street}</FormHelperText>}
         </FormGrid>
         <FormGrid item xs={12} md={3}>
           <FormLabel htmlFor="number" required>
@@ -111,7 +196,9 @@ export default function AddressForm() {
             required
             value={addressInfo.number}
             onChange={handleInputChange}
+            error={!!errors.number}
           />
+          {errors.number && <FormHelperText error>{errors.number}</FormHelperText>}
         </FormGrid>
         <FormGrid item xs={12} md={9}>
           <FormLabel htmlFor="neighborhood" required>
@@ -126,7 +213,9 @@ export default function AddressForm() {
             value={addressInfo.neighborhood}
             onChange={handleInputChange}
             disabled={isAddressLoading || isAddressError}
+            error={!!errors.neighborhood}
           />
+          {errors.neighborhood && <FormHelperText error>{errors.neighborhood}</FormHelperText>}
         </FormGrid>
         <FormGrid item xs={6}>
           <FormLabel htmlFor="city" required>
@@ -141,7 +230,9 @@ export default function AddressForm() {
             value={addressInfo.city}
             onChange={handleInputChange}
             disabled={isAddressLoading || isAddressError}
+            error={!!errors.city}
           />
+          {errors.city && <FormHelperText error>{errors.city}</FormHelperText>}
         </FormGrid>
         <FormGrid item xs={6}>
           <FormLabel htmlFor="state" required>
@@ -156,7 +247,9 @@ export default function AddressForm() {
             value={addressInfo.state}
             onChange={handleInputChange}
             disabled={isAddressLoading || isAddressError}
+            error={!!errors.state}
           />
+          {errors.state && <FormHelperText error>{errors.state}</FormHelperText>}
         </FormGrid>
         <FormGrid item xs={6}>
           <FormLabel htmlFor="country" required>
@@ -169,6 +262,7 @@ export default function AddressForm() {
             onChange={handleCountryChange}
             required
             disabled={isCountriesLoading || isCountriesError}
+            error={!!errors.country}
           >
             {countries?.map((country: string) => (
               <MenuItem key={country} value={country}>
@@ -176,19 +270,7 @@ export default function AddressForm() {
               </MenuItem>
             ))}
           </Select>
-        </FormGrid>
-        <FormGrid item xs={12}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                name="saveAddress"
-                checked={saveAddress}
-                onChange={(e) => setSaveAddress(e.target.checked)} // Editado para Salvar dados para futuras doações
-                sx={{ "&.Mui-checked": { color: "green" } }}
-              />
-            }
-            label="Salvar endereço para próximas doações."
-          />
+          {errors.country && <FormHelperText error>{errors.country}</FormHelperText>}
         </FormGrid>
       </Grid>
     </Box>

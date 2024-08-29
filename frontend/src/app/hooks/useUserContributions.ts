@@ -4,7 +4,7 @@ import Contribution from "../types/contribution";
 
 export function useContributions(userId: string) {
   const { data, isPending, isError } = useQuery({
-    queryKey: ["userContributions"],
+    queryKey: ["userContributions", userId],
     queryFn: () => getContributions(userId),
   });
 

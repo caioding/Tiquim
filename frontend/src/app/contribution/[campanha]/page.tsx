@@ -4,13 +4,8 @@ import { Container } from "@mui/material";
 import PixMethod from "../../components/contribution-campaign/PixMethod";
 import InfoHeader from "../../components/contribution-campaign/InfoHeader";
 import CreditCardMethod from "@/app/components/contribution-campaign/CreditCardMethod";
-import { useParams } from "next/navigation";
 
 export default function PaymentPage() {
-  const params = useParams();
-
-  const idCampaign = params.campaign as string;
-
   const [paymentMethod, setPaymentMethod] = React.useState("credit");
 
   const handlePaymentMethodChange = (method: string) => {

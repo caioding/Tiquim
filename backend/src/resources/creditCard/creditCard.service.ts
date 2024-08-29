@@ -13,9 +13,11 @@ export const createCreditCard = async (
   creditCard: CreateCreditCardDto,
   uid: string,
 ): Promise<CardDto> => {
-  const rounds = parseInt(process.env.BCRYPT_ROUNDS!);
-  const salt = await genSalt(rounds);
-  const cardNumber = await hash(creditCard.cardNumber, salt);
+  //deveria fazer um decript quando fosse ler
+  
+  //const rounds = parseInt(process.env.BCRYPT_ROUNDS!);
+  //const salt = await genSalt(rounds);
+  //const cardNumber = await hash(creditCard.cardNumber, salt);
   return await prisma.creditCard.create({
     select: {
       id: true,
@@ -27,7 +29,7 @@ export const createCreditCard = async (
     },
     data: {
       ...creditCard,
-      cardNumber: cardNumber,
+      cardNumber: creditCard.cardNumber,
       userId: uid,
     },
   });
@@ -38,6 +40,7 @@ export const readCreditCard = async (uid: string): Promise<CardDto[]> => {
     select: {
       id: true,
       userId: true,
+      cardNumber:true,
       cardExpiryDate: true,
       cardHolderName: true,
       cardLastDigits: true,

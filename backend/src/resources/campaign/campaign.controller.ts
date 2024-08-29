@@ -158,10 +158,11 @@ const remove = async (req: Request, res: Response) => {
 const indexUser = async (req: Request, res: Response) => {
   const uid = req.query.userId ? req.query.userId.toString() : req.session.uid!;
   const searchTerm = req.query.q ? req.query.q.toString() : "";
+  const { userId } = req.query;
   const skip = req.query.skip ? parseInt(req.query.skip.toString()) : undefined;
   const take = req.query.take ? parseInt(req.query.take.toString()) : undefined;
   try {
-    const campaigns = await listUserCampaigns(searchTerm, uid, skip, take);
+    const campaigns = await listUserCampaigns(searchTerm, uid, skip, take, userId as string);
     res.status(StatusCodes.OK).json(campaigns);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);

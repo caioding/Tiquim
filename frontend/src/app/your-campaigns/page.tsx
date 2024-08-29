@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SortIcon from "@mui/icons-material/Sort";
 import {
   Box,
@@ -34,7 +34,7 @@ import { useCampaignsSupporters } from "../hooks/useCampaignsSupporters";
 export default function YourCampaigns() {
   const { id } = useAuthContext();
 
-  const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const queryClient = useQueryClient();
   const { campaigns, isPending, isError } = useYourCampaigns(searchQuery);
   const { supporters } = useCampaignsSupporters();
@@ -49,6 +49,7 @@ export default function YourCampaigns() {
   const [selectedCategory, setSelectedCategory] = React.useState("");
   const [selectedState, setSelectedState] = React.useState("");
   const [selectedCity, setSelectedCity] = React.useState("");
+
 
   const openSort = Boolean(anchorElSort);
   const openFilter = Boolean(anchorElFilter);
@@ -74,7 +75,7 @@ export default function YourCampaigns() {
     "Saúde",
   ];
 
-  React.useEffect(() => {
+  useEffect(() => {
     filterAndSortData(sortBy, sortDirection);
   }, [
     searchQuery,

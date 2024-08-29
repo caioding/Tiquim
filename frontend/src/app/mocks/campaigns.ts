@@ -22,8 +22,8 @@ const campaigns: Campaign[] = [
   {
     id: "",
     userId: "",
-    goal: 5000,
-    deadline: new Date("2025-01-01"),
+    goal: 10500,
+    deadline: new Date("2024-12-25"),
     createdAt: new Date("2024-08-01"),
     updatedAt: new Date("2024-08-01"),
     title: "Apoio à Educação Infantil",
@@ -41,7 +41,7 @@ const campaigns: Campaign[] = [
     id: "",
     userId: "",
     title: "Preservação Ambiental",
-    createdAt: new Date("2024-03-20"),
+    createdAt: new Date("2025-08-25"),
     updatedAt: new Date("2024-07-08"),
     deadline: new Date("2025-03-20"),
     imageUrl:
@@ -59,7 +59,7 @@ const campaigns: Campaign[] = [
     id: "",
     userId: "",
     title: "Adoção de Animais Abandonados",
-    createdAt: new Date("2024-04-25"),
+    createdAt: new Date("2025-03-31"),
     updatedAt: new Date("2024-07-08"),
     deadline: new Date("2025-04-25"),
     imageUrl:
@@ -77,7 +77,7 @@ const campaigns: Campaign[] = [
     id: "",
     userId: "",
     title: "Combate ao Desperdício de Alimentos",
-    createdAt: new Date("2024-05-30"),
+    createdAt: new Date("2024-10-30"),
     updatedAt: new Date("2024-07-08"),
     deadline: new Date("2025-05-30"),
     imageUrl:
@@ -87,15 +87,15 @@ const campaigns: Campaign[] = [
     preview:
       "Participe da luta contra o desperdício de alimentos, ajudando a distribuir o excedente para quem precisa.",
     description:
-      "A campanha de Combate ao Desperdício de Alimentos tem como objetivo reduzir a quantidade de comida que é jogada fora e redistribuir o excedente para pessoas em necessidade. Todos os dias, toneladas de alimentos em boas condições são descartadas enquanto muitas pessoas sofrem com a fome. Nosso projeto busca parcerias com restaurantes, supermercados e feiras para coletar esses alimentos e distribuir em comunidades carentes e instituições de caridade. Além disso, promovemos a conscientização sobre o desperdício de alimentos, ensinando práticas de consumo consciente, como planejamento de compras, armazenamento adequado e aproveitamento integral dos alimentos. Aceitamos doações de alimentos não perecíveis e recursos financeiros para apoiar a logística de coleta e distribuição. Com sua ajuda, podemos criar um sistema mais sustentável e justo, onde os recursos são aproveitados ao máximo e todos têm acesso à alimentação. Junte-se a nós nessa causa e faça a diferença na luta contra o desperdício de alimentos.",
+      "A campanha de Combate ao Desperdício de Alimentos tem como objetivo reduzir a quantidade de comida que é jogada fora e redistribuir o excedente para pessoas em necessidade. Todos os dias, toneladas de alimentos em boas condições são descartadas enquanto muitas pessoas sofrem com a fome. Nosso projeto busca parcerias com restaurantes, supermercados e feiras para coletar esses alimentos e distribuir em comunidades carentes e instituições de caridade. Além disso, promovemos a conscientização sobre o desperdício de alimentos, ensinando práticas de consumo consciente, como planejamento de compras, armazenamento adequado e aproveitamento integral dos alimentos. Aceitamos doações de alimentos não perecíveis e recursos financeiros para apoiar a logística de coleta e distribuição. Com sua ajuda, podemos criar um sistema mais sustentável e justo, onde os recursos são aproveitados ao máximo e todos têm acesso à alimentação.",
     state: "Rio de Janeiro",
     city: "Rio de Janeiro",
   },
   {
     id: "",
     userId: "",
-    title: "Inclusão Digital",
-    createdAt: new Date("2024-06-05"),
+    title: "Inclusão Digital por um Futuro Melhor",
+    createdAt: new Date("2025-10-05"),
     updatedAt: new Date("2024-07-08"),
     deadline: new Date("2025-06-05"),
     imageUrl:
@@ -105,15 +105,15 @@ const campaigns: Campaign[] = [
     preview:
       "Apoie nossa campanha para fornecer acesso à internet e recursos digitais para comunidades carentes.",
     description:
-      "A campanha de Inclusão Digital busca promover o acesso à tecnologia e à internet em comunidades carentes, reduzindo a exclusão digital e proporcionando oportunidades de desenvolvimento pessoal e profissional. Em um mundo cada vez mais conectado, o acesso à informação e à educação digital é essencial para o progresso e a inclusão social. Nosso objetivo é equipar espaços comunitários com computadores, oferecer cursos de capacitação digital e facilitar o acesso à internet de qualidade. Trabalhamos em parceria com empresas de tecnologia, ONGs e instituições educativas para criar uma rede de suporte e maximizar o impacto de nossas ações. Acreditamos que a inclusão digital pode transformar vidas, oferecendo novas possibilidades de aprendizado e crescimento. Sua contribuição pode ajudar a adquirir equipamentos, financiar a infraestrutura necessária e expandir nossos programas educativos. Participe dessa causa e ajude a construir um futuro mais inclusivo e conectado. Com seu apoio, podemos garantir que mais pessoas tenham acesso às ferramentas digitais indispensáveis para a vida moderna.",
-    state: "Minas Gerais",
-    city: "Belo Horizonte",
+      "A campanha de Inclusão Digital busca promover o acesso à tecnologia e à internet em comunidades carentes, reduzindo a exclusão digital e proporcionando oportunidades de desenvolvimento pessoal e profissional. Em um mundo cada vez mais conectado, o acesso à informação e à educação digital é essencial para o progresso e a inclusão social. Nosso objetivo é equipar espaços comunitários com computadores, oferecer cursos de capacitação digital e facilitar o acesso à internet de qualidade. Trabalhamos em parceria com empresas de tecnologia, ONGs e instituições educativas para criar uma rede de suporte e maximizar o impacto de nossas ações. Acreditamos que a inclusão digital pode transformar vidas, oferecendo novas possibilidades de aprendizado e crescimento. Sua contribuição pode ajudar a adquirir equipamentos, financiar a infraestrutura necessária e expandir nossos programas educativos. Participe dessa causa e ajude a construir um futuro mais inclusivo e conectado.",
+    city: "Goiás",
+    state: "Goiania",
   },
   {
     id: "",
     userId: "",
     title: "Saúde Mental",
-    createdAt: new Date("2024-07-10"),
+    createdAt: new Date("2025-06-13"),
     updatedAt: new Date("2024-07-08"),
     deadline: new Date("2025-07-10"),
     imageUrl:
@@ -123,15 +123,15 @@ const campaigns: Campaign[] = [
     preview:
       "Promova a saúde mental e o bem-estar emocional através de nossa campanha de conscientização e apoio.",
     description:
-      "A campanha de Saúde Mental tem como objetivo promover a conscientização sobre a importância da saúde mental e oferecer suporte emocional para aqueles que precisam. Com o aumento dos casos de ansiedade, depressão e outros transtornos mentais, é fundamental que a sociedade esteja bem informada e preparada para lidar com esses desafios. Estamos organizando palestras, workshops e grupos de apoio para ajudar as pessoas a entender e gerenciar melhor sua saúde mental. Além disso, estamos criando uma linha de apoio para oferecer orientação e suporte imediato a quem necessitar. Nosso projeto inclui campanhas de conscientização para desmistificar e combater o estigma associado aos transtornos mentais. Também buscamos parcerias com profissionais da área de saúde para oferecer atendimentos gratuitos ou a preços acessíveis. A saúde mental é tão importante quanto a saúde física, e é crucial que todos tenham acesso a recursos e apoio adequados. Participe dessa causa e ajude a promover o bem-estar emocional em nossa comunidade. Sua contribuição pode fazer uma grande diferença na vida de muitas pessoas.",
-    state: "Santa Catarina",
-    city: "Florianópolis",
+      "A campanha de Saúde Mental tem como objetivo promover a conscientização sobre a importância da saúde mental e oferecer suporte emocional para aqueles que precisam. Com o aumento dos casos de ansiedade, depressão e outros transtornos mentais, é fundamental que a sociedade esteja bem informada e preparada para lidar com esses desafios. Estamos organizando palestras, workshops e grupos de apoio para ajudar as pessoas a entender e gerenciar melhor sua saúde mental. Além disso, estamos criando uma linha de apoio para oferecer orientação e suporte imediato a quem necessitar. Nosso projeto inclui campanhas de conscientização para desmistificar e combater o estigma associado aos transtornos mentais. Também buscamos parcerias com profissionais da área de saúde para oferecer atendimentos gratuitos ou a preços acessíveis. A saúde mental é tão importante quanto a saúde física, e é crucial que todos tenham acesso a recursos e apoio adequados. Participe dessa causa!",
+    city: "Goiás",
+    state: "Goiania",
   },
   {
     id: "",
     userId: "",
     title: "Arte e Cultura",
-    createdAt: new Date("2024-08-15"),
+    createdAt: new Date("2024-12-30"),
     updatedAt: new Date("2024-07-08"),
     deadline: new Date("2025-08-15"),
     imageUrl:
@@ -142,8 +142,8 @@ const campaigns: Campaign[] = [
       "Incentive a produção e o acesso à arte e cultura em comunidades carentes através de nossa campanha.",
     description:
       "A campanha de Arte e Cultura tem como objetivo promover o acesso à arte e à cultura em comunidades carentes, proporcionando oportunidades para o desenvolvimento artístico e cultural. Acreditamos que a arte é uma ferramenta poderosa para a transformação social, capaz de inspirar e empoderar indivíduos. Nosso projeto inclui oficinas de arte, apresentações culturais e apoio a artistas locais. Estamos trabalhando em parceria com escolas, centros comunitários e organizações culturais para oferecer uma variedade de atividades artísticas, como teatro, música, dança e artes visuais. Através dessas iniciativas, esperamos despertar o interesse e o talento artístico em jovens e adultos, proporcionando um espaço onde possam expressar sua criatividade e desenvolver suas habilidades. Além disso, buscamos criar oportunidades para que artistas locais apresentem seu trabalho, fortalecendo a cena cultural da região. Participe dessa campanha e ajude a enriquecer a vida cultural de nossa comunidade. Sua contribuição pode fazer a diferença na promoção da arte e cultura, proporcionando momentos de alegria, aprendizado e inspiração para todos.",
-    state: "Amazonas",
-    city: "Manaus",
+    state: "Pernanbuco",
+    city: "Recife",
   },
   {
     id: "",
@@ -159,9 +159,9 @@ const campaigns: Campaign[] = [
     preview:
       "Promova a prática de esportes e atividades físicas para todas as idades através de nossa campanha.",
     description:
-      "A campanha Esporte para Todos tem como objetivo incentivar a prática de esportes e atividades físicas entre pessoas de todas as idades. Acreditamos que o esporte é fundamental para a saúde física e mental, além de promover a inclusão social e o espírito de equipe. Nosso projeto oferece uma variedade de atividades esportivas, como futebol, basquete, vôlei, atletismo e muito mais. Estamos organizando eventos e torneios esportivos, bem como aulas e treinamentos para iniciantes e avançados. Além disso, buscamos parcerias com academias, clubes e centros esportivos para expandir as oportunidades de prática esportiva. Queremos garantir que todos, independentemente de idade ou condição física, tenham acesso a atividades que promovam um estilo de vida saudável. Participe dessa campanha e ajude a fomentar a cultura do esporte em nossa comunidade. Sua contribuição pode ajudar a adquirir equipamentos esportivos, melhorar a infraestrutura dos espaços de prática e oferecer mais opções de atividades físicas para todos.",
-    state: "Amazonas",
-    city: "Manaus",
+      "A campanha Esporte para Todos tem como objetivo incentivar a prática de esportes e atividades físicas entre pessoas de todas as idades. Acreditamos que o esporte é fundamental para a saúde física e mental, além de promover a inclusão social e o espírito de equipe. Nosso projeto oferece uma variedade de atividades esportivas, como futebol, basquete, vôlei, atletismo e muito mais. Estamos organizando eventos e torneios esportivos, bem como aulas e treinamentos para iniciantes e avançados. Além disso, buscamos parcerias com academias, clubes e centros esportivos para expandir as oportunidades de prática esportiva. Queremos garantir que todos, independentemente de idade ou condição física, tenham acesso a atividades que promovam um estilo de vida saudável. Participe dessa campanha e ajude a fomentar a cultura do esporte em nossa comunidade. Sua contribuição pode ajudar a adquirir equipamentos esportivos, melhorar a infraestrutura dos espaços de prática e oferecer mais opções de atividades.",
+    state: "Rio de Janeiro",
+    city: "Rio de Janeiro",
   },
   {
     id: "",

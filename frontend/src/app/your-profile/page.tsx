@@ -8,13 +8,15 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { getAvatarUser } from "../services/user";
 import useAuthContext from "../hooks/useAuthContext";
-import { Card, CardContent, Fab, Tooltip } from "@mui/material";
+import { Card, CardContent, CardHeader, Fab, Tooltip } from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useQueryClient } from "@tanstack/react-query";
 import { getImageCampaign } from "../services/campaign";
 import { useContributions, useCampaignsByContribution } from "../hooks/useUserContributions";
 import { useUser } from "../hooks/useUser";
 import { useEffect, useState } from "react";
 import { useUserCampaigns } from "../hooks/useUserCampaigns";
+import { useRouter } from "next/navigation";
 
 export default function YourProfile() {
   const { id } = useAuthContext();
@@ -26,7 +28,7 @@ export default function YourProfile() {
     isError: isErrorContribution,
   } = useCampaignsByContribution(contributions ?? []);
   const { user } = useUser(id);
-
+  const router = useRouter();
   const [avatarUrl, setAvatarUrl] = useState<string>("/placeholder.png");
   const [imagesUrl, setImagesUrl] = useState<{ [key: string]: string }>({});
   useEffect(() => {
@@ -60,6 +62,10 @@ export default function YourProfile() {
     }
   }, [campaigns, yourContributions]);
 
+  const handleCampaignClick = (campaignLink: string) => {
+    router.push(`/campaign/${campaignLink}`);
+  };
+
   const showYourCampaigns = () => {
     if (isPending) {
       return (
@@ -87,35 +93,51 @@ export default function YourProfile() {
       );
     } else {
       return campaigns?.map((campaign) => (
-        <Grid item xs={12} sm={4} key={campaign.id}>
-          <Card sx={{ p: 2, borderRadius: 2 }}>
-            <CardContent>
-              <Grid container alignItems="center">
-                <Grid item sx={{ width: "20%" }}>
-                  <Avatar
-                    alt={campaign.title}
-                    src={imagesUrl[campaign.id] ?? "/placeholder.png"}
-                    sx={{ width: 56, height: 56 }}
-                  />
-                </Grid>
-                <Grid item sx={{ width: "80%", minWidth: 0 }}>
-                  <Tooltip title={campaign.title}>
-                    <Typography
-                      variant="body2"
-                      fontWeight="bold"
+        <Grid item xs={12} sm={6} md={4} lg={3} key={campaign.id}>
+          <Card
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              width: { xs: "100%", sm: "200px" },
+              height: "auto",
+              cursor: "pointer",
+            }}
+          >
+            <CardHeader
+              avatar={
+                <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
+                  {imagesUrl[campaign.id] ? (
+                    <Box
+                      component="img"
                       sx={{
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        ml: 1,
+                        height: 40,
+                        width: 40,
                       }}
-                    >
-                      {campaign.title}
-                    </Typography>
-                  </Tooltip>
-                </Grid>
-              </Grid>
-            </CardContent>
+                      src={imagesUrl[campaign.id]}
+                    />
+                  ) : (
+                    <AccountCircleIcon sx={{ height: "auto", width: "auto" }} />
+                  )}
+                </Avatar>
+              }
+              title={
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontWeight: "bold",
+                    display: "-webkit-box",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: 2,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {campaign.title}
+                </Typography>
+              }
+              titleTypographyProps={{ fontWeight: "bold" }}
+              onClick={() => handleCampaignClick(campaign.id)}
+            />
           </Card>
         </Grid>
       ));
@@ -149,44 +171,68 @@ export default function YourProfile() {
       );
     } else {
       return yourContributions?.map((campaign) => (
-        <Grid item xs={12} sm={4} key={campaign.id}>
-          <Card sx={{ p: 2, borderRadius: 2 }}>
-            <CardContent>
-              <Grid container alignItems="center">
-                <Grid item sx={{ width: "20%" }}>
-                  <Avatar
-                    alt={campaign.title}
-                    src={imagesUrl[campaign.id] ?? "/placeholder.png"}
-                    sx={{ width: 56, height: 56 }}
-                  />
-                </Grid>
-                <Grid item sx={{ width: "80%", minWidth: 0 }}>
-                  <Tooltip title={campaign.title}>
-                    <Typography
-                      variant="body2"
-                      fontWeight="bold"
+        <Grid item xs={12} sm={6} md={4} lg={3} key={campaign.id}>
+          <Card
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              width: { xs: "100%", sm: "200px" },
+              height: "auto",
+              cursor: "pointer",
+            }}
+          >
+            <CardHeader
+              avatar={
+                <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
+                  {imagesUrl[campaign.id] ? (
+                    <Box
+                      component="img"
                       sx={{
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        ml: 1,
+                        height: 40,
+                        width: 40,
                       }}
-                    >
-                      {campaign.title}
-                    </Typography>
-                  </Tooltip>
-                </Grid>
-              </Grid>
-            </CardContent>
+                      src={imagesUrl[campaign.id]}
+                    />
+                  ) : (
+                    <AccountCircleIcon sx={{ height: "auto", width: "auto" }} />
+                  )}
+                </Avatar>
+              }
+              title={
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontWeight: "bold",
+                    display: "-webkit-box",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: 2,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {campaign.title}
+                </Typography>
+              }
+              titleTypographyProps={{ fontWeight: "bold" }}
+              onClick={() => handleCampaignClick(campaign.id)}
+            />
           </Card>
         </Grid>
       ));
     }
   };
 
+  if (id === "") {
+    return (
+      <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center", mb: 5 }}>
+        Realize o login para visualizar seu perfil.
+      </Typography>
+    );
+  }
+
   return (
-    <Container maxWidth="lg" sx={{ textAlign: "center", mt: 5, mb: 5 }}>
-      <Box position="relative" display="inline-block" sx={{ mb: 10 }}>
+    <Container maxWidth="lg" sx={{ textAlign: "center", mt: 5, mb: 2 }}>
+      <Box position="relative" display="inline-block" sx={{ mb: 5 }}>
         <Avatar
           alt={user?.name}
           src={avatarUrl ?? "fallback-avatar-url"}
@@ -217,22 +263,22 @@ export default function YourProfile() {
         </Typography>
       </Box>
 
-      <Box sx={{ mt: 15, textAlign: "left" }}>
+      <Box sx={{ mt: 10, textAlign: "left" }}>
         <Typography variant="h6" fontSize="25px" fontWeight="bold">
           Suas Campanhas
         </Typography>
 
-        <Grid container spacing={2} sx={{ mt: 2 }}>
+        <Grid container spacing={3} sx={{ mt: 1 }}>
           {showYourCampaigns()}
         </Grid>
       </Box>
 
-      <Box sx={{ mt: 10, textAlign: "left" }}>
+      <Box sx={{ mt: 5, textAlign: "left" }}>
         <Typography variant="h6" fontSize="25px" fontWeight="bold">
           Campanhas que você apoiou
         </Typography>
 
-        <Grid container spacing={2} sx={{ mt: 2 }}>
+        <Grid container spacing={3} sx={{ mt: 1 }}>
           {showCampaignsYouHelped()}
         </Grid>
       </Box>

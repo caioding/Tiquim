@@ -1,3 +1,4 @@
+import { Card } from "../types/card";
 import { CreatePaymentMethodDto, CreditCardDto } from "../types/payment";
 import api from "./api";
 
@@ -54,4 +55,8 @@ export async function createCreditCard(cardData: CreditCardDto) {
       },
     })
     .then((response) => response.data);
+}
+
+export async function getCreditCards(id: string): Promise<Card[]> {
+  return api.get(`/creditCard/${id}`, {}).then((response) => response.data);
 }
