@@ -29,7 +29,7 @@ export function SupporterCard({ name, avatarUrl, userId }: SupporterCardProps) {
     router.push(`/profile/${userId}`);
   };
   return (
-    <Card sx={{ width: { xs: "100%", sm: "200px" }, height: "72px" }}>
+    <Card sx={{ width: { xs: "100%", sm: "200px" }, height: "72px", cursor: "pointer",}}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
@@ -39,10 +39,8 @@ export function SupporterCard({ name, avatarUrl, userId }: SupporterCardProps) {
                 sx={{
                   height: 40,
                   width: 40,
-                  cursor: "pointer",
                 }}
                 src={avatar}
-                onClick={handleAvatarClick}
               />
             ) : (
               <AccountCircleIcon sx={{ height: "auto", width: "auto" }} />
@@ -51,6 +49,7 @@ export function SupporterCard({ name, avatarUrl, userId }: SupporterCardProps) {
         }
         title={getUserName(name)}
         titleTypographyProps={{ fontWeight: "bold" }}
+        onClick={handleAvatarClick}
       />
     </Card>
   );

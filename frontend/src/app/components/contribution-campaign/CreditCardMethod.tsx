@@ -7,12 +7,15 @@ import AddressForm from "./AddressForm";
 import CreditCardDetails from "./CreditCardDetails";
 import PaymentContext from "@/app/states/PaymentProvider";
 import { createAddress } from "@/app/services/address";
-import { createCreditCard, createPaymentMethod } from "@/app/services/paymentMethod";
+import { createCreditCard, createPaymentMethod, getCreditCards } from "@/app/services/paymentMethod";
 import { createContribution } from "@/app/services/contribution";
 import { usePathname, useRouter } from "next/navigation";
 import useSnackbar from "@/app/hooks/useSnackbar";
 import { Campaign } from "@/app/types/campaign";
 import { useContext } from "react";
+import useAuthContext from "@/app/hooks/useAuthContext";
+import { useCreditCards } from "@/app/hooks/useCreditCards";
+import { useUser } from "@/app/hooks/useUser";
 
 interface CampaignCreditProps {
   campaign: Campaign;
@@ -57,10 +60,12 @@ const initialContributionData = {
 
 export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
   const [activeStep, setActiveStep] = React.useState(0);
+  
   const { setSnackbar } = useSnackbar();
   const router = useRouter();
 
   //verificar melhor como obter o id da campanha: Utilizar contexto
+  
   const pathname = usePathname();
   const campaignId = pathname ? pathname.split("/").pop() : null;
 
@@ -122,10 +127,7 @@ export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
       };
       const saveCard = await createCreditCard(formattedCardData);
       console.log("Sending Card data:", formattedCardData);
-    } else {
-      console.log("o usuario escolheu nao salvar o cartao");
-    }
-
+    } 
     try {
       const formattedPM = {type: paymentMethod}
       const savedPaymentMethod = await createPaymentMethod(paymentMethod);

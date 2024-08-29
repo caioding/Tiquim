@@ -5,11 +5,12 @@ import Grid from "@mui/material/Grid";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { styled } from "@mui/system";
 import { Box, FormControlLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { useAddress } from "@/app/hooks/useAddress";
+import { useAddress, useUserAddress } from "@/app/hooks/useAddress";
 import { useCountries } from "@/app/hooks/useCountries";
 import { useContext, useEffect } from "react";
 import PaymentContext from "../../states/PaymentProvider";
 import getAddress from "../../services/address"; // Importa a função getAddress
+import useAuthContext from "@/app/hooks/useAuthContext";
 
 // Deixa os inputs alinhados
 const FormGrid = styled(Grid)(() => ({
@@ -29,12 +30,17 @@ const StyledOutlinedInput = styled(OutlinedInput)(() => ({
 }));
 
 export default function AddressForm() {
+  const { id } = useAuthContext()
+  
   const { addressInfo, setAddressInfo, saveAddress, setSaveAddress } = useContext(PaymentContext);
-  // saveAddress, setSaveAddress do context para pegar os dados
+  
   const [zip, setZip] = React.useState("");
   const { address, isLoading: isAddressLoading, isError: isAddressError } = useAddress(zip);
   const [selectedCountry, setSelectedCountry] = React.useState("");
   const { countries, isLoading: isCountriesLoading, isError: isCountriesError } = useCountries();
+  const [selectedAddress, setSelectedAddress] = React.useState<string | ''>('');
+  const {userAddress, isPending: isPendingUserAddress, isError: isUserAddressError} = useUserAddress(id);
+
 
   const handleCepChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const cep = event.target.value;
@@ -67,9 +73,54 @@ export default function AddressForm() {
     setAddressInfo((prev) => ({ ...prev, country: event.target.value }));
   };
 
+  const handleAddressSelectionChange = async (event: {target: {value: unknown}}) => {
+    const addressId = event.target.value as string;
+    if (userAddress) {
+      const addressItem = userAddress.find((address) => address.id === addressId);
+
+      const calculatedAddress = await getAddress(addressItem.cep)
+
+      if(addressItem) {
+        setAddressInfo({
+            zip: addressItem.cep || '',
+            street: calculatedAddress.logradouro || '',
+            number: addressItem.number || '',
+            neighborhood: calculatedAddress.bairro || '',
+            city: addressItem.city || '',
+            state: calculatedAddress.uf || '',
+            country: calculatedAddress.country || 'Brasil',
+        })
+        setSelectedAddress(addressId)
+      } else {
+        console.warn(`Endereço de ID ${addressId} não encontrado.`)
+      }
+    } else {
+      console.warn('Nenhum endereço encontrado')
+    }
+  }
+
   return (
     <Box sx={{ maxWidth: 700, margin: "auto" }}>
       <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
+      <FormGrid item xs={12}>
+          <FormLabel htmlFor="savedAddresses" required>
+            Endereços Salvos
+          </FormLabel>
+          <Select
+            id="savedAddresses"
+            name="savedAddresses"
+            value={selectedAddress || ""}
+            onChange={handleAddressSelectionChange}
+            required
+            displayEmpty
+          >
+            {userAddress?.map((address) => (
+              <MenuItem key={address.id} value={address.id}>
+                {`CEP:${address.cep}, ${address.number}, ${address.city}, ${address.uf}`}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormGrid>
         <FormGrid item xs={12} md={3}>
           <FormLabel htmlFor="zip" required>
             CEP

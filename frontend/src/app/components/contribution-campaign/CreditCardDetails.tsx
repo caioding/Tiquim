@@ -11,9 +11,11 @@ import CreditCardRoundedIcon from "@mui/icons-material/CreditCardRounded";
 import SimCardRoundedIcon from "@mui/icons-material/SimCardRounded";
 import "react-credit-cards-2/dist/es/styles-compiled.css";
 import CreditCard, { Focused } from "react-credit-cards-2";
-import { Container } from "@mui/material";
+import { Container, FormControl, MenuItem, Select } from "@mui/material";
 import { useContext } from "react";
 import PaymentContext from "../../states/PaymentProvider";
+import { useCreditCards } from "@/app/hooks/useCreditCards";
+import useAuthContext from "@/app/hooks/useAuthContext";
 
 const FormGrid = styled(Grid)(() => ({
   display: "flex",
@@ -22,9 +24,15 @@ const FormGrid = styled(Grid)(() => ({
 }));
 
 export default function CreditCardDetails() {
+  const { id } = useAuthContext()
+  
   const { cardInfo, setCardInfo, saveCard, setSaveCard } = useContext(PaymentContext);
+  
   // saveAddress, setSaveAddress do context para pegar os dados
   const [focus, setFocus] = React.useState<Focused | undefined>(undefined);
+  const [selectedCard, setSelectedCard] = React.useState<string | ''>('');
+
+  const { cards, isPending, isError } = useCreditCards(id);
 
   const handleCardNumberChange = (event: { target: { value: string } }) => {
     const value = event.target.value.replace(/\D/g, "");
@@ -73,11 +81,58 @@ export default function CreditCardDetails() {
     setCardInfo((prev) => ({ ...prev, cardHolderName: upperCaseValue }));
   };
 
+  const handleCardSelectionChange = (event: {target : {value: unknown}}) => {
+    const cardId = event.target.value as string;
+    if (cards) {
+      const card = cards.find((card) => card.id === cardId);
+      if (card) {
+        
+        setCardInfo({
+          cardNumber: card.cardNumber || '',
+          cardHolderName: card.cardHolderName || '',
+          expirationDate: card.cardExpiryDate, 
+          cvv: card.cvv || ''
+        });
+        
+        setSelectedCard(cardId);
+      } else {
+        console.warn(`Cartão com ID ${cardId} não encontrado.`);
+      }
+    } else {
+      console.warn('Nenhum cartão encontrado.');
+    }
+  };
+
+
   return (
     <Container sx={{ width: "80%", m: "auto", mb: 5 }}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <FormGrid container>
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Select
+                    value={selectedCard}
+                    onChange={handleCardSelectionChange}
+                    displayEmpty
+                    fullWidth
+                  >
+                    <MenuItem value="" disabled>Selecione um cartão salvo</MenuItem>
+                    {cards?.map((card) => (
+                      <MenuItem key={card.id} value={card.id}>
+                        Cartão Final - {card.cardLastDigits}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                }
+                label=""
+                sx={{ml: 0}}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6">Ou insira novos detalhes do cartão</Typography>
+            </Grid>
             <Grid item xs={9}>
               <OutlinedInput
                 id="card-number"
@@ -147,7 +202,7 @@ export default function CreditCardDetails() {
               <Checkbox
                 name="saveCard"
                 checked={saveCard}
-                onChange={(e) => setSaveCard(e.target.checked)} // Editado para Salvar dados para futuras doações
+                onChange={(e) => setSaveCard(e.target.checked)}
                 sx={{
                   "&.Mui-checked": {
                     color: "green",
