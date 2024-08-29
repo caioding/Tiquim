@@ -73,6 +73,7 @@ export default function AddressForm({ errors, setErrors }: AddressFormProps) {
     // Verifica se o CEP tem 8 dígitos e é brasileiro
     if (cep.length === 8 && /^[0-9]{5}-?[0-9]{3}$/.test(cep)) {
       setAddressInfo((prev) => ({ ...prev, country: "Brasil" }));
+      setErrors((prevErrors) => ({ ...prevErrors, country: "" }));
 
       // Busca o endereço pelo CEP
       const addressData = await getAddress(cep);
@@ -117,6 +118,7 @@ export default function AddressForm({ errors, setErrors }: AddressFormProps) {
           country: calculatedAddress.country || "Brasil",
         });
         setSelectedAddress(addressId);
+        setErrors((prev) => ({ ...prev, zip: "", street: "", number: "", neighborhood: "", city: "", state: "", country: "" }));
       } else {
         console.warn(`Endereço de ID ${addressId} não encontrado.`);
       }

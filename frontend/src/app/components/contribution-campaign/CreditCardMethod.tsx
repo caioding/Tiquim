@@ -21,7 +21,7 @@ const steps = ["Detalhes do Pagamento", "Endereço de Cobrança", "Revisão de P
 function getStepContent(step: number, errors: any, setErrors: React.Dispatch<React.SetStateAction<any>>) {
   switch (step) {
     case 0:
-      return <CreditCardDetails />;
+      return <CreditCardDetails errors={errors} setErrors={setErrors} />;
     case 1:
       return <AddressForm errors={errors} setErrors={setErrors} />;
     case 2:
@@ -98,20 +98,20 @@ export default function CreditCardMethod() {
       return;
     }
 
-    // if (activeStep === 0) {
-    //   const newErrors = {
-    //     cardNumber: cardInfo.cardNumber ? "" : "Esse campo é obrigatório",
-    //     cardHolderName: cardInfo.cardHolderName ? "" : "Esse campo é obrigatório",
-    //     expirationDate: cardInfo.expirationDate ? "" : "Esse campo é obrigatório",
-    //     cvv: cardInfo.cvv ? "" : "Esse campo é obrigatório",
-    //   };
+    if (activeStep === 0) {
+      const newErrors = {
+        cardNumber: cardInfo.cardNumber ? "" : "Esse campo é obrigatório",
+        cardHolderName: cardInfo.cardHolderName ? "" : "Esse campo é obrigatório",
+        expirationDate: cardInfo.expirationDate ? "" : "Esse campo é obrigatório",
+        cvv: cardInfo.cvv ? "" : "Esse campo é obrigatório",
+      };
 
-    //   setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
+      setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
 
-    //   if (Object.values(newErrors).some((error) => error)) {
-    //     return;
-    //   }
-    // }
+      if (Object.values(newErrors).some((error) => error)) {
+        return;
+      }
+    }
 
     if (activeStep === 1) {
       const newErrors = {
