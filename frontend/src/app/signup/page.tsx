@@ -252,9 +252,7 @@ export default function SignUp() {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <InputLabel htmlFor="state" sx={{ color: "black" }}>
-                Estado
-              </InputLabel>
+              <InputLabel htmlFor="state">Estado</InputLabel>
               <Select
                 id="state"
                 value={selectedState}
@@ -263,9 +261,6 @@ export default function SignUp() {
                 fullWidth
                 sx={{
                   backgroundColor: "white",
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "transparent",
-                  },
                 }}
               >
                 {sortedStates?.map((state) => (
@@ -275,23 +270,16 @@ export default function SignUp() {
                 ))}
               </Select>
             </Grid>
-
             <Grid item xs={12} sm={6}>
-              <InputLabel htmlFor="city" sx={{ color: "black" }}>
-                Cidade
-              </InputLabel>
+              <InputLabel htmlFor="city">Cidade</InputLabel>
               <Select
                 id="city"
                 value={selectedCity}
                 onChange={handleCityChange}
-                label="Cidade"
                 disabled={!selectedState}
                 fullWidth
                 sx={{
                   backgroundColor: "white",
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "transparent",
-                  },
                 }}
               >
                 {cities?.map((city) => (

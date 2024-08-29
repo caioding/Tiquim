@@ -21,6 +21,7 @@ import ReportIcon from "@mui/icons-material/Report";
 import AlertDialog from "../DialogConfirmationDelete";
 import useSnackbar from "../../hooks/useSnackbar";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface CommentCardProps {
   comment: Comment;
@@ -84,26 +85,30 @@ export function CommentCard({ comment, id }: CommentCardProps) {
     <Card sx={{ width: { xs: "100%", sm: "80%" }, margin: "5px auto", boxShadow: 3 }}>
       <CardHeader
         avatar={
-          <Avatar
-            sx={{ bgcolor: "black", cursor: "pointer" }}
-            aria-label="recipe"
-            onClick={() => {
-              router.push(`/profile/${comment.userId}`);
-            }}
-          >
-            {avatar ? (
-              <Box
-                component="img"
-                sx={{
-                  height: 40,
-                  width: 40,
+          <Link href={`/profile/${user?.id}`} legacyBehavior>
+            <a style={{ textDecoration: "none" }}>
+              <Avatar
+                sx={{ bgcolor: "black", cursor: "pointer" }}
+                aria-label="recipe"
+                onClick={() => {
+                  router.push(`/profile/${comment.userId}`);
                 }}
-                src={avatar}
-              />
-            ) : (
-              <AccountCircleIcon sx={{ height: "auto", width: "auto" }} />
-            )}
-          </Avatar>
+              >
+                {avatar ? (
+                  <Box
+                    component="img"
+                    sx={{
+                      height: 40,
+                      width: 40,
+                    }}
+                    src={avatar}
+                  />
+                ) : (
+                  <AccountCircleIcon sx={{ height: "auto", width: "auto" }} />
+                )}
+              </Avatar>
+            </a>
+          </Link>
         }
         action={
           id && (

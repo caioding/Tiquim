@@ -9,7 +9,7 @@ import { Payment } from "@mui/icons-material";
 import PaymentContext, { PaymentProvider } from "./states/PaymentProvider";
 
 export const metadata: Metadata = {
-  title: "Campanhas",
+  title: "Tiquim",
   description: "Plataforma de financiamento coletivo",
 };
 

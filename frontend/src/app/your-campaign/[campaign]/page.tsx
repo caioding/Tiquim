@@ -142,13 +142,28 @@ export default function YourCampaign() {
   };
 
   const handleDelete = async () => {
-    const success = await deleteCampaign(campaignToDelete);
+    if (supporters > 0) {
+      setSnackbar(
+        "Não é possível apagar uma campanha que já recebeu doações. Entre em contato com o suporte para fechar a campanha",
+        "error",
+      );
+      return;
+    }
 
-    if (success) {
-      setSnackbar("Campanha deletada com sucesso!");
-      router.push("/your-campaigns");
-    } else {
-      setSnackbar("Erro ao deletar campanha", "error");
+    try {
+      const success = await deleteCampaign(campaignToDelete);
+
+      if (success) {
+        setSnackbar("Campanha deletada com sucesso!");
+        router.push("/your-campaigns");
+      }
+    } catch (err) {
+      setSnackbar(
+        "Erro ao deletar campanha. Se houver atualizações na campanha, apague-as e tente de novo",
+        "error",
+      );
+    } finally {
+      setConfirmOpen(false);
     }
   };
 
@@ -227,9 +242,7 @@ export default function YourCampaign() {
                   <Typography variant="h6" sx={{ color: "#32A852" }}>
                     R$
                     {typeof percentage === "number" || percentage instanceof Number
-                      ? (Math.min(Number(percentage), 1) * campaign.goal)
-                          .toFixed(2)
-                          .replace(".", ",")
+                      ? (Number(percentage) * campaign.goal).toFixed(2).replace(".", ",")
                       : 0}
                   </Typography>
                 </Grid>

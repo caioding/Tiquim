@@ -162,7 +162,6 @@ export default function CreditCardMethod() {
       };
 
       const savedAddress = await createAddress(formatedAddressData);
-    } else {
     }
 
     if (saveCard) {

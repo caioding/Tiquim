@@ -80,13 +80,6 @@ export default function Campanha() {
 
   const { setSnackbar } = useSnackbar();
 
-  const handleChangeReason = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setReason(e.target.value);
-    },
-    [setReason],
-  );
-
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -96,6 +89,12 @@ export default function Campanha() {
   };
 
   const handleReport = () => {
+    if (!id) {
+      setSnackbar("É preciso está logado para denunciar", "error");
+      setConfirmOpen(false);
+      setAnchorEl(null);
+      return;
+    }
     setOpenReasonModal(true);
   };
 
@@ -197,6 +196,15 @@ Lembre-se: um Tiquim de ajuda pode mudar a realidade de alguém!`;
 
   const deadline = formatDate(campaign.deadline).toString();
 
+  const isCampaignOver = (deadline: string): boolean => {
+    const currentDate = new Date();
+    const deadlineDate = new Date(deadline);
+
+    deadlineDate.setHours(23, 59, 59, 999);
+
+    return currentDate > deadlineDate;
+  };
+
   return (
     <Container sx={{ width: "80%", m: "auto" }}>
       <Grid container component="main" sx={{ height: "487px" }}>
@@ -239,17 +247,17 @@ Lembre-se: um Tiquim de ajuda pode mudar a realidade de alguém!`;
               }}
             >
               <Chip label={campaign.category} sx={{ backgroundColor: "#32A852", color: "white" }} />
-              {id && (
-                <IconButton onClick={handleMenuOpen}>
-                  <MoreVertIcon />
-                </IconButton>
-              )}
+
+              <IconButton onClick={handleMenuOpen}>
+                <MoreVertIcon />
+              </IconButton>
             </Box>
             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
               <MenuItem onClick={handleCopyLink} sx={{ paddingX: 2 }}>
                 <ContentCopyIcon sx={{ mr: 1 }} />
                 <Typography>Copiar link</Typography>
               </MenuItem>
+
               <MenuItem onClick={() => setConfirmOpen(true)} sx={{ paddingX: 2 }}>
                 <ReportIcon sx={{ mr: 1, color: "red" }} />
                 <Typography sx={{ color: "red" }}>Denunciar</Typography>
@@ -262,21 +270,23 @@ Lembre-se: um Tiquim de ajuda pode mudar a realidade de alguém!`;
               message={"Tem certeza que deseja denunciar essa campanha?"}
               title="Denúncia de Campanha"
             />
-            <Dialog open={openReasonModal} onClose={handleCancelReport}>
+            <Dialog open={openReasonModal} onClose={handleCancelReport} scroll="body" maxWidth="md">
               <DialogTitle>Informe a razão da denúncia</DialogTitle>
               <DialogContent>
                 <DialogContentText>
                   Por favor, explique por que você está denunciando esta campanha.
                 </DialogContentText>
                 <TextField
+                  required
                   autoFocus
                   id="reason"
                   label="Razão"
-                  type="text"
+                  variant="outlined"
+                  margin="normal"
                   fullWidth
                   multiline
                   value={reason}
-                  onChange={handleChangeReason}
+                  onChange={(e) => setReason(e.target.value)}
                   sx={{
                     wordBreak: "break-word",
                   }}
@@ -306,9 +316,7 @@ Lembre-se: um Tiquim de ajuda pode mudar a realidade de alguém!`;
                   <Typography variant="h6" sx={{ color: "#32A852" }}>
                     R$
                     {typeof percentage === "number" || percentage instanceof Number
-                      ? (Math.min(Number(percentage), 1) * campaign.goal)
-                          .toFixed(2)
-                          .replace(".", ",")
+                      ? (Number(percentage) * campaign.goal).toFixed(2).replace(".", ",")
                       : 0}
                   </Typography>
                 </Grid>
@@ -354,9 +362,11 @@ Lembre-se: um Tiquim de ajuda pode mudar a realidade de alguém!`;
                 "&:hover": { backgroundColor: "#008000" },
                 textTransform: "none",
               }}
+              disabled={isCampaignOver(campaign.deadline.toString())}
               onClick={(e) => handleDonateToCampaign(e, campaign.id)}
+              href={`../contribution/${campaign.id}`}
             >
-              Doar
+              {isCampaignOver(campaign.deadline.toString()) ? "Campanha finalizada" : "Doar"}
             </Button>
           </Box>
         </Grid>

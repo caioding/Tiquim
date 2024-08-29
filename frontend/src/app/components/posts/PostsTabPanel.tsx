@@ -40,7 +40,13 @@ export function PostsTabPanel({ idCampaign, idOwner, value, index }: TabPanelPro
           }}
         >
           {isOwner ? <CreatePost idCampaign={idCampaign} /> : <></>}
-          {sortedPosts?.map((post) => <PostCard post={post} isOwner={isOwner} />)}
+          {sortedPosts.length > 0 ? (
+            sortedPosts?.map((post) => <PostCard post={post} isOwner={isOwner} />)
+          ) : (
+            <Typography variant="h6" sx={{ fontWeight: "bold", textAlign: "center" }}>
+              A campanha não possui nenhuma atualização por enquanto
+            </Typography>
+          )}
         </Container>
       )}
     </div>

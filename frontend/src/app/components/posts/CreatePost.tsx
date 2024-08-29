@@ -91,7 +91,7 @@ export function CreatePost({ idCampaign }: CreatePostProps) {
             mt: 1,
           }}
           inputProps={{
-            maxLength: 200,
+            maxLength: 100,
             disableUnderline: true,
             style: { fontSize: "13px" },
           }}

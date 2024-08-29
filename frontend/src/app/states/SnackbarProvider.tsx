@@ -40,7 +40,7 @@ const SnackbarProvider: React.FC<SnackbarProps> = ({ children }) => {
   const setSnackbar = (
     message: string,
     severity: AlertColor = "success",
-    duration: number = 2000,
+    duration: number = 8000,
   ) => {
     setMessage(message);
     setSeverity(severity);

@@ -13,6 +13,7 @@ import { useUser } from "../hooks/useUser";
 import { useCampaignPercentage } from "../hooks/useCampaignPercentage";
 import { getImageCampaign } from "../services/campaign";
 import { formatDate } from "../utils/datetime";
+import Link from "next/link";
 import useAuthContext from "../hooks/useAuthContext";
 import useSnackbar from "../hooks/useSnackbar";
 
@@ -81,48 +82,63 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
     router.push(`/contribution/${idCampaign}`);
   };
 
+  const isCampaignOver = (deadline: string): boolean => {
+    const currentDate = new Date();
+    const deadlineDate = new Date(deadline);
+
+    deadlineDate.setHours(23, 59, 59, 999);
+
+    return currentDate > deadlineDate;
+  };
+
   return (
-    <Card
-      sx={{
-        width: 345,
-        height: 400,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        m: { xs: "auto", sm: 0 },
-        cursor: "pointer",
-      }}
-      onClick={() => openCampaignDetails(campaign.id)}
-    >
-      <CardMedia component="img" alt={campaign.title} height="140" image={imageUrl} />
-      <CardContent sx={{ flexGrow: 1, mx: 1.5, overflow: "hidden" }}>
-        <CardHeader
-          title={campaign.title}
-          author={user.name}
-          authorId={user.id}
-          createdAt={datetime}
-          completedPercentage={completedPercentage}
-          city={campaign.city}
-          state={campaign.state}
-        />
-        <Typography variant="body2" color="text.secondary" sx={{ fontSize: "14px", mt: 1 }}>
-          {campaign.preview}
-        </Typography>
-      </CardContent>
-      <CardActions sx={{ mb: 3, mx: 2 }}>
-        <Button
-          variant="contained"
+    <Link href={`campaign/${campaign.id}`} legacyBehavior>
+      <a style={{ textDecoration: "none" }}>
+        <Card
           sx={{
-            width: "100%",
-            backgroundColor: "#32a852",
-            textTransform: "none",
-            "&:hover": { backgroundColor: "#008000" },
+            width: 345,
+            height: 400,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            m: { xs: "auto", sm: 0 },
+            cursor: "pointer",
           }}
-          onClick={(e) => handleDonateToCampaign(e, campaign.id)}
+          onClick={() => openCampaignDetails(campaign.id)}
         >
-          Doar
-        </Button>
-      </CardActions>
-    </Card>
+          <CardMedia component="img" alt={campaign.title} height="140" image={imageUrl} />
+          <CardContent sx={{ flexGrow: 1, mx: 1.5, overflow: "hidden" }}>
+            <CardHeader
+              title={campaign.title}
+              author={user.name}
+              authorId={user.id}
+              createdAt={datetime}
+              completedPercentage={completedPercentage}
+              city={campaign.city}
+              state={campaign.state}
+            />
+            <Typography variant="body2" color="text.secondary" sx={{ fontSize: "14px", mt: 1 }}>
+              {campaign.preview}
+            </Typography>
+          </CardContent>
+          <CardActions sx={{ mb: 3, mx: 2 }}>
+            <Button
+              variant="contained"
+              sx={{
+                width: "100%",
+                backgroundColor: "#32a852",
+                textTransform: "none",
+                "&:hover": { backgroundColor: "#008000" },
+              }}
+              disabled={isCampaignOver(campaign.deadline.toString())}
+              onClick={(e) => handleDonateToCampaign(e, campaign.id)}
+              href={`/contribution/${campaign.id}`}
+            >
+              {isCampaignOver(campaign.deadline.toString()) ? "Campanha finalizada" : "Doar"}
+            </Button>
+          </CardActions>
+        </Card>
+      </a>
+    </Link>
   );
 }
