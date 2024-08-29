@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import getAddress, { getCities, getStates } from "../services/address";
+import getAddress, { getCities, getStates, getUserAddresses } from "../services/address";
 import { City, State } from "../types/address";
 
 export function useAddress(cep: string) {
@@ -29,4 +29,13 @@ export function useCities(state: string) {
   });
 
   return { cities: data as City[] };
+}
+
+export function useUserAddress(userId: string) {
+  const {data, isPending, isError} = useQuery({
+    queryKey: ["userAddresses", userId],
+    queryFn: () => getUserAddresses(userId)
+  })
+
+  return {userAddress: data, isPending, isError}
 }
