@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { CreateCampaignDto, UpdateCampaignDto } from "./campaign.types";
 import {
+  closeCampaign,
   createCampaign,
   deleteCampaign,
   listCampaigns,
@@ -180,4 +181,24 @@ const indexRegion = async (req: Request, res: Response) => {
   }
 };
 
-export default { index, create, read, update, remove, indexUser, indexRegion };
+const close = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const campaign = await closeCampaign(id);
+
+    if (!campaign) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Campanha não encontrada ou usuário não autorizado" });
+    }
+
+    return res.status(StatusCodes.OK).json(campaign);
+  } catch (error) {
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "Erro ao atualizar a campanha", error });
+  }
+};
+
+export default { index, create, read, update, remove, indexUser, indexRegion, close };

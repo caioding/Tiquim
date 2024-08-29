@@ -222,9 +222,7 @@ export default function EditAccount() {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <InputLabel htmlFor="state" sx={{ color: "black" }}>
-                Estado
-              </InputLabel>
+              <InputLabel htmlFor="state">Estado</InputLabel>
               <Select
                 id="state"
                 value={selectedState}
@@ -243,9 +241,7 @@ export default function EditAccount() {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <InputLabel htmlFor="city" sx={{ color: "black" }}>
-                Cidade
-              </InputLabel>
+              <InputLabel htmlFor="city">Cidade</InputLabel>
               <Select
                 id="city"
                 value={selectedCity}

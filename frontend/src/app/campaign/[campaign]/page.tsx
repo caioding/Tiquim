@@ -89,6 +89,12 @@ export default function Campanha() {
   };
 
   const handleReport = () => {
+    if (!id) {
+      setSnackbar("É preciso está logado para denunciar", "error");
+      setConfirmOpen(false);
+      setAnchorEl(null);
+      return;
+    }
     setOpenReasonModal(true);
   };
 
@@ -236,17 +242,17 @@ Lembre-se: um Tiquim de ajuda pode mudar a realidade de alguém!`;
               }}
             >
               <Chip label={campaign.category} sx={{ backgroundColor: "#32A852", color: "white" }} />
-              {id && (
-                <IconButton onClick={handleMenuOpen}>
-                  <MoreVertIcon />
-                </IconButton>
-              )}
+
+              <IconButton onClick={handleMenuOpen}>
+                <MoreVertIcon />
+              </IconButton>
             </Box>
             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
               <MenuItem onClick={handleCopyLink} sx={{ paddingX: 2 }}>
                 <ContentCopyIcon sx={{ mr: 1 }} />
                 <Typography>Copiar link</Typography>
               </MenuItem>
+
               <MenuItem onClick={() => setConfirmOpen(true)} sx={{ paddingX: 2 }}>
                 <ReportIcon sx={{ mr: 1, color: "red" }} />
                 <Typography sx={{ color: "red" }}>Denunciar</Typography>

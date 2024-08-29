@@ -141,6 +141,17 @@ export const updateCampaign = async (
   });
 };
 
+export const closeCampaign = async (id: string): Promise<CampaignDto | null> => {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  return await prisma.campaign.update({
+    where: { id: id },
+    data: {
+      deadline: yesterday.toISOString(),
+    },
+  });
+};
+
 export const deleteCampaign = async (id: string, uid: string): Promise<CampaignDto> => {
   return await prisma.campaign.delete({ where: { id: id, userId: uid } });
 };

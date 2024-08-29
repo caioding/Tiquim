@@ -1,6 +1,6 @@
 import { Router } from "express";
 import campaignController from "./campaign.controller";
-import { isAuth } from "../../middlewares/isAdmin";
+import { isAdmin, isAuth } from "../../middlewares/isAdmin";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -25,6 +25,7 @@ const router = Router();
 router.get("/", campaignController.index);
 router.get("/region/", isAuth, campaignController.indexRegion);
 router.get("/user", isAuth, campaignController.indexUser);
+router.put("/close/:id", isAdmin, campaignController.close);
 router.post("/", isAuth, upload.single("campaignImage"), campaignController.create);
 router.get("/:id", campaignController.read);
 router.put("/:id", isAuth, upload.single("campaignImage"), campaignController.update);
