@@ -4,12 +4,12 @@ import FormLabel from "@mui/material/FormLabel";
 import Grid from "@mui/material/Grid";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { styled } from "@mui/system";
-import { Box, FormControlLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { Box, FormControlLabel, FormHelperText, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { useAddress, useUserAddress } from "@/app/hooks/useAddress";
 import { useCountries } from "@/app/hooks/useCountries";
 import { useContext, useEffect } from "react";
 import PaymentContext from "../../states/PaymentProvider";
-import getAddress from "../../services/address"; // Importa a função getAddress
+import getAddress from "../../services/address";
 import useAuthContext from "@/app/hooks/useAuthContext";
 
 // Deixa os inputs alinhados
@@ -24,16 +24,14 @@ const StyledOutlinedInput = styled(OutlinedInput)(() => ({
     "-moz-appearance": "textfield",
   },
   "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button":
-    {
-      "-webkit-appearance": "none",
-    },
+  {
+    "-webkit-appearance": "none",
+  },
 }));
 
 export default function AddressForm() {
   const { id } = useAuthContext();
-
-  const { addressInfo, setAddressInfo, saveAddress, setSaveAddress } = useContext(PaymentContext);
-
+  const { addressInfo, setAddressInfo, saveAddress, setSaveAddress, errors } = useContext(PaymentContext);
   const [zip, setZip] = React.useState("");
   const { address, isLoading: isAddressLoading, isError: isAddressError } = useAddress(zip);
   const [selectedCountry, setSelectedCountry] = React.useState("");
@@ -138,7 +136,9 @@ export default function AddressForm() {
             required
             value={addressInfo.zip}
             onChange={handleCepChange}
+            error={!!errors.zip}
           />
+          {errors.zip && <FormHelperText error>{errors.zip}</FormHelperText>}
         </FormGrid>
         <FormGrid item xs={12} md={9}>
           <FormLabel htmlFor="street" required>
@@ -153,7 +153,9 @@ export default function AddressForm() {
             value={addressInfo.street}
             onChange={handleInputChange}
             disabled={isAddressLoading || isAddressError}
+            error={!!errors.street}
           />
+          {errors.street && <FormHelperText error>{errors.street}</FormHelperText>}
         </FormGrid>
         <FormGrid item xs={12} md={3}>
           <FormLabel htmlFor="number" required>
@@ -167,7 +169,9 @@ export default function AddressForm() {
             required
             value={addressInfo.number}
             onChange={handleInputChange}
+            error={!!errors.number}
           />
+          {errors.number && <FormHelperText error>{errors.number}</FormHelperText>}
         </FormGrid>
         <FormGrid item xs={12} md={9}>
           <FormLabel htmlFor="neighborhood" required>
@@ -182,7 +186,9 @@ export default function AddressForm() {
             value={addressInfo.neighborhood}
             onChange={handleInputChange}
             disabled={isAddressLoading || isAddressError}
+            error={!!errors.neighborhood}
           />
+          {errors.neighborhood && <FormHelperText error>{errors.neighborhood}</FormHelperText>}
         </FormGrid>
         <FormGrid item xs={6}>
           <FormLabel htmlFor="city" required>
@@ -197,7 +203,9 @@ export default function AddressForm() {
             value={addressInfo.city}
             onChange={handleInputChange}
             disabled={isAddressLoading || isAddressError}
+            error={!!errors.city}
           />
+          {errors.city && <FormHelperText error>{errors.city}</FormHelperText>}
         </FormGrid>
         <FormGrid item xs={6}>
           <FormLabel htmlFor="state" required>
@@ -212,7 +220,9 @@ export default function AddressForm() {
             value={addressInfo.state}
             onChange={handleInputChange}
             disabled={isAddressLoading || isAddressError}
+            error={!!errors.state}
           />
+          {errors.state && <FormHelperText error>{errors.state}</FormHelperText>}
         </FormGrid>
         <FormGrid item xs={6}>
           <FormLabel htmlFor="country" required>
@@ -225,6 +235,7 @@ export default function AddressForm() {
             onChange={handleCountryChange}
             required
             disabled={isCountriesLoading || isCountriesError}
+            error={!!errors.country}
           >
             {countries?.map((country: string) => (
               <MenuItem key={country} value={country}>
@@ -232,19 +243,7 @@ export default function AddressForm() {
               </MenuItem>
             ))}
           </Select>
-        </FormGrid>
-        <FormGrid item xs={12}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                name="saveAddress"
-                checked={saveAddress}
-                onChange={(e) => setSaveAddress(e.target.checked)} // Editado para Salvar dados para futuras doações
-                sx={{ "&.Mui-checked": { color: "green" } }}
-              />
-            }
-            label="Salvar endereço para próximas doações."
-          />
+          {errors.country && <FormHelperText error>{errors.country}</FormHelperText>}
         </FormGrid>
       </Grid>
     </Box>

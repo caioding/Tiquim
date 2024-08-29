@@ -12,6 +12,7 @@ import { createContribution } from "@/app/services/contribution";
 import { usePathname, useRouter } from "next/navigation";
 import useSnackbar from "@/app/hooks/useSnackbar";
 import { Campaign } from "@/app/types/campaign";
+import { useState } from "react";
 
 const steps = ["Detalhes do Pagamento", "Endereço de Cobrança", "Revisão de Pagamento"];
 
@@ -52,6 +53,7 @@ const initialContributionData = {
 
 export default function CreditCardMethod() {
   const [activeStep, setActiveStep] = React.useState(0);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const { setSnackbar } = useSnackbar();
   const router = useRouter();
@@ -73,10 +75,31 @@ export default function CreditCardMethod() {
   } = React.useContext(PaymentContext);
   // saveAddress, setSaveAddress do context para pegar os dados
 
+  const validateAddressForm = () => {
+    const newErrors: { [key: string]: string } = {};
+    if (!addressInfo.zip) newErrors.zip = "Campo obrigatório";
+    if (!addressInfo.street) newErrors.street = "Campo obrigatório";
+    if (!addressInfo.number) newErrors.number = "Campo obrigatório";
+    if (!addressInfo.neighborhood) newErrors.neighborhood = "Campo obrigatório";
+    if (!addressInfo.city) newErrors.city = "Campo obrigatório";
+    if (!addressInfo.state) newErrors.state = "Campo obrigatório";
+    if (!addressInfo.country) newErrors.country = "Campo obrigatório";
+    setErrors(newErrors);
+    return newErrors;
+  };
+
   const handleNext = () => {
     if (amount < 1 || isNaN(amount)) {
       setSnackbar("Valor de doação inválido!", "error");
       return;
+    }
+
+    if (activeStep === 1) {
+      const newErrors = validateAddressForm();
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        return;
+      }
     }
 
     if (activeStep === 2 && paymentMethod === "credit") {

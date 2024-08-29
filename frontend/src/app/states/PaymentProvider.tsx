@@ -31,6 +31,8 @@ interface IPaymentContext {
   setSaveAddress: React.Dispatch<React.SetStateAction<boolean>>;
   saveCard: boolean;
   setSaveCard: React.Dispatch<React.SetStateAction<boolean>>;
+  errors: { [key: string]: string };
+  setErrors: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
 }
 
 interface PaymentProviderProps {
@@ -56,15 +58,17 @@ const initialState: IPaymentContext = {
     state: "",
     country: "",
   },
-  setAmount: () => {},
-  setCardInfo: () => {},
-  setAddressInfo: () => {},
-  setContributionAmount: () => {},
-  setPaymentMethod: () => {},
+  setAmount: () => { },
+  setCardInfo: () => { },
+  setAddressInfo: () => { },
+  setContributionAmount: () => { },
+  setPaymentMethod: () => { },
   saveAddress: false,
-  setSaveAddress: () => {},
+  setSaveAddress: () => { },
   saveCard: false,
-  setSaveCard: () => {},
+  setSaveCard: () => { },
+  errors: {},
+  setErrors: () => { },
 };
 
 const PaymentContext = createContext<IPaymentContext>(initialState);
@@ -75,6 +79,7 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({ children }) =>
   const [paymentMethod, setPaymentMethod] = useState("credit");
   const [saveAddress, setSaveAddress] = useState<boolean>(initialState.saveAddress);
   const [saveCard, setSaveCard] = useState<boolean>(initialState.saveCard);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const [cardInfo, setCardInfo] = useState({
     cardNumber: "",
@@ -109,6 +114,8 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({ children }) =>
         setSaveAddress,
         saveCard,
         setSaveCard,
+        errors,
+        setErrors,
       }}
     >
       {children}
