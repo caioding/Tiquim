@@ -13,15 +13,21 @@ import { usePathname, useRouter } from "next/navigation";
 import useSnackbar from "@/app/hooks/useSnackbar";
 import { Campaign } from "@/app/types/campaign";
 import { useState } from "react";
+import { useContext } from "react";
+
+interface CampaignCreditProps {
+  campaign: Campaign;
+}
+
 
 const steps = ["Detalhes do Pagamento", "Endereço de Cobrança", "Revisão de Pagamento"];
 
-function getStepContent(step: number) {
+function getStepContent(step: number, errors: any) {
   switch (step) {
     case 0:
       return <CreditCardDetails />;
     case 1:
-      return <AddressForm />;
+      return <AddressForm errors={errors} />;
     case 2:
       return <Review />;
     default:
@@ -53,7 +59,7 @@ const initialContributionData = {
 
 export default function CreditCardMethod() {
   const [activeStep, setActiveStep] = React.useState(0);
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  // const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const { setSnackbar } = useSnackbar();
   const router = useRouter();
@@ -75,18 +81,20 @@ export default function CreditCardMethod() {
   } = React.useContext(PaymentContext);
   // saveAddress, setSaveAddress do context para pegar os dados
 
-  const validateAddressForm = () => {
-    const newErrors: { [key: string]: string } = {};
-    if (!addressInfo.zip) newErrors.zip = "Campo obrigatório";
-    if (!addressInfo.street) newErrors.street = "Campo obrigatório";
-    if (!addressInfo.number) newErrors.number = "Campo obrigatório";
-    if (!addressInfo.neighborhood) newErrors.neighborhood = "Campo obrigatório";
-    if (!addressInfo.city) newErrors.city = "Campo obrigatório";
-    if (!addressInfo.state) newErrors.state = "Campo obrigatório";
-    if (!addressInfo.country) newErrors.country = "Campo obrigatório";
-    setErrors(newErrors);
-    return newErrors;
-  };
+  const [errors, setErrors] = React.useState({
+    zip: "",
+    street: "",
+    number: "",
+    neighborhood: "",
+    city: "",
+    state: "",
+    country: "",
+    cardNumber: "",
+    cardHolderName: "",
+    expirationDate: "",
+    cvv: "",
+  });
+
 
   const handleNext = () => {
     if (amount < 1 || isNaN(amount)) {
@@ -94,10 +102,35 @@ export default function CreditCardMethod() {
       return;
     }
 
+    // if (activeStep === 0) {
+    //   const newErrors = {
+    //     cardNumber: cardInfo.cardNumber ? "" : "Esse campo é obrigatório",
+    //     cardHolderName: cardInfo.cardHolderName ? "" : "Esse campo é obrigatório",
+    //     expirationDate: cardInfo.expirationDate ? "" : "Esse campo é obrigatório",
+    //     cvv: cardInfo.cvv ? "" : "Esse campo é obrigatório",
+    //   };
+
+    //   setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
+
+    //   if (Object.values(newErrors).some((error) => error)) {
+    //     return;
+    //   }
+    // }
+
     if (activeStep === 1) {
-      const newErrors = validateAddressForm();
-      if (Object.keys(newErrors).length > 0) {
-        setErrors(newErrors);
+      const newErrors = {
+        zip: addressInfo.zip ? "" : "Esse campo é obrigatório",
+        street: addressInfo.street ? "" : "Esse campo é obrigatório",
+        number: addressInfo.number ? "" : "Esse campo é obrigatório",
+        neighborhood: addressInfo.neighborhood ? "" : "Esse campo é obrigatório",
+        city: addressInfo.city ? "" : "Esse campo é obrigatório",
+        state: addressInfo.state ? "" : "Esse campo é obrigatório",
+        country: addressInfo.country ? "" : "Esse campo é obrigatório",
+      };
+
+      setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
+
+      if (Object.values(newErrors).some((error) => error)) {
         return;
       }
     }
@@ -183,7 +216,7 @@ export default function CreditCardMethod() {
           </Step>
         ))}
       </Stepper>
-      {getStepContent(activeStep)}
+      {getStepContent(activeStep, errors)}
       <Box
         sx={[
           {

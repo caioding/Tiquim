@@ -12,6 +12,7 @@ import PaymentContext from "../../states/PaymentProvider";
 import getAddress from "../../services/address";
 import useAuthContext from "@/app/hooks/useAuthContext";
 
+
 // Deixa os inputs alinhados
 const FormGrid = styled(Grid)(() => ({
   display: "flex",
@@ -29,9 +30,21 @@ const StyledOutlinedInput = styled(OutlinedInput)(() => ({
   },
 }));
 
-export default function AddressForm() {
+interface AddressFormProps {
+  errors: {
+    zip: string;
+    street: string;
+    number: string;
+    neighborhood: string;
+    city: string;
+    state: string;
+    country: string;
+  };
+}
+
+export default function AddressForm({ errors }: AddressFormProps) {
   const { id } = useAuthContext();
-  const { addressInfo, setAddressInfo, saveAddress, setSaveAddress, errors } = useContext(PaymentContext);
+  const { addressInfo, setAddressInfo, saveAddress, setSaveAddress} = useContext(PaymentContext);
   const [zip, setZip] = React.useState("");
   const { address, isLoading: isAddressLoading, isError: isAddressError } = useAddress(zip);
   const [selectedCountry, setSelectedCountry] = React.useState("");
