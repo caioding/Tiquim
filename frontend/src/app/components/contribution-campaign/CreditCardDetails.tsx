@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import "react-credit-cards-2/dist/es/styles-compiled.css";
 import CreditCard, { Focused } from "react-credit-cards-2";
-import { Container, MenuItem, Select } from "@mui/material";
+import { Container, FormHelperText, MenuItem, Select } from "@mui/material";
 import { useContext } from "react";
 import PaymentContext from "../../states/PaymentProvider";
 import { useCreditCards } from "@/app/hooks/useCreditCards";
@@ -20,7 +20,22 @@ const FormGrid = styled(Grid)(() => ({
   gap: "16px",
 }));
 
-export default function CreditCardDetails() {
+interface CreditCardDetailsProps {
+  errors: {
+    cardNumber: string;
+    cardHolderName: string;
+    expirationDate: string;
+    cvv: string;
+  };
+  setErrors: React.Dispatch<React.SetStateAction<{
+    cardNumber: string;
+    cardHolderName: string;
+    expirationDate: string;
+    cvv: string;
+  }>>;
+}
+
+export default function CreditCardDetails({ errors, setErrors }: CreditCardDetailsProps) {
   const { id } = useAuthContext();
 
   const { cardInfo, setCardInfo, saveCard, setSaveCard } = useContext(PaymentContext);
@@ -36,6 +51,7 @@ export default function CreditCardDetails() {
     const formattedValue = value.replace(/(\d{4})(?=\d)/g, "$1 ");
     if (value.length <= 16) {
       setCardInfo((prev) => ({ ...prev, cardNumber: formattedValue }));
+      setErrors((prev) => ({ ...prev, cardNumber: "" }));
     }
   };
 
@@ -43,6 +59,7 @@ export default function CreditCardDetails() {
     const value = event.target.value.replace(/\D/g, "");
     if (value.length <= 3) {
       setCardInfo((prev) => ({ ...prev, cvv: value }));
+      setErrors((prev) => ({ ...prev, cvv: "" }));
     }
   };
 
@@ -70,12 +87,14 @@ export default function CreditCardDetails() {
 
     if (value.length <= 4) {
       setCardInfo((prev) => ({ ...prev, expirationDate: formattedValue }));
+      setErrors((prev) => ({ ...prev, expirationDate: "" }));
     }
   };
 
   const handleCardNameChange = (event: { target: { value: string } }) => {
     const upperCaseValue = event.target.value.toUpperCase();
     setCardInfo((prev) => ({ ...prev, cardHolderName: upperCaseValue }));
+    setErrors((prev) => ({ ...prev, cardHolderName: "" }));
   };
 
   const handleCardSelectionChange = (event: { target: { value: unknown } }) => {
@@ -91,6 +110,7 @@ export default function CreditCardDetails() {
         });
 
         setSelectedCard(cardId);
+        setErrors((prev) => ({ ...prev, cardNumber: "", cardHolderName: "", expirationDate: "", cvv: "" }));
       } else {
         console.warn(`Cartão com ID ${cardId} não encontrado.`);
       }
@@ -147,7 +167,9 @@ export default function CreditCardDetails() {
                 onChange={handleCardNumberChange}
                 onFocus={() => setFocus("number")}
                 fullWidth
+                error={!!errors.cardNumber}
               />
+              {errors.cardNumber && <FormHelperText error>{errors.cardNumber}</FormHelperText>}
             </Grid>
             <Grid item xs={9}>
               <OutlinedInput
@@ -159,32 +181,40 @@ export default function CreditCardDetails() {
                 onChange={handleCardNameChange}
                 onFocus={() => setFocus("name")}
                 fullWidth
+                error={!!errors.cardHolderName}
               />
+              {errors.cardHolderName && <FormHelperText error>{errors.cardHolderName}</FormHelperText>}
             </Grid>
             <Grid container direction="row" spacing={2}>
-              <Grid item xs={3}>
+              <Grid item xs={4.6}>
                 <OutlinedInput
                   id="card-expiration"
                   autoComplete="card-expiration"
-                  placeholder="M/A"
+                  placeholder="MM/AA"
                   required
                   value={cardInfo.expirationDate}
                   onChange={handleExpirationDateChange}
                   onFocus={() => setFocus("expiry")}
                   fullWidth
+                  inputProps={{ style: { textAlign: "center" } }}
+                  error={!!errors.expirationDate}
                 />
+                {errors.expirationDate && <FormHelperText error>{errors.expirationDate}</FormHelperText>}
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={4.6}>
                 <OutlinedInput
                   id="cvv"
                   autoComplete="CVV"
-                  placeholder="123"
+                  placeholder="CVV"
                   required
                   value={cardInfo.cvv}
                   onChange={handleCvvChange}
                   onFocus={() => setFocus("cvc")}
                   fullWidth
+                  inputProps={{ style: { textAlign: "center" } }}
+                  error={!!errors.cvv}
                 />
+                {errors.cvv && <FormHelperText error>{errors.cvv}</FormHelperText>}
               </Grid>
             </Grid>
           </FormGrid>
