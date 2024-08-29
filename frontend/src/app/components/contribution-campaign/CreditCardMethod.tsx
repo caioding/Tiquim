@@ -74,6 +74,11 @@ export default function CreditCardMethod() {
   // saveAddress, setSaveAddress do context para pegar os dados
 
   const handleNext = () => {
+    if (amount < 1 || isNaN(amount)) {
+      setSnackbar("Valor de doação inválido!", "error");
+      return;
+    }
+
     if (activeStep === 2 && paymentMethod === "credit") {
       //hora que confirma o pagamento pq chegou na última aba e o usuário escolheu cartão de crédito
       handleSubmit(campaignId!);
