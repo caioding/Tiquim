@@ -53,7 +53,13 @@ export function CommentsTabPanel({ idCampaign, idOwner, value, index }: TabPanel
               Doe qualquer quantia para poder comentar!
             </Typography>
           )}
-          {sortedComments?.map((comment) => <CommentCard comment={comment} id={id} />)}
+          {sortedComments.length > 0 ? (
+            sortedComments?.map((comment) => <CommentCard comment={comment} id={id} />)
+          ) : (
+            <Typography variant="h6" sx={{ fontWeight: "bold", textAlign: "center" }}>
+              A campanha não possui nenhum comentário por enquanto
+            </Typography>
+          )}
         </Container>
       )}
     </div>

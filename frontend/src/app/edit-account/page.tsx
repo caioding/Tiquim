@@ -229,13 +229,9 @@ export default function EditAccount() {
                 id="state"
                 value={selectedState}
                 onChange={handleStateChange}
-                label="Estado"
                 fullWidth
                 sx={{
                   backgroundColor: "white",
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "transparent",
-                  },
                 }}
               >
                 {sortedStates?.map((state) => (
@@ -254,14 +250,10 @@ export default function EditAccount() {
                 id="city"
                 value={selectedCity}
                 onChange={handleCityChange}
-                label="Cidade"
                 disabled={!selectedState}
                 fullWidth
                 sx={{
                   backgroundColor: "white",
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "transparent",
-                  },
                 }}
               >
                 {cities?.map((city) => (

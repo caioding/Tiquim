@@ -33,7 +33,7 @@ const index = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  const {type} = req.body as {type: string};
+  const { type } = req.body as { type: string };
   try {
     /*
       #swagger.summary = 'Cria um método de pagamento.'
@@ -47,7 +47,7 @@ const create = async (req: Request, res: Response) => {
       }
       */
     const uid = req.session.uid!;
-    const nemPaymentMethod = await createPaymentMethod({type});
+    const nemPaymentMethod = await createPaymentMethod({ type });
     res.status(StatusCodes.OK).json(nemPaymentMethod);
   } catch (err) {
     console.log(err);

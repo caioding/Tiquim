@@ -14,7 +14,6 @@ import { createContribution } from "@/app/services/contribution";
 import { usePathname, useRouter } from "next/navigation";
 import useSnackbar from "@/app/hooks/useSnackbar";
 
-
 const initialContributionData = {
   amount: 0,
   campaignId: "",
@@ -39,18 +38,18 @@ export default function PixMethod() {
 
   const handleSubmit = async () => {
     try {
-        const savedPayment = await createPaymentMethod(paymentMethod);
-        console.log("Forma de pagamento via pix cadastrada");
+      const savedPayment = await createPaymentMethod(paymentMethod);
+      console.log("Forma de pagamento via pix cadastrada");
 
-        const formattedContribution = {
-          ...initialContributionData,
-          amount: amount,
-          campaignId: campaignId!,
-          paymentMethodId: savedPayment.id,
-        };
-        const savedContribution = await createContribution(formattedContribution);
-        setSnackbar("Contribuição realizada com sucesso!", "success");
-        router.push(`/campaign/${campaignId}`);
+      const formattedContribution = {
+        ...initialContributionData,
+        amount: amount,
+        campaignId: campaignId!,
+        paymentMethodId: savedPayment.id,
+      };
+      const savedContribution = await createContribution(formattedContribution);
+      setSnackbar("Contribuição realizada com sucesso!", "success");
+      router.push(`/campaign/${campaignId}`);
     } catch (err) {
       console.log("Erro ao finalizar pagamento:", err);
       setSnackbar("Erro ao finalizar o pagamento", "error");

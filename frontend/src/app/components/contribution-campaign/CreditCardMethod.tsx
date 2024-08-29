@@ -108,10 +108,9 @@ export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
       };
 
       const savedAddress = await createAddress(formatedAddressData);
-    } else {}
+    }
 
     if (saveCard) {
-
       const formattedCardData = {
         ...initialCardDataState,
         cardNumber: cardInfo.cardNumber,
@@ -127,7 +126,7 @@ export default function CreditCardMethod({ campaign }: CampaignCreditProps) {
     }
 
     try {
-      const formattedPM = {type: paymentMethod}
+      const formattedPM = { type: paymentMethod };
       const savedPaymentMethod = await createPaymentMethod(paymentMethod);
 
       const formattedContribution = {

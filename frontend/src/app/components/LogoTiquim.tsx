@@ -7,7 +7,7 @@ interface LogoTiquimProps {
   sx?: object;
 }
 
-const LogoTiquim = ({ width = 30, height = 30, sx }: LogoTiquimProps) => {
+const LogoTiquim = ({ width = 30, height = 35, sx }: LogoTiquimProps) => {
   return (
     <Box
       component="svg"
