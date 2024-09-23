@@ -11,6 +11,7 @@ Tiquim is a crowdfunding platform that enables users to launch campaigns for rai
 - MySQL
 - Docker
 - TypeScript
+- Test with Jest
 
 ## Prerequisites
 
